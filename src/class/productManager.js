@@ -1,5 +1,5 @@
-const { throws } = require('assert')
-const fs = require('fs')
+import fs from 'fs'
+// const { throws } = require('assert')
 
 class ProductManager {
   static id = 0
@@ -14,7 +14,7 @@ class ProductManager {
       const parseContent = JSON.parse(content)
       return parseContent
     } catch (err) {
-      console.error('Error catch readFile', err)
+      throw new Error(err)
     }
   }
 
@@ -25,20 +25,24 @@ class ProductManager {
 
   async getProducts () {
     const fileContent = await this.#readFile()
+
     try {
       if (fileContent.length === 0) throw new Error('Theres no products')
-      else console.log(fileContent)
-    } catch (error) {
-      console.log('Theres no products')
+      else return fileContent
+    } catch (err) {
+      throw new Error(err)
     }
   }
 
   async getProductById (id) {
     try {
       const fileContent = await this.#readFile()
-      if (!fileContent.find((obj) => obj.id === id)) { throw new Error(`Product with id ${obj.id}  not found`) } else console.log(fileContent.find((obj) => obj.id === id))
-    } catch {
-      console.log(`Product with id ${id} not found`)
+      if (!fileContent.find((obj) => obj.id === id)) { throw new Error('Product not found') } else {
+        const finded = fileContent.find((obj) => obj.id === id)
+        return finded
+      }
+    } catch (err) {
+      throw new Error(err)
     }
   }
 
@@ -118,4 +122,4 @@ class ProductManager {
   }
 }
 
-module.exports = ProductManager
+export default ProductManager

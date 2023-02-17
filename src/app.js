@@ -1,48 +1,45 @@
 import express from 'express'
-import usuarios from './data/usuarios.js'
+import ProductManager from './class/productManager.js'
 const app = express()
 app.use(express.urlencoded({ extended: true }))
 
-// Filtra por genero
-// app.get("/", (req, res) => {
-//   const query = req.query;
-//   const genderQ = query.gender;
-
-//   if (genderQ !== "male" && genderQ !== "female") {
-//     res.send({ usuarios });
-//     return;
-//   }
-
-//   const filtered = usuarios.filter((u) => u.gender === genderQ);
-//   res.send({ filtered });
-// });
-
-// Filtrado generico
-app.get('/', (req, res) => {
+app.get('/products', async (req, res) => {
   const query = req.query
-  const entries = Object.entries(query)
+  const limit = query.limit
+  const products = await productManager.getProducts()
 
-  if (entries.length === 0) {
-    return res.send({ usuarios })
+  try {
+    if (!products) {
+      res.status(200).send({ error: 'Products not found' })
+    } else {
+      if (!limit) {
+        res.status(200).send({ products })
+      } else {
+        const limited = products.slice(0, limit)
+        res.status(200).send({ limited })
+      }
+    }
+  } catch {
+    res.status(500).send('Error reading file')
   }
-
-  const filtrados = usuarios.filter((u) => {
-    return entries.every(([clave, valor]) => u[clave] == valor)
-  })
-
-  res.send({ usuarios: filtrados })
 })
 
-app.get('/:userId', (req, res) => {
-  const { userId } = req.params
-  const usuario = usuarios.find((usuario) => usuario.id === Number(userId))
+app.get('/products/:pid', async (req, res) => {
+  let { pid } = req.params
+  pid = parseInt(req.params.pid.split('=')[1])
 
-  if (!usuario) {
-    res.send({ error: `User with id ${userId} not found` })
-  } else {
-    res.send({ usuario })
+  try {
+    const product = await productManager.getProductById(pid)
+    if (!product) {
+      res.status(404).send('Product not found')
+    }
+    res.status(200).send({ product })
+  } catch {
+    res.status(500).send('Error finding product')
   }
 })
 
 const port = 8080
 app.listen(port, () => console.log('escuchando puerto 8080'))
+
+const productManager = new ProductManager('./data/db.json')
