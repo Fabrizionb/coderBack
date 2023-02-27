@@ -1,8 +1,8 @@
 import fs from 'fs'
+import { randomUUID } from 'crypto'
 // const { throws } = require('assert')
 
 class ProductManager {
-  static id = 0
   constructor (filepath) {
     this.filepath = filepath
     this.products = []
@@ -14,111 +14,96 @@ class ProductManager {
       const parseContent = JSON.parse(content)
       return parseContent
     } catch (err) {
-      throw new Error(err)
+      throw new Error(err, 'Error ReadFile')
     }
   }
 
   async #checkCode (code) {
-    const fileContent = await this.#readFile()
-    return fileContent.find((obj) => obj.code === code)
+    try {
+      const fileContent = await this.#readFile()
+      return fileContent.find((obj) => obj.code === code)
+    } catch (err) {
+      throw new Error(err, 'Error checkCode')
+    }
   }
 
-  async getProducts () {
+  async getAll () {
     const fileContent = await this.#readFile()
 
     try {
       if (fileContent.length === 0) throw new Error('Theres no products')
       else return fileContent
     } catch (err) {
-      throw new Error(err)
+      throw new Error(err, 'Error getProducts')
     }
   }
 
   async getProductById (id) {
+    const getAll = await this.getAll()
     try {
-      const fileContent = await this.#readFile()
-      if (!fileContent.find((obj) => obj.id === id)) { throw new Error('Product not found') } else {
-        const finded = fileContent.find((obj) => obj.id === id)
-        return finded
-      }
+      const productFinder = getAll.find(
+        (product) => product.id === id
+      )
+      return productFinder
     } catch (err) {
-      throw new Error(err)
+      throw new Error(err, 'Error getProductById')
     }
   }
 
   async updateProduct (id, obj) {
     try {
-      const fileContent = await this.#readFile()
-      const updated = fileContent.map((product) =>
-        product.id === id ? { ...product, ...obj } : product
-      )
-      if (!fileContent.find((obj) => obj.id === id)) { throw new Error(`product with id ${obj.id} not found`) } else {
-        await fs.promises.writeFile(
-          this.filepath,
-          JSON.stringify(updated, null, 2)
-        )
+      const productFinder = await this.getProductById(id)
+      const getAll = await this.getAll()
+      if (!productFinder) {
+        throw new Error('Product not found')
       }
+      const productMod = { ...productFinder, ...obj }
+      const productsWithoutProduct = getAll.filter((p) => p.id !== id)
+      const newProducts = [...productsWithoutProduct, productMod]
+      const productsStr = JSON.stringify(newProducts)
+      await fs.promises.writeFile(this.filepath, productsStr)
     } catch (err) {
-      console.error('Error catch updateProduct')
+      throw new Error(err, 'Error updateProduct')
     }
   }
 
-  async addProduct (title, description, price, image, code, stock) {
-    ProductManager.id++
-    const product = {
-      title,
-      description,
-      price,
-      image,
-      code,
-      stock,
-      id: ProductManager.id
-    }
-
-    // if (!title || !description || !price || !image || !code || !stock) {
-    //   throw new Error("Parameters cant be empty");
-    // }
-
-    // const fileExists = await fs.promises.stat(this.filepath).catch(() => false);
-    // if (!fileExists) {
-    //   throw new Error("File not found");
-    // }
-
-    if (await this.#checkCode(code)) {
-      return console.log(`Product with code ${code} found`)
-    }
-
-    this.products.push(product)
-    await fs.promises.writeFile(this.filepath, JSON.stringify(this.products))
-  }
-
-  async deleteProductById (id) {
-    if (!id) {
-      throw new Error('Id cant be empty')
-    }
-    const fileExists = await fs.promises.stat(this.filepath).catch(() => false)
-    if (!fileExists) {
-      throw new Error('File not found')
-    }
-    const fileContent = await this.#readFile()
-
+  async addProduct (product) {
     try {
-      const productsFiltered = fileContent.filter(
-        (product) => product.id !== id
-      )
-      if (!fileContent.find((obj) => obj.id === id)) { throw new Error(`product with id ${id} not found`) } else {
-        await fs.promises.writeFile(
-          this.filepath,
-          JSON.stringify(productsFiltered, null, 2)
-        )
+      const id = randomUUID()
+      const productsOld = await this.getAll()
+      const productsNew = [...productsOld, { id, ...product }]
+      const productsStr = JSON.stringify(productsNew)
+
+      if (!product.title || !product.description || !product.price || !product.image || !product.code || !product.stock) {
+        throw new Error('Parameters cant be empty')
       }
+
+      const fileExists = await fs.promises.stat(this.filepath).catch(() => false)
+      if (!fileExists) {
+        throw new Error('File not found')
+      }
+
+      if (await this.#checkCode(product.code)) {
+        return console.log(`Product with code ${product.code} found`)
+      }
+
+      this.products.push(product)
+      await fs.promises.writeFile(this.filepath, productsStr)
+      return id
     } catch (err) {
-      console.error('Error catch deleteProductById', err)
+      throw new Error(err, 'Error AddProduct')
     }
   }
 
-  async deleteAll () {
-    await fs.promises.writeFile(this.filepath, JSON.stringify([]), 'utf-8')
+  async delete (id) {
+    try {
+      const getAll = await this.getAll()
+      const productsWithoutProduct = getAll.filter((p) => p.id !== id)
+      const productsStr = JSON.stringify(productsWithoutProduct)
+      await fs.promises.writeFile(this.filepath, productsStr)
+    } catch (err) {
+      throw new Error(err, 'Error deleteProductById')
+    }
   }
 }
 
