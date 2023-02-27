@@ -3,13 +3,7 @@ import ProductManager from '../class/productManager.js'
 import { validateProduct, validarProductPartial } from '../../data/valid.js'
 
 const route = Router()
-const productManager = new ProductManager('./data/db.json')
-
-// route.use(async (req, res, next) => {
-//   console.log(req.url, Date.now())
-
-//   next()
-// })
+const productManager = new ProductManager('./data/products.json')
 
 route.get('/', async (req, res) => {
   const { limit } = req.query
@@ -32,26 +26,21 @@ route.get('/', async (req, res) => {
 })
 
 route.get('/:pid', async (req, res) => {
-  const pid = parseInt(req.params.pid)
-  if (isNaN(pid)) {
-    res.status(400).send('Invalid product ID')
+  const pid = req.params.pid
+  const cart = await productManager.getById(pid)
+  if (!cart) {
+    res
+      .status(404).send({ error: `cart with id ${pid} not found` })
     return
   }
-  try {
-    const product = await productManager.getProductById(pid)
-    if (!product) {
-      res.status(404).send('Product not found')
-      return
-    }
-    res.status(200).send({ product })
-  } catch {
-    res.status(500).send('Error finding product')
-  }
+  res.status(200).send({ cart })
 })
 
 route.post('/', async (req, res) => {
   const product = req.body
-  const isValid = validateProduct(product)
+  const statusProduct = { ...product, status: true }
+  const isValid = validateProduct(statusProduct)
+
   try {
     if (!product) {
       res.status(200).send({ error: 'Product missing' })
@@ -60,7 +49,7 @@ route.post('/', async (req, res) => {
       res.status(400).send({ error: 'Invalid Data' })
       return
     } else {
-      const idCreated = await productManager.addProduct(product)
+      const idCreated = await productManager.addProduct(statusProduct)
       res.status(201).send({ idCreated })
       return
     }
@@ -70,8 +59,8 @@ route.post('/', async (req, res) => {
 })
 
 route.put('/:pid', async (req, res) => {
-  const pid = parseInt(req.params.pid)
-  const product = await productManager.getProductById(pid)
+  const pid = req.params.pid
+  const product = await productManager.getById(pid)
   const newData = req.body
   const isValid = validateProduct(newData)
 
@@ -93,15 +82,10 @@ route.put('/:pid', async (req, res) => {
 })
 
 route.patch('/:pid', async (req, res) => {
-  const pid = parseInt(req.params.pid)
-  const product = await productManager.getProductById(pid)
+  const pid = req.params.pid
+  const product = await productManager.getById(pid)
   const newData = req.body
   const isValid = validarProductPartial(newData)
-
-  if (isNaN(pid)) {
-    res.status(400).send('Invalid product ID')
-    return
-  }
 
   if (!product) {
     res.status(404).send('Product not found')
@@ -116,15 +100,15 @@ route.patch('/:pid', async (req, res) => {
 })
 
 route.delete('/:pid', async (req, res) => {
-  const pid = parseInt(req.params.pid)
-  const product = await productManager.getProductById(pid)
+  const pid = req.params.pid
+  const product = await productManager.getById(pid)
 
   if (!product) {
     res.status(404).send('Product not found')
     return
   }
 
-  await productManager.deleteProductById(pid)
+  await productManager.deleteById(pid)
   res.send({ ok: true })
 })
 

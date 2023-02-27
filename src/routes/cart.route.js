@@ -1,125 +1,63 @@
 import { Router } from 'express'
-import ProductManager from '../class/productManager.js'
-import { validateProduct, validarProductPartial } from '../../data/valid.js'
+import CartManager from '../../src/class/cartManager.js'
+import ProductManager from '../../src/class/productManager.js'
+// import { validateProduct, validarProductPartial } from '../../data/valid.js'
 
 const route = Router()
-const cartManager = new ProductManager('./data/cart.json')
+const cartManager = new CartManager('./data/cart.json')
+const productManager = new ProductManager('./data/products.json')
 
 route.get('/', async (req, res) => {
-  const { limit } = req.query
-  const products = await cartManager.getAll()
-
   try {
-    if (!products) {
-      res.status(200).send({ error: 'Products not found' })
-    } else {
-      if (!limit) {
-        res.status(200).send({ products })
-      } else {
-        const limited = products.slice(0, limit)
-        res.status(200).send({ limited })
-      }
-    }
-  } catch {
-    res.status(500).send('Error reading file')
+    const carts = await cartManager.getCart()
+    res.status(200).json(carts)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
 })
 
-route.get('/:pid', async (req, res) => {
-  const pid = parseInt(req.params.pid)
-  if (isNaN(pid)) {
-    res.status(400).send('Invalid product ID')
-    return
-  }
+route.get('/:cid', async (req, res) => {
+  const cid = req.params.cid
+
   try {
-    const product = await cartManager.getProductById(pid)
-    if (!product) {
-      res.status(404).send('Product not found')
-      return
-    }
-    res.status(200).send({ product })
-  } catch {
-    res.status(500).send('Error finding product')
+    const cart = await cartManager.getCartById(cid)
+
+    if (cart) res.status(200).json(cart.products)
+    else res.status(404).json({ error: `Not data found with id ${cid}.` })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
 })
 
 route.post('/', async (req, res) => {
-  const product = req.body
-  const isValid = validateProduct(product)
   try {
-    if (!product) {
-      res.status(200).send({ error: 'Product missing' })
-      return
-    } else if (!isValid) {
-      res.status(400).send({ error: 'Invalid Data' })
-      return
-    } else {
-      const idCreated = await cartManager.addProduct(product)
-      res.status(201).send({ idCreated })
-      return
-    }
+    const cartCreated = await cartManager.addCart()
+    res.status(201).send({ cartCreated })
   } catch {
-    res.status(500).send('Error posting product')
+    res.status(500).send('Error creating cart')
   }
 })
 
-route.put('/:pid', async (req, res) => {
-  const pid = parseInt(req.params.pid)
-  const product = await cartManager.getProductById(pid)
-  const newData = req.body
-  const isValid = validateProduct(newData)
+route.post('/:cid/product/:pid', async (req, res) => {
+  try {
+    const { cid, pid } = req.params
+    const cart = await cartManager.getCartById(cid)
+    const product = await productManager.getById(pid)
 
-  if (isNaN(pid)) {
-    res.status(400).send('Invalid product ID')
-    return
-  }
+    if (!product) {
+      return res.status(404).json({ error: `No product found with id ${pid}.` })
+    }
+    const productInCart = cart.products.find((cart) => cart.products === product.id)
 
-  if (!product) {
-    res.status(404).send('Product not found')
-    return
+    if (productInCart) {
+      productInCart.quantity += 1
+    } else {
+      cart.products.push({ product: product.id, quantity: 1 })
+    }
+    await cartManager.updateById(cid, cart)
+    res.status(200).json(`Product ${pid} added to cart ${cid}.`)
+  } catch (error) {
+    res.status(500).json({ error: error.message, pta: 'catch cartRoute' })
   }
-  if (!isValid) {
-    res.status(400).send({ error: 'Invalid Data' })
-    return
-  }
-  await cartManager.updateProduct(pid, newData)
-  res.send({ ok: true })
 })
-
-route.patch('/:pid', async (req, res) => {
-  const pid = parseInt(req.params.pid)
-  const product = await cartManager.getProductById(pid)
-  const newData = req.body
-  const isValid = validarProductPartial(newData)
-
-  if (isNaN(pid)) {
-    res.status(400).send('Invalid product ID')
-    return
-  }
-
-  if (!product) {
-    res.status(404).send('Product not found')
-    return
-  }
-  if (!isValid) {
-    res.status(400).send({ error: 'Invalid Data' })
-    return
-  }
-  await cartManager.updateProduct(pid, newData)
-  res.send({ ok: true })
-})
-
-route.delete('/:pid', async (req, res) => {
-  const pid = parseInt(req.params.pid)
-  const product = await cartManager.getProductById(pid)
-
-  if (!product) {
-    res.status(404).send('Product not found')
-    return
-  }
-
-  await cartManager.deleteProductById(pid)
-  res.send({ ok: true })
-})
-
 export default route

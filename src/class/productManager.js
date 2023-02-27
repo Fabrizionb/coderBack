@@ -1,6 +1,5 @@
 import fs from 'fs'
 import { randomUUID } from 'crypto'
-// const { throws } = require('assert')
 
 class ProductManager {
   constructor (filepath) {
@@ -38,32 +37,22 @@ class ProductManager {
     }
   }
 
-  async getProductById (id) {
-    const getAll = await this.getAll()
-    try {
-      const productFinder = getAll.find(
-        (product) => product.id === id
-      )
-      return productFinder
-    } catch (err) {
-      throw new Error(err, 'Error getProductById')
-    }
+  async getById (pid) {
+    const todasLasEntidades = await this.getAll()
+    const entidadCargada = todasLasEntidades.find(
+      (entidad) => entidad.id === pid
+    )
+    return entidadCargada
   }
 
-  async updateProduct (id, obj) {
+  async deleteById (pid) {
     try {
-      const productFinder = await this.getProductById(id)
       const getAll = await this.getAll()
-      if (!productFinder) {
-        throw new Error('Product not found')
-      }
-      const productMod = { ...productFinder, ...obj }
-      const productsWithoutProduct = getAll.filter((p) => p.id !== id)
-      const newProducts = [...productsWithoutProduct, productMod]
-      const productsStr = JSON.stringify(newProducts)
+      const productsWithoutProduct = getAll.filter((p) => p.id !== pid)
+      const productsStr = JSON.stringify(productsWithoutProduct)
       await fs.promises.writeFile(this.filepath, productsStr)
     } catch (err) {
-      throw new Error(err, 'Error updateProduct')
+      throw new Error(err, 'Error deleteProductById')
     }
   }
 
@@ -71,10 +60,10 @@ class ProductManager {
     try {
       const id = randomUUID()
       const productsOld = await this.getAll()
-      const productsNew = [...productsOld, { id, ...product }]
+      const productsNew = [...productsOld, { id, ...product, status: true }]
       const productsStr = JSON.stringify(productsNew)
 
-      if (!product.title || !product.description || !product.price || !product.image || !product.code || !product.stock) {
+      if (!product.title || !product.description || !product.price || !product.code || !product.stock || !product.thumbnails || !product.status || !product.category) {
         throw new Error('Parameters cant be empty')
       }
 
@@ -95,14 +84,20 @@ class ProductManager {
     }
   }
 
-  async delete (id) {
+  async updateProduct (id, obj) {
     try {
-      const getAll = await this.getAll()
+      const productFinder = await this.getProductById(id)
+      const getAll = await this.getInfo()
+      if (!productFinder) {
+        throw new Error('Product not found')
+      }
+      const productMod = { ...productFinder, ...obj }
       const productsWithoutProduct = getAll.filter((p) => p.id !== id)
-      const productsStr = JSON.stringify(productsWithoutProduct)
+      const newProducts = [...productsWithoutProduct, productMod]
+      const productsStr = JSON.stringify(newProducts)
       await fs.promises.writeFile(this.filepath, productsStr)
     } catch (err) {
-      throw new Error(err, 'Error deleteProductById')
+      throw new Error(err, 'Error updateProduct')
     }
   }
 }

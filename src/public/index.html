@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="./pages/css/style.css" />
+    <title>Express ecommerce</title>
+  </head>
+  <body>
+    <div class="hero-image">
+      <div class="hero-text">
+        <h1>Programación Backend</h1>
+        <p>Cargador de productos</p>
+        <form onsubmit="send(event)">
+          <input
+            id="form-title"
+            type="text"
+            name="form-title"
+            placeholder="Título"
+          />
+        
+          <textarea
+            id="form-description"
+            name="form-description"
+            placeholder="Descripción"
+          ></textarea>
+        
+          <input
+            id="form-price"
+            type="number"
+            name="form-price"
+            placeholder="Precio"
+          />
+        
+          <input
+            id="form-image"
+            type="file"
+            name="form-image"
+            accept="image/*"
+            multiple
+          />
+        
+          <input
+            id="form-code"
+            type="text"
+            name="form-code"
+            placeholder="Código de producto"
+          />
+        
+          <input
+            id="form-stock"
+            type="number"
+            name="form-stock"
+            placeholder="Cantidad en stock"
+          />
+        
+          <input type="submit" value="Guardar Producto" />
+        </form>
+        <p id="mascota-id"></p>
+      </div>
+    </div>
+
+    <script>
+      async function send(event) {
+        event.preventDefault();
+       
+        const title = document.getElementById('form-title').value;
+  const description = document.getElementById('form-description').value;
+  const price = Number(document.getElementById('form-price').value);
+  const files = document.getElementById('form-image').files;
+  const code = document.getElementById('form-code').value;
+  const stock = Number(document.getElementById('form-stock').value);
+
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('description', description);
+  formData.append('price', price);
+  for (let i = 0; i < files.length; i++) {
+    formData.append('image', files[i]);
+  }
+  formData.append('code', code);
+  formData.append('stock', stock);
+
+  fetch('/productos', {
+    method: 'POST',
+    body: formData,
+    headers: {
+          },
+        });
+        if (response.ok) {
+          response.json().then((d) => {
+            const p = document.getElementById('mascota-id');
+            p.innerText = `Creada mascota ${d.id}`;
+          });
+        }
+  }
+    
+
+
+
+
+
+
+      
+    </script>
+  </body>
+</html>

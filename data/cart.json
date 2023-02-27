@@ -1,1 +1,32 @@
-[{"id":"cb5a2ba6-0f58-4c4c-b86b-003d20d2a52d","title":"Pantalón Nike Jogger","description":"Comodidad y estilo deportivo","price":250,"image":"url","code":"abc003","stock":40},{"id":"4b18ede2-e5f0-4afa-922c-0513747f50c2","title":"Sudadera Puma","description":"Comodidad y estilo casual","price":150,"image":"url","code":"abc094","stock":25}]
+[
+    {
+        "cid": "9901a898-68cc-4eef-8423-87175fa232ac",
+        "products": [ {"id":"1b457fc6-5a05-43e0-b2bd-3577152f1f07","quantity":1}
+    ]
+    },
+    {
+        "cid": "1fb88819-ca7a-4044-80ec-8e0f0144b866",
+        "products": [ {"id":"e30fc029-01f8-40ab-98d3-e9c27e77ac5c","quantity":1}
+        ]
+    },
+    {
+        "cid": "1fb88819-ca7a-4044-80ec-ce0f0124b866",
+        "products": [ {"id":"97a6c98d-5c45-46b6-953b-bb4ce0f7b5fa","quantity":1}
+        ]
+    },
+    {
+        "cid": "b24d76b0-475a-42d7-8a8b-a0011d0b0e1c",
+        "products": [ {"id":"cb5a2ba6-0f58-4c4c-b86b-003d20d2a52d","quantity":1}
+        ]
+    },
+    {
+        "cid": "bd752f79-62d3-41ca-a1f2-b113a6542b21",
+        "products": [ {"id":"16668fcc-b17e-40b1-a06e-8d68b1a0c4ef","quantity":1}
+    ]
+    },
+    {
+        "cid": "d22ab65f-8883-4c1d-bb18-43d27e606314",
+        "products": [ {"id":"2639ca82-5dc6-4ebc-bb9a-73aab5f0dc67","quantity":1}
+        ]
+    }
+]
