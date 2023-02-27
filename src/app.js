@@ -2,6 +2,7 @@ import express from 'express'
 import ProductManager from './class/productManager.js'
 const app = express()
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 app.get('/products', async (req, res) => {
   const query = req.query
@@ -26,7 +27,7 @@ app.get('/products', async (req, res) => {
 
 app.get('/products/:pid', async (req, res) => {
   let { pid } = req.params
-  pid = parseInt(req.params.pid.split('=')[1])
+  pid = parseInt(pid.split('=')[1])
 
   try {
     const product = await productManager.getProductById(pid)
