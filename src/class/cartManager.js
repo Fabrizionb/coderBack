@@ -1,8 +1,6 @@
 import fs from 'fs'
 import { randomUUID } from 'crypto'
 
-// const { throws } = require('assert')
-
 class CartManager {
   constructor (filepath) {
     this.filepath = filepath
@@ -28,7 +26,7 @@ class CartManager {
     }
   }
 
-  async getAll () {
+  async getCart () {
     const fileContent = await this.#readFile()
 
     try {
@@ -59,7 +57,7 @@ class CartManager {
   }
 
   async getCartById (cid) {
-    const getAll = await this.getAll()
+    const getAll = await this.getCart()
     try {
       const cartFinder = getAll.find(
         (cart) => cart.cid === cid
@@ -75,37 +73,19 @@ class CartManager {
     cart.products.push(cid)
   }
 
-  // async updateById (cid, data) {
-  //   const cart = await this.getCartById(cid)
-  //   const product = await productManager.getById(pid)
+  async updateById (cid, pid) {
+    const cartFinder = await this.getCartById(cid)
+    const objetoEncontrado = cartFinder.products.find(objeto => objeto.id === pid)
 
-  //   const cartOld = this.getAll()
-  //   const cartById = await this.getCartById(cid)
-
-  //   const productInCart = cartById.products.find((product) => product.id === data.id)
-  //   return productInCart
-  // }
-
-  async updateById (cid, data) {
-    // Read the file.
-    const fileContent = await this.#readFile()
-
-    try {
-      // Find the data by id.
-      const dataById = await this.getCartById(cid)
-
-      if (dataById) {
-        // Write the new object in the file.
-        await fs.promises.writeFile(this.path, JSON.stringify(fileContent.map((obj) => obj.id === cid ? { ...obj, ...data } : obj), null, 2))
-
-        // Return the new object.
-        return { cid, ...data }
-      } else {
-        throw new Error(`Error: Not data found with id ${cid}.`)
-      }
-    } catch (error) {
-      throw new Error(`Error: Nottt data found with id ${cid}.`)
+    if (objetoEncontrado) {
+      objetoEncontrado.quantity += 1
+      return
+    } else {
+      cartFinder.products.push({ id: pid, quantity: 1 })
     }
+
+    console.log(objetoEncontrado.quantity)
+    return cartFinder
   }
 }
 

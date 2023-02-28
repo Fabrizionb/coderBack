@@ -1,1 +1,182 @@
-[{"id":"97a6c98d-5c45-46b6-953b-bb4ce0f7b5fa","title":"Sudadera Puma","description":"Comodidad y estilo casual","price":150,"thumbnails":["url1","url2","url3"],"code":"abc004","stock":25,"status":true,"category":"Sudaderas"},{"id":"e30fc029-01f8-40ab-98d3-e9c27e77ac5c","title":"Shorts Under Armour","description":"Ligereza y transpirabilidad","price":99,"thumbnails":["url1","url2","url3"],"code":"abc005","stock":35,"status":true,"category":"Pantalones"},{"id":"1b457fc6-5a05-43e0-b2bd-3577152f1f07","title":"Mochila Nike Brasilia","description":"Funcionalidad y comodidad","price":200,"thumbnails":["url1","url2","url3"],"code":"abc006","stock":50,"status":true,"category":"Accesorios"},{"id":"67582c26-a159-4198-8e17-d88a0d74220a","title":"Campera Adidas Originals","description":"Estilo retro y elegante","price":280,"thumbnails":["url1","url2","url3"],"code":"abc007","stock":15,"status":true,"category":"Sudaderas"},{"id":"0a87a414-e8c2-4ed1-936b-367e9ce507ec","title":"Gorra New Era","description":"Comodidad y estilo urbano","price":80,"thumbnails":["url1","url2","url3"],"code":"abc008","stock":45,"status":true,"category":"Accesorios"},{"id":"0a30eac6-2ccf-40d9-aabb-cee4f9351520","title":"Malla deportiva Nike","description":"Comodidad y estilo deportivo","price":180,"thumbnails":["url1","url2","url3"],"code":"abc009","stock":20,"status":true,"category":"Pantalones"},{"id":"16668fcc-b17e-40b1-a06e-8d68b1a0c4ef","title":"Buzo Adidas Performance","description":"Comodidad y estilo deportivo","price":220,"thumbnails":["url1","url2","url3"],"code":"abc010","stock":30,"status":true,"category":"Sudaderas"},{"id":"2639ca82-5dc6-4ebc-bb9a-73aab5f0dc67","title":"Calcetines Under Armour","description":"Comodidad y transpirabilidad","price":50,"thumbnails":["url1","url2","url3"],"code":"abc011","stock":60,"status":true,"category":"Accesorios"},{"id":"60b411a5-7b7b-4539-8206-fe926887071e","title":"Mochilita kappa","description":"Para montaña","price":280,"thumbnails":["url1","url2","url3"],"code":"abc014","stock":20,"status":true,"category":"Accesorios"},{"id":"12e5cccd-181e-4679-8b81-378038d209a6","title":"Remera Adidas Originals","description":"Cómoda y versátil","price":120,"thumbnails":["url1","url2","url3"],"code":"abc002","stock":30,"status":true,"category":"Remeras"},{"id":"3e772abb-e1b0-45e2-a65e-9107493ea6a2","title":"Remera Yonyals","description":"Cómoda y versátil","price":120,"thumbnails":["url1","url2","url3"],"code":"abc066","stock":30,"status":true,"category":"Remeras"},{"id":"d797c3d3-4a87-450a-8beb-bfb6a3042943","title":"Remera Loyal","description":"Cómoda y versátil","price":120,"thumbnails":["url1","url2","url3"],"code":"abc559","stock":30,"category":"Remeras","status":true}]
+[
+    {
+        "id": "97a6c98d-5c45-46b6-953b-bb4ce0f7b5fa",
+        "title": "Sudadera Puma",
+        "description": "Comodidad y estilo casual",
+        "price": 150,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc004",
+        "stock": 25,
+        "status": true,
+        "category": "Sudaderas"
+    },
+    {
+        "id": "e30fc029-01f8-40ab-98d3-e9c27e77ac5c",
+        "title": "Shorts Under Armour",
+        "description": "Ligereza y transpirabilidad",
+        "price": 99,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc005",
+        "stock": 35,
+        "status": true,
+        "category": "Pantalones"
+    },
+    {
+        "id": "1b457fc6-5a05-43e0-b2bd-3577152f1f07",
+        "title": "Mochila Nike Brasilia",
+        "description": "Funcionalidad y comodidad",
+        "price": 200,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc006",
+        "stock": 50,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "id": "67582c26-a159-4198-8e17-d88a0d74220a",
+        "title": "Campera Adidas Originals",
+        "description": "Estilo retro y elegante",
+        "price": 280,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc007",
+        "stock": 15,
+        "status": true,
+        "category": "Sudaderas"
+    },
+    {
+        "id": "0a87a414-e8c2-4ed1-936b-367e9ce507ec",
+        "title": "Gorra New Era",
+        "description": "Comodidad y estilo urbano",
+        "price": 80,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc008",
+        "stock": 45,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "id": "0a30eac6-2ccf-40d9-aabb-cee4f9351520",
+        "title": "Malla deportiva Nike",
+        "description": "Comodidad y estilo deportivo",
+        "price": 180,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc009",
+        "stock": 20,
+        "status": true,
+        "category": "Pantalones"
+    },
+    {
+        "id": "16668fcc-b17e-40b1-a06e-8d68b1a0c4ef",
+        "title": "Buzo Adidas Performance",
+        "description": "Comodidad y estilo deportivo",
+        "price": 220,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc010",
+        "stock": 30,
+        "status": true,
+        "category": "Sudaderas"
+    },
+    {
+        "id": "2639ca82-5dc6-4ebc-bb9a-73aab5f0dc67",
+        "title": "Calcetines Under Armour",
+        "description": "Comodidad y transpirabilidad",
+        "price": 50,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc011",
+        "stock": 60,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "id": "60b411a5-7b7b-4539-8206-fe926887071e",
+        "title": "Mochilita kappa",
+        "description": "Para montaña",
+        "price": 280,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc014",
+        "stock": 20,
+        "status": true,
+        "category": "Accesorios"
+    },
+    {
+        "id": "12e5cccd-181e-4679-8b81-378038d209a6",
+        "title": "Remera Adidas Originals",
+        "description": "Cómoda y versátil",
+        "price": 120,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc002",
+        "stock": 30,
+        "status": true,
+        "category": "Remeras"
+    },
+    {
+        "id": "3e772abb-e1b0-45e2-a65e-9107493ea6a2",
+        "title": "Remera Yonyals",
+        "description": "Cómoda y versátil",
+        "price": 120,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc066",
+        "stock": 30,
+        "status": true,
+        "category": "Remeras"
+    },
+    {
+        "id": "d797c3d3-4a87-450a-8beb-bfb6a3042943",
+        "title": "Remera Loyal",
+        "description": "Cómoda y versátil",
+        "price": 120,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc559",
+        "stock": 30,
+        "category": "Remeras",
+        "status": true
+    }
+]
