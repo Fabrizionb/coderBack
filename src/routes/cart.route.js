@@ -5,23 +5,34 @@ const route = Router()
 const cartManager = new CartManager('./data/cart.json')
 
 route.post('/', async (req, res) => {
-  res.send(await cartManager.addCart())
+  try {
+    const carts = await cartManager.readCart()
+    res.status(200).json(carts)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
 })
 
 route.get('/', async (req, res) => {
   try {
-    res.send(await cartManager.readCart())
+    const carts = await cartManager.readCart()
+    res.status(200).json(carts)
   } catch (error) {
-    res.status(500).send(error.message, 'Error get')
+    res.status(500).json({ error: error.message })
   }
 })
 
 route.get('/:id', async (req, res) => {
   const id = req.params.id
   try {
-    res.send(await cartManager.getCartById(id))
+    const cart = await cartManager.getCartById(id)
+    if (!cart) {
+      res.status(404).json({ error: `Cart with id ${id} not found` })
+    } else {
+      res.status(200).json(cart)
+    }
   } catch (error) {
-    res.status(500).send(error.message, 'Error get')
+    res.status(500).json({ error: error.message })
   }
 })
 
@@ -29,9 +40,14 @@ route.post('/:cid/product/:pid', async (req, res) => {
   const cid = req.params.cid
   const pid = req.params.pid
   try {
-    res.send(await cartManager.addProductInCart(cid, pid))
+    const updatedCart = await cartManager.addProductInCart(cid, pid)
+    if (!updatedCart) {
+      res.status(404).json({ error: `Cart with id ${cid} not found` })
+    } else {
+      res.status(201).json(updatedCart)
+    }
   } catch (error) {
-    res.status(500).send(error.message, 'Error post')
+    res.status(500).json({ error: error.message })
   }
 })
 

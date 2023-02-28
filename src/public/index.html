@@ -46,6 +46,12 @@
             name="form-code"
             placeholder="Código de producto"
           />
+          <input
+            id="form-cat"
+            type="text"
+            name="form-code"
+            placeholder="Categoria"
+          />
         
           <input
             id="form-stock"
@@ -56,52 +62,46 @@
         
           <input type="submit" value="Guardar Producto" />
         </form>
-        <p id="mascota-id"></p>
+        <p id="producto-id"></p>
       </div>
     </div>
 
     <script>
       async function send(event) {
         event.preventDefault();
-       
         const title = document.getElementById('form-title').value;
-  const description = document.getElementById('form-description').value;
-  const price = Number(document.getElementById('form-price').value);
-  const files = document.getElementById('form-image').files;
-  const code = document.getElementById('form-code').value;
-  const stock = Number(document.getElementById('form-stock').value);
+        const description = document.getElementById('form-description').value;
+        const price = document.getElementById('form-price').value;
+        const code = document.getElementById('form-code').value;
+        const category = document.getElementById('form-cat').value;
+        const stock = document.getElementById('form-stock').value;
+        const file = document.getElementById('form-image');
 
-  const formData = new FormData();
-  formData.append('title', title);
-  formData.append('description', description);
-  formData.append('price', price);
-  for (let i = 0; i < files.length; i++) {
-    formData.append('image', files[i]);
-  }
-  formData.append('code', code);
-  formData.append('stock', stock);
 
-  fetch('/productos', {
-    method: 'POST',
-    body: formData,
-    headers: {
+        const formData = new FormData();
+        formData.append('Title', title);
+        formData.append('description', description);
+        formData.append('price', price);
+        formData.append('code', code);
+        formData.append('category', category);
+        formData.append('stock', stock);
+        formData.append('file', file.files[0]);
+        const response = await fetch('/api/products', {
+          method: 'POST',
+          body: formData,
+          headers: {
           },
         });
         if (response.ok) {
           response.json().then((d) => {
-            const p = document.getElementById('mascota-id');
-            p.innerText = `Creada mascota ${d.id}`;
+            const p = document.getElementById('producto-id');
+            p.innerText = `producto creado ${d.id}`;
           });
+        }else {
+          response.json().then(formData)
         }
-  }
-    
-
-
-
-
-
-
-      
+        
+      }
     </script>
   </body>
 </html>

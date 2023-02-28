@@ -1,11 +1,34 @@
-La ruta raíz POST / deberá crear un nuevo carrito con la siguiente estructura:
-Id:Number/String (A tu elección, de igual manera como con los productos, debes asegurar que nunca se dupliquen los ids y que este se autogenere).
-products: Array que contendrá objetos que representen cada producto
+-Errores:
 
-La ruta GET /:cid deberá listar los productos que pertenezcan al carrito con el parámetro cid proporcionados.
-La ruta POST  /:cid/product/:pid deberá agregar el producto al arreglo “products” del carrito seleccionado, agregándose como un objeto bajo el siguiente formato:
-product: SÓLO DEBE CONTENER EL ID DEL PRODUCTO (Es crucial que no agregues el producto completo)
+- No estás manejando el envío de archivos con multer // Necesario para aprobar
 
-quantity: debe contener el número de ejemplares de dicho producto. El producto, de momento, se agregará de uno en uno.
+Agregado el manejo de envios con multer.
 
-Además, si un producto ya existente intenta agregarse al producto, incrementar el campo quantity de dicho producto. 
+- No estás haciendo correctamente las validaciones pedidas para el addProduct (que el status sea true por default, y que no mande los thumbnails, sino que se complete con la ruta de las imágenes cargadas) // Necesario para aprobar
+
+Ahora las imagenes se toman del array de multer y se cargan luego en el nuevo producto.
+Las funcion validadora fue modifcada para que no acepte ningun valor de las claves que valida, como undefined, null ni string vacio.
+La validacion se ejecuta en el endpoint de products.route.
+Primero se valida que los campos que llegan por req.body cargados en product, tenga los campos necesarios y no tengan ningun campo vacio.
+Segundo se valida que llegue un producto por req.body.
+Tercero le asigno a newProducts las propiedades de ...product y le sumo  status: true
+Finalmente se lo envio al metodo addProducts, tanto ...newProduct como el array de imagenes thumbnails.
+
+
+- No era necesario que haya un html estático, y veo que copiaste el que usamos en clase, sin terminar de leer bien qué cambios tenías que hacer (fijate que todavía hay menciones a mascotas)
+
+Cambie las referencias y variables de mascotas por productos y le agregue los campos necesarios para que valide. 
+No es funcional, queria ver si podia implementar una interfaz grafica para hacerlo dinamico. 
+Falle miserablemente. 
+Dejare los archivos para agregar esta funcionalidad mas adelante.
+
+- Comentarios:
+
+ - Muy bien mandando los status codes en todos los endpoints! solo que algunos no los estarías usando correctamente (Cuál es el status code para cuando no existe la entidad buscada?)
+
+ Agregados los codigos de errores que faltaban (creo que es lo que pedia), no entendi bien lo de los codes mas de lo que hice. Entendi que las res.send van solamente del lado del route, no del productManager. Asi que del productManager, hice throw new Error({ error: error.message }). Si no es lo pedido, por favor mostrame un ejemplo en el codigo y que iria, porque estoy medio perdido.
+
+ - Siempre es buena práctica devolver un json y no un string en la respuesta de los endpoints (Tus manager deberían de devolver un objeto, o null, o un error, y manejar dependiendo de eso la respuesta enviada al frontend por el endpoint, con su respectivo status code)
+
+ Cambiado send x json, agregados los codigos y bloques try catch que faltaban.
+

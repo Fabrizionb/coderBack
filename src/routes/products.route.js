@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import ProductManager from '../controller/productManager.js'
 import { validateProduct } from '../../data/valid.js'
+import { multiUploader } from '../utils/multiUploader.js'
 
 const route = Router()
 const productManager = new ProductManager('./data/products.json')
@@ -11,17 +12,17 @@ route.get('/', async (req, res) => {
 
   try {
     if (!products) {
-      res.status(200).send({ error: 'Products not found' })
+      res.status(404).json({ error: 'Products not found' })
     } else {
       if (!limit) {
-        res.status(200).send({ products })
+        res.status(200).json({ products })
       } else {
         const limited = products.slice(0, limit)
-        res.status(200).send({ limited })
+        res.status(200).json({ limited })
       }
     }
   } catch (error) {
-    res.status(500).send(error.message, 'Error get')
+    res.status(500).json({ error: error.message })
   }
 })
 
@@ -31,34 +32,34 @@ route.get('/:pid', async (req, res) => {
   try {
     const cart = await productManager.getProductsById(pid)
     if (!cart) {
-      res
-        .status(404).send({ error: `cart with id ${pid} not found` })
+      res.status(404).json({ error: `Cart with id ${pid} not found` })
       return
     }
-    res.status(200).send({ cart })
+    res.status(200).json({ cart })
   } catch (error) {
-    res.status(500).send(error.message, 'Error get')
+    res.status(500).json({ error: error.message })
   }
 })
 
-route.post('/', async (req, res) => {
+route.post('/', multiUploader, async (req, res) => {
   const product = req.body
   const isValid = validateProduct(product)
-
+  const newProduct = { ...product, status: true }
   try {
-    if (!product) {
-      res.status(200).send({ error: 'Product missing' })
-      return
-    } else if (!isValid) {
-      res.status(400).send({ error: 'Invalid Data' })
-      return
-    } else {
-      const idCreated = await productManager.addProducts(product)
-      res.status(201).send({ idCreated })
+    if (!isValid) {
+      res.status(400).json({ error: 'Invalid Data' })
       return
     }
+    if (!product) {
+      res.status(400).json({ error: 'Product missing' })
+      return
+    }
+
+    const thumbnails = req.files.map(file => file.filename) // Map req.files = array
+    const idCreated = await productManager.addProducts({ ...newProduct, thumbnails }) // Producto spread mas array
+    res.status(201).json({ id: idCreated })
   } catch (error) {
-    res.status(500).send(error.message, 'Error post')
+    res.status(400).json({ error: error.message })
   }
 })
 
@@ -68,12 +69,13 @@ route.put('/:id', async (req, res) => {
   try {
     const productById = await productManager.getProductsById(updateProduct.id)
     const isValid = validateProduct(updateProduct)
-    if (!productById) res.status(404).send({ error: 'Product not found' })
-    if (!isValid) res.status(404).send({ error: 'Invalid Data' })
+    if (!productById) res.status(404).json({ error: 'Product not found' })
+    if (!isValid) res.status(404).json({ error: 'Invalid Data' })
     const id = req.params.id
-    res.send(await productManager.updateProduct(id, updateProduct))
+    const updatedProduct = await productManager.updateProduct(id, updateProduct)
+    res.status(200).json(updatedProduct)
   } catch (error) {
-    res.status(500).send(error.message, 'Error put')
+    res.status(500).json({ error: error.message })
   }
 })
 
@@ -83,13 +85,13 @@ route.delete('/:pid', async (req, res) => {
   try {
     const product = await productManager.getProductsById(pid)
     if (!product) {
-      res.status(404).send('Product not found')
+      res.status(404).json({ error: 'Product not found' })
       return
     }
     await productManager.deleteProduct(pid)
-    res.send({ ok: true })
+    res.status(200).json({ message: 'Product deleted successfully' })
   } catch (error) {
-    res.status(500).send(error.message, 'Error delete')
+    res.status(500).json({ error: error.message })
   }
 })
 

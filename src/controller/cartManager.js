@@ -18,9 +18,14 @@ class CartManager {
   async readCart () {
     try {
       const carts = await fs.promises.readFile(this.filepath, 'utf-8')
-      return JSON.parse(carts)
+      const parsedCarts = JSON.parse(carts)
+      if (parsedCarts.length === 0) {
+        throw new Error({ err: 'Products not found' })
+      } else {
+        return parsedCarts
+      }
     } catch (error) {
-      throw new Error(error.message, 'Error readProducts')
+      throw new Error({ error: error.message })
     }
   }
 
@@ -28,7 +33,7 @@ class CartManager {
     try {
       await fs.promises.writeFile(this.filepath, JSON.stringify(cart))
     } catch (error) {
-      throw new Error(error.message, 'Error writeProducts')
+      throw new Error({ error: error.message })
     }
   }
 
@@ -40,17 +45,20 @@ class CartManager {
       await this.writeCart(cartsConcat)
       return 'Added Cart'
     } catch (error) {
-      throw new Error(error.message, 'Error ReadProducts')
+      throw new Error({ error: error.message })
     }
   }
 
   async getCartById (id) {
     try {
       const cartById = await this.exist(id)
-      if (!cartById) return 'Cart not found'
-      return cartById
+      if (!cartById) {
+        throw new Error({ error: 'Cart not found' })
+      } else {
+        return cartById
+      }
     } catch (error) {
-      throw new Error(error.message, 'Error getCartById')
+      throw new Error({ error: error.message })
     }
   }
 
@@ -78,7 +86,7 @@ class CartManager {
       await this.writeCart(cartConcat)
       return 'Product added to cart'
     } catch (error) {
-      throw new Error(error.message, 'Error addProductInCart')
+      throw new Error({ error: error.message })
     }
   }
 }
