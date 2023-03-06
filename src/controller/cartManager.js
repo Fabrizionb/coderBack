@@ -43,7 +43,7 @@ class CartManager {
       const id = randomUUID()
       const cartsConcat = [{ id, products: [] }, ...cartsOld]
       await this.writeCart(cartsConcat)
-      return 'Added Cart'
+      return cartsConcat
     } catch (error) {
       throw new Error({ error: error.message })
     }
@@ -69,7 +69,9 @@ class CartManager {
       if (!cartById) return 'Cart not found'
       const productById = await productManager.exist(productId)
       const cartFilter = await getCar.filter(cart => cart.id !== cartId)
-      if (!productById) return 'Product not found'
+      if (!productById) {
+        throw new Error({ error: 'product not found' })
+      }
 
       // Esta el producto, dentro del array ?
       if (cartById.products.some((prod) => prod.id === productId)) {
@@ -78,13 +80,13 @@ class CartManager {
         moreProductInCart.quantity++
         const cartsConcat = [cartById, ...cartFilter]
         await this.writeCart(cartsConcat)
-        return 'Product quantity increase'
+        return moreProductInCart
       }
 
       cartById.products.push({ id: productById.id, quantity: 1 })
       const cartConcat = [cartById, ...cartFilter]
       await this.writeCart(cartConcat)
-      return 'Product added to cart'
+      return cartConcat
     } catch (error) {
       throw new Error({ error: error.message })
     }

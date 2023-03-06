@@ -163,49 +163,5 @@
         "stock": 30,
         "status": true,
         "category": "Remeras"
-    },
-    {
-        "title": "",
-        "description": "",
-        "price": "",
-        "code": "",
-        "stock": "",
-        "status": true,
-        "thumbnails": [
-            "1677613104984-product1.jpg",
-            "1677613104985-product2.jpg",
-            "1677613104986-product3.jpg"
-        ],
-        "id": "e54975b0-6b3a-4659-84ff-bc66dcc47796"
-    },
-    {
-        "title": "",
-        "description": "",
-        "price": "",
-        "code": "",
-        "stock": "",
-        "category": "",
-        "status": true,
-        "thumbnails": [
-            "1677613253555-product1.jpg",
-            "1677613253555-product2.jpg",
-            "1677613253555-product3.jpg"
-        ],
-        "id": "52c356e0-53bb-472d-ace0-451951413113"
-    },
-    {
-        "title": "1",
-        "description": "1",
-        "price": "1",
-        "code": "1",
-        "stock": "1",
-        "category": "1",
-        "status": true,
-        "thumbnails": [
-            "1677613434588-product1.jpg",
-            "1677613434589-product2.jpg",
-            "1677613434589-product3.jpg"
-        ],
-        "id": "567216da-9672-4c9a-8116-105f9acc8616"
     }
 ]

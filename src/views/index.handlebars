@@ -1,0 +1,67 @@
+<div class="content">
+  <div class="p-0 container-fluid">
+
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title">Lista de Productos</h5>
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+          <div class="card-body">
+              <div class="row form-group">
+                <div class="col-sm-auto">
+                  <button class="btn btn-primary btn_custom">Accion 1</button>
+                </div>
+                <div class="col-sm-auto">
+                  <button class="btn btn-primary btn_custom">Accion 2</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+          <table class="my-0 table table-striped th-custom" id="ticketTable">
+            <thead>
+
+              <tr>
+                <th>Id<span class="order-4"></span></th>
+                <th>Titulo<span class="order-4"></span></th>
+                <th>Descripcion<span class="order-4"></span></th>
+                <th>Category<span class="order-4"></span></th>
+                <th>Price<span class="order-4"></span></th>
+                <th>Status<span class="order-4"></span></th>
+                <th>Stock<span class="order-4"></span></th>
+                <th>Thumbnails</th>
+                <th><span class="order-4"></span></th>
+              </tr>
+
+            </thead>
+            <tbody>
+{{#each data}}
+              <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.title}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.category}}</td>
+                <td>{{this.price}}</td>
+                <td>{{this.status}}</td>
+                <td>{{this.stock}}</td>
+                <td>{{this.thumbnails}}</td>
+                <td><span style="overflow: visible; position: relative; width: 110px;">
+                    <a title="Edit details" class="btn btn-sm btn-clean btn-icon btn-icon-md">
+                      <img src="https://img.icons8.com/ultraviolet/16/000000/edit-property.png" /> </a>
+                    <a title="Delete" class="btn btn-sm btn-clean btn-icon btn-icon-md"> <img src="https://img.icons8.com/ultraviolet/16/000000/delete.png" /> </a>
+                  </span></td>
+              </tr>
+{{/each}}
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="./pages/js/index.js"></script>

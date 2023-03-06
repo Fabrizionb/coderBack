@@ -1,0 +1,14 @@
+<div class="container mt-5">
+<form onsubmit="send(event)">
+    <input id="form-title" type="text" name="form-title" placeholder="Título" />
+    <textarea class="w-100"id="form-description" name="form-description" placeholder="Descripción"></textarea>
+    <input id="form-price" type="number" name="form-price" placeholder="Precio" />
+    <input id="form-code" type="text" name="form-code" placeholder="Código de producto" />
+    <input id="form-cat" type="text" name="form-code" placeholder="Categoria" />
+    <input id="form-stock" type="number" name="form-stock" placeholder="Cantidad en stock" />
+    <input id="form-images" type="file" name="form-image" accept="image/*" multiple />
+    <input class="btnReg "type="submit" value="Guardar Producto" />
+</form>
+<p id="producto-id"></p>
+</div>
+<script src="./pages/js/register.js"></script>
