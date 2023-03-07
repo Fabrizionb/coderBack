@@ -163,5 +163,19 @@
         "stock": 30,
         "status": true,
         "category": "Remeras"
+    },
+    {
+        "title": "Libro",
+        "description": "Libro sobre algo cool",
+        "price": "36",
+        "code": "698yui",
+        "category": "Libros",
+        "stock": "50",
+        "status": true,
+        "thumbnails": [
+            "1678134004034-product5.jpg",
+            "1678134004035-product6.jpg"
+        ],
+        "id": "e1444309-7c94-4175-9b68-5995a97559c1"
     }
 ]

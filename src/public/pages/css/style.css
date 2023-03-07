@@ -58,3 +58,27 @@ input[type=button], input[type=submit] {
   background-color: rgb(71, 91, 156);
   color: white;
  }
+
+ .icon {
+  width:35px!important;
+  height: 35px!important;
+ }
+ .icon:hover {
+  transform: scale(1.2);
+ }
+
+ .tabla {
+  background-color: crimson;
+ }
+
+img {
+  height: 10px!important;
+  
+ }
+
+ #ticketTable tbody td:last-child span {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

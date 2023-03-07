@@ -1,0 +1,21 @@
+<div class="container mt-5 mb-5">
+    <div>
+        <h4 class="text-center">Product with id "<span class="text-danger">{{product.id}}</span>"</h4>
+    </div>
+    <div class="card">
+        <div class="bg-image hover-overlay ripple d-flex justify-content-center gap-3" data-mdb-ripple-color="light">
+            <img class="imgProd " src="/img/{{product.thumbnails.[0]}}" />
+            <img class="imgProd " src="/img/{{product.thumbnails.[1]}}" />
+            <a href="#!">
+                <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+            </a>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title ">{{product.title}}</h5>
+            <p class="card-text">{{product.description}}</p>
+            <div class="card-footer text-black"><p>Category: <span>{{product.category}}</span></p></div>
+            <div class="card-footer text-black"><p>Status: <span class="text-primary">{{product.status}}</span></p></div>
+            <div class="card-footer text-black"><p>Stock: <span>{{product.stock}}</span></p></div>
+        </div>
+    </div>
+</div>
