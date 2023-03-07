@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import ProductManager from '../controller/productManager.js'
-import { validateProduct } from '../../data/valid.js'
+import { validateProduct } from '../data/valid.js'
 import { multiUploader } from '../utils/multiUploader.js'
 
 const route = Router()

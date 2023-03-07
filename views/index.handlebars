@@ -1,8 +1,9 @@
+{{!-- <h2>{{saludar user.nombre}}</h2> helper, primero funcion dsp parametro--}}
 <div class="content">
   <div class="p-0 container">
     <div class="card">
       <div class="card-header">
-        <h5 class="card-title text-center">Lista de Productos</h5>
+        {{> title titulo = "Listado de Productos"}}
       </div>
       <div class="card-body">
         <div class="row">
@@ -24,12 +25,12 @@
                 <th class="order-4 text-center">Id</th>
                 <th class="order-4 text-center">Titulo</th>
                 <th class="order-4 text-center">Descripcion</th>
-                <th class="order-4 text-center">Category</th>
-                <th class="order-4 text-center">Price</th>
+                <th class="order-4 text-center">Categoria</th>
+                <th class="order-4 text-center">Precio</th>
                 <th class="order-4 text-center">Status</th>
                 <th class="order-4 text-center">Stock</th>
                 <th class="order-4 text-center">Thumbnails</th>
-                <th class="order-4 text-center">Actions</th>
+                <th class="order-4 text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -51,7 +52,8 @@
                     <a title="Edit product" class="btn btn-sm btn-clean btn-icon btn-icon-md">
                       <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/edit-property.png" /> </a>
                     <a title="Delete product" class="btn btn-sm btn-clean btn-icon btn-icon-md">
-                      <img class="icon" src="https://img.icons8.com/ultraviolet/30/null/recycle-bin.png" /> </a>
+                      <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/recycle-bin.png" /> </a>
+                       
                   </span></td>
               </tr>
               {{/each}}
@@ -62,4 +64,4 @@
     </div>
   </div>
 </div>
-<script src="./pages/js/index.js"></script>
+<script src="../public/pages/js/index.js"></script>
