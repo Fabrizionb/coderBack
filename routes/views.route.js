@@ -37,7 +37,6 @@ route.get('/view/product/:pid', async (req, res) => {
 // Ruta para ver los productos en tiempo real
 route.get('/realtimeproducts', async (req, res) => {
   const data = await productManager.readProducts()
-
   res.render('realTimeProducts', { titulo: 'Listado de Productos', data })
 })
 

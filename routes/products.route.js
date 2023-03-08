@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import ProductManager from '../controller/productManager.js'
-import { validateProduct } from '../data/valid.js'
+import { validateProduct, validarProductPartial } from '../data/valid.js'
 import { multiUploader } from '../utils/multiUploader.js'
 
 const route = Router()
@@ -65,14 +65,15 @@ route.post('/', multiUploader, async (req, res) => {
 
 route.put('/:id', async (req, res) => {
   const updateProduct = req.body
+  const { product } = updateProduct
+  const { id, ...productData } = product
 
   try {
-    const productById = await productManager.getProductsById(updateProduct.id)
-    const isValid = validateProduct(updateProduct)
+    const productById = await productManager.getProductsById(id)
+    const isValid = validarProductPartial(productData)
     if (!productById) res.status(404).json({ error: 'Product not found' })
     if (!isValid) res.status(404).json({ error: 'Invalid Data' })
-    const id = req.params.id
-    const updatedProduct = await productManager.updateProduct(id, updateProduct)
+    const updatedProduct = await productManager.updateProduct(id, productData)
     res.status(200).json(updatedProduct)
   } catch (error) {
     res.status(500).json({ error: error.message })

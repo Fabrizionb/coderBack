@@ -26,9 +26,9 @@
                       <th class="order-4 text-center">Thumbnails</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="tableRealTime">
                     {{#each data}}
-                    <tr>
+                    <tr id={{this.id}}>
                       <td class=" text-center align-middle">{{this.id}}</td>
                       <td class=" text-center align-middle">{{this.title}}</td>
                       <td class=" text-center align-middle">{{this.description}}</td>
@@ -57,11 +57,11 @@
                 <input id="form-title" type="text" name="form-title" placeholder="Título" />
                 <textarea class="w-100" id="form-description" name="form-description"
                   placeholder="Descripción"></textarea>
-                <input id="form-price" type="number" name="form-price" placeholder="Precio" />
-                <input id="form-code" type="text" name="form-code" placeholder="Código de producto" />
-                <input id="form-cat" type="text" name="form-code" placeholder="Categoria" />
-                <input id="form-stock" type="number" name="form-stock" placeholder="Cantidad en stock" />
-                <input id="form-images" type="file" name="form-image" accept="image/*" multiple />
+                <input id="form-price-create" type="number" name="form-price-create" placeholder="Precio" />
+                <input id="form-code-create" type="text" name="form-code-create" placeholder="Código de producto" />
+                <input id="form-cat-create" type="text" name="form-cat-create" placeholder="Categoria" />
+                <input id="form-stock-create" type="number" name="form-stock-create" placeholder="Cantidad en stock" />
+                <input id="form-images-create" type="file" name="form-images-create" accept="image/*" multiple />
                 <input class="btnReg " type="submit" value="Guardar Producto" />
               </form>
               <p id="producto-id"></p>
@@ -75,10 +75,32 @@
             </div>
             <div class="container mt-2 register">
               <form onsubmit="sendDelete(event)">
-                <input id="form-id" type="text" name="form-id" placeholder="Ingrese un id" />
+                <input id="form-id-delete" type="text" name="form-id" placeholder="Ingrese un id" />
                 <input class="btnReg " type="submit" value="Eliminar Producto" />
               </form>
               <p id="delete-id"></p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="containerF modificadorProductos">
+            <div>
+              {{> title titulo = "Modificador de Productos"}}
+            </div>
+            <div class="container mt-2 register">
+              <form onsubmit="sendModify(event)">
+                <input id="form-id-modify" type="text" name="form-id-modify" placeholder="ID" />
+                <input id="form-title-modify" type="text" name="form-title-modify" placeholder="Título" />
+                <textarea class="w-100" id="form-description-modify" name="form-description-modify"
+                  placeholder="Descripción"></textarea>
+                <input id="form-price-modify" type="number" name="form-price-modify" placeholder="Precio" />
+                <input id="form-code-modify" type="text" name="form-code-modify" placeholder="Código de producto" />
+                <input id="form-cat-modify" type="text" name="form-cat-modify" placeholder="Categoria" />
+                <input id="form-stock-modify" type="number" name="form-stock-modify" placeholder="Cantidad en stock" />
+                {{!-- <input id="form-images-modify" type="file" name="form-images-modify" accept="image/*" multiple /> --}}
+                <input class="btnReg " type="submit" value="Guardar Producto" />
+              </form>
+              <p id="producto-modify"></p>
             </div>
           </div>
         </div>
@@ -87,6 +109,4 @@
   </div>
 </div>
 <script src="/socket.io/socket.io.js"></script> 
-<script src="./js/realTime.js"></script> 
-{{!-- <script src="./js/register.js"></script>
-<script  src="./js/delete.js"></script>  --}}
+<script src="/js/realTime.js"></script> 
