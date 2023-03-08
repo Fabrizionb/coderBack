@@ -66,7 +66,7 @@ class ProductManager {
     try {
       const productById = await this.exist(id)
       if (!productById) {
-        throw new Error({ error: 'Product not found' })
+        return null
       } else {
         return productById
       }

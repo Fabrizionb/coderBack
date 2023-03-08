@@ -1,0 +1,92 @@
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-7">
+        <div class="col-12">
+          <div class="card p-4">
+            <div class="card-header">
+              {{> title titulo = "Listado de Productos"}}
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="card-body">
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="my-0 table table-striped" id="ticketTable">
+                  <thead>
+                    <tr>
+                      <th class="order-4 text-center">Id</th>
+                      <th class="order-4 text-center">Titulo</th>
+                      <th class="order-4 text-center">Descripcion</th>
+                      <th class="order-4 text-center">Categoria</th>
+                      <th class="order-4 text-center">Precio</th>
+                      <th class="order-4 text-center">Status</th>
+                      <th class="order-4 text-center">Stock</th>
+                      <th class="order-4 text-center">Thumbnails</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each data}}
+                    <tr>
+                      <td class=" text-center align-middle">{{this.id}}</td>
+                      <td class=" text-center align-middle">{{this.title}}</td>
+                      <td class=" text-center align-middle">{{this.description}}</td>
+                      <td class=" text-center align-middle">{{this.category}}</td>
+                      <td class=" text-center align-middle">{{this.price}}</td>
+                      <td class=" text-center align-middle">{{this.status}}</td>
+                      <td class=" text-center align-middle">{{this.stock}}</td>
+                      <td class=" text-center align-middle">{{this.thumbnails}}</td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4 formsC">
+        <div class="row">
+          <div class="containerF cargadorProductos">
+            <div>
+              {{> title titulo = "Cargador de Productos"}}
+            </div>
+            <div class="container mt-2 register">
+              <form onsubmit="send(event)">
+                <input id="form-title" type="text" name="form-title" placeholder="Título" />
+                <textarea class="w-100" id="form-description" name="form-description"
+                  placeholder="Descripción"></textarea>
+                <input id="form-price" type="number" name="form-price" placeholder="Precio" />
+                <input id="form-code" type="text" name="form-code" placeholder="Código de producto" />
+                <input id="form-cat" type="text" name="form-code" placeholder="Categoria" />
+                <input id="form-stock" type="number" name="form-stock" placeholder="Cantidad en stock" />
+                <input id="form-images" type="file" name="form-image" accept="image/*" multiple />
+                <input class="btnReg " type="submit" value="Guardar Producto" />
+              </form>
+              <p id="producto-id"></p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="containerF eliminadorProductos">
+            <div>
+              {{> title titulo = "Eliminador de Productos"}}
+            </div>
+            <div class="container mt-2 register">
+              <form onsubmit="sendDelete(event)">
+                <input id="form-id" type="text" name="form-id" placeholder="Ingrese un id" />
+                <input class="btnReg " type="submit" value="Eliminar Producto" />
+              </form>
+              <p id="delete-id"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/socket.io/socket.io.js"></script> 
+<script src="./js/realTime.js"></script> 
+{{!-- <script src="./js/register.js"></script>
+<script  src="./js/delete.js"></script>  --}}

@@ -1,8 +1,11 @@
  body,
  html {
    height: 100%;
+   
  }
-
+body{
+  background-color: #f8f9fa!important;
+}
  .hero-image {
    height: 100%;
    background-position: center;
@@ -19,7 +22,6 @@
    transform: translate(-50%, -50%);
    color: white;
  }
-
 
  input,
  select,
@@ -86,9 +88,39 @@
    justify-content: center;
    align-items: center;
  }
- .register{
+ /* .register{
   height: 70vh;
- }
+ } */
 .logo {
   height: 80px!important;
+}
+
+/* .content {
+  min-height: 75vh;
+} */
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.containerF {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.formsC{
+  width: 100%;
+  max-width: 40%;
+  justify-content: flex-end!important;
+}
+
+.notFound {
+background-color: #f8f9fa!important;;
 }

@@ -6,8 +6,16 @@ import cookieParser from 'cookie-parser'
 import { create } from 'express-handlebars'
 import helpers from './lib/helpers.handlebars.js'
 import viewsRoute from './routes/views.route.js'
+import configureSocket from './socket/configure-socket.js'
+
 const { __dirname } = fileDirname(import.meta)
 const app = express()
+
+const port = 8080
+const httpServer = app.listen(port, () => console.log(`escuchando puerto ${port}`))
+
+// config socket.io
+configureSocket(httpServer)
 
 const hbs = create({
   partialsDir: ['views/partials'],
@@ -33,6 +41,3 @@ app.use((err, req, res, next) => {
   res.status(500).json({ err: 'Error' })
   next()
 })
-
-const port = 8080
-app.listen(port, () => console.log(`escuchando puerto ${port}`))

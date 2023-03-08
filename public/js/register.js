@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+const socketRegister = io()
 
 async function send (event) {
   event.preventDefault()
@@ -21,6 +23,18 @@ async function send (event) {
     formData.append('files', file.files[i])
   }
 
+  const obj = {}
+  for (const [key, value] of formData.entries()) {
+    if (obj[key]) {
+      if (!Array.isArray(obj[key])) {
+        obj[key] = [obj[key]]
+      }
+      obj[key].push(value)
+    } else {
+      obj[key] = value
+    }
+  }
+
   const response = await fetch('/api/products', {
     method: 'POST',
     body: formData,
@@ -32,6 +46,7 @@ async function send (event) {
     response.json().then((d) => {
       const p = document.getElementById('producto-id')
       p.innerText = `producto creado ${d.id}`
+      socketRegister.emit('productCreated', obj) // Emit con los datos del nuevo producto creado
     })
   } else {
     response.json().then(formData)
