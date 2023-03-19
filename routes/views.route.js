@@ -1,27 +1,21 @@
-
+// import FileManager from '../controller/fileManager.js'
+// const fileManager = new FileManager('./data/products.json')
 import { Router } from 'express'
-import ProductManager from '../controller/productManager.js'
-
-const productManager = new ProductManager('./data/products.json')
+import { userModel as fileManager } from '../models/user.model.js'
 
 const route = Router()
 
 // Ruta estatica para los productos
 route.get('/', async (req, res) => {
-  const data = await productManager.readProducts()
+  const data = await fileManager.readFile()
 
   res.render('index', { title: 'Listado de Productos', data })
 })
 
-// Ruta vieja para cargar productos
-// route.get('/register', async (req, res) => {
-//   res.render('register', { titulo: 'Listado de Productos' })
-// })
-
 // ruta para ver cada uno de los productos
 route.get('/view/product/:pid', async (req, res) => {
   const pid = req.params.pid
-  const product = await productManager.getProductsById(pid)
+  const product = await fileManager.getEntityById(pid)
   try {
     if (!product) {
       res.render('404', { id: pid })
@@ -36,7 +30,7 @@ route.get('/view/product/:pid', async (req, res) => {
 
 // Ruta para ver los productos en tiempo real
 route.get('/realtimeproducts', async (req, res) => {
-  const data = await productManager.readProducts()
+  const data = await fileManager.readFile()
   res.render('realTimeProducts', { titulo: 'Listado de Productos', data })
 })
 

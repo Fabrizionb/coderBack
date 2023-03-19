@@ -1,4 +1,5 @@
-const productKeys = ['title', 'description', 'price', 'code', 'stock', 'category']
+const productKeys = ['title', 'description', 'price', 'code', 'stock', 'category', 'thumbnails']
+const productKeysPartial = ['title', 'description', 'price', 'code', 'stock', 'category', 'status', 'thumbnails']
 
 export function validateProduct (maybeProduct) {
   const maybeProductKeys = Object.keys(maybeProduct)
@@ -11,7 +12,7 @@ export function validateProduct (maybeProduct) {
 export function validarProductPartial (maybeProductPartial) {
   const maybeProductKeys = Object.keys(maybeProductPartial)
   return (
-    maybeProductKeys.length <= productKeys.length &&
-      maybeProductKeys.every((key) => productKeys.includes(key) && maybeProductPartial[key] !== null && maybeProductPartial[key] !== undefined && maybeProductPartial[key] !== '')
+    maybeProductKeys.length <= productKeysPartial.length &&
+      maybeProductKeys.every((key) => productKeysPartial.includes(key) && maybeProductPartial[key] !== null && maybeProductPartial[key] !== undefined && maybeProductPartial[key] !== '')
   )
 }

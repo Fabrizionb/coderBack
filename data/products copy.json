@@ -1,0 +1,327 @@
+[
+    {
+        "title": "Sudadera Puma",
+        "description": "Comodidad y estilo casual",
+        "price": 472,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc001",
+        "stock": 10,
+        "category": "Sudaderas"
+    },
+    {
+        "title": "Remera Nike",
+        "description": "Máxima comodidad para tus entrenamientos",
+        "price": 174,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc002",
+        "stock": 15,
+        "category": "Remeras"
+    },
+    {
+        "title": "Zapatillas Adidas",
+        "description": "Diseño y confort para tus pies",
+        "price": 381,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc003",
+        "stock": 20,
+        "category": "Zapatillas"
+    },
+    {
+        "title": "Pantalón Under Armour",
+        "description": "Máxima transpirabilidad para tus entrenamientos",
+        "price": 282,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc005",
+        "stock": 30,
+        "category": "Pantalones"
+    },
+    {
+        "title": "Gorra New Era",
+        "description": "Estilo y protección para tus actividades al aire libre",
+        "price": 299,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc006",
+        "stock": 5,
+        "category": "Gorras"
+    },
+    {
+        "title": "Remera Puma",
+        "description": "Máxima comodidad para tus entrenamientos",
+        "price": 436,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc007",
+        "stock": 12,
+        "category": "Remeras"
+    },
+    {
+        "title": "Botines Nike",
+        "description": "Agilidad y precisión para tus partidos",
+        "price": 307,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc008",
+        "stock": 25,
+        "category": "Botines"
+    },
+    {
+        "title": "Campera Adidas",
+        "description": "Protección y diseño para tu día a día",
+        "price": 372,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc009",
+        "stock": 18,
+        "category": "Camperas"
+    },
+    {
+        "title": "Mochila Puma",
+        "description": "Espacio y confort para llevar todo lo que necesitas",
+        "price": 324,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc010",
+        "stock": 18,
+        "category": "Mochilas"
+    },
+    {
+        "title": "Gorra Nike",
+        "description": "Complementa tu outfit con estilo y protección",
+        "price": 234,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc010",
+        "stock": 8,
+        "category": "Gorras"
+    },
+    {
+        "title": "Shorts Under Armour",
+        "description": "Libertad de movimiento para tus entrenamientos",
+        "price": 199,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc011",
+        "stock": 22,
+        "category": "Shorts"
+    },
+    {
+        "title": "Remera Adidas",
+        "description": "Transpirabilidad y comodidad para tus entrenamientos",
+        "price": 401,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc012",
+        "stock": 14,
+        "category": "Remeras"
+    },
+    {
+        "title": "Botines Puma",
+        "description": "Precisión y agilidad para tus partidos",
+        "price": 486,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc013",
+        "stock": 11,
+        "category": "Botines"
+    },
+    {
+        "title": "Gorra Adidas",
+        "description": "Complementa tu outfit con estilo y protección",
+        "price": 268,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc014",
+        "stock": 7,
+        "category": "Gorras"
+    },
+    {
+        "title": "Campera Puma",
+        "description": "Diseño y protección para tus actividades al aire libre",
+        "price": 455,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc015",
+        "stock": 16,
+        "category": "Camperas"
+    },
+    {
+        "title": "Pantalón Nike",
+        "description": "Transpirabilidad y comodidad para tus entrenamientos",
+        "price": 282,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc016",
+        "stock": 20,
+        "category": "Pantalones"
+    },
+    {
+        "title": "Remera Under Armour",
+        "description": "Libertad de movimiento y transpirabilidad para tus entrenamientos",
+        "price": 388,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc017",
+        "stock": 9,
+        "category": "Remeras"
+    },
+    {
+        "title": "Botines Adidas",
+        "description": "Precisión y agilidad para tus partidos",
+        "price": 494,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc018",
+        "stock": 6,
+        "category": "Botines"
+    },
+    {
+        "title": "Remera Nike",
+        "description": "Comodidad y estilo casual para tu día a día",
+        "price": 305,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc019",
+        "stock": 18,
+        "category": "Remeras"
+    },
+    {
+        "title": "Campera Adidas",
+        "description": "Diseño y protección para tus actividades al aire libre",
+        "price": 450,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc020",
+        "stock": 12,
+        "category": "Camperas"
+    },
+    {
+        "title": "Pantalón Under Armour",
+        "description": "Libertad de movimiento y transpirabilidad para tus entrenamientos",
+        "price": 288,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc021",
+        "stock": 19,
+        "category": "Pantalones"
+    },
+    {
+        "title": "Remera Puma",
+        "description": "Comodidad y estilo casual para tu día a día",
+        "price": 161,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc022",
+        "stock": 16,
+        "category": "Remeras"
+    },
+    {
+        "title": "Shorts Adidas",
+        "description": "Libertad de movimiento para tus entrenamientos",
+        "price": 243,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc023",
+        "stock": 25,
+        "category": "Shorts"
+    },
+    {
+        "title": "Gorra Puma",
+        "description": "Complementa tu outfit con estilo y protección",
+        "price": 196,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc024",
+        "stock": 10,
+        "category": "Gorras"
+    },
+    {
+        "title": "Botines Under Armour",
+        "description": "Precisión y agilidad para tus partidos",
+        "price": 455,
+        "thumbnails": [
+            "url1",
+            "url2",
+            "url3"
+        ],
+        "code": "abc025",
+        "stock": 5,
+        "category": "Botines"
+    }
+]
