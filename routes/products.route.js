@@ -1,8 +1,9 @@
 // import FileManager from '../controller/fileManager.js'
 import { Router } from 'express'
 import { validateProduct, validarProductPartial } from '../data/valid.js'
-import { userModel as fileManager } from '../models/user.model.js'
+import { userModel as fileManager, userModel } from '../models/user.model.js'
 import { multiUploader } from '../utils/multiUploader.js'
+import { productModel } from '../models/product.model.js'
 
 const route = Router()
 // const fileManager = new FileManager('./data/products.json')
@@ -10,14 +11,16 @@ const route = Router()
 route.get('/', async (req, res) => {
   const { limit } = req.query
   const products = await fileManager.readFile()
+  const productsMongoose = await productModel.find()
+  console.log('ProductosMongoose desde el get ', productsMongoose)
   try {
-    if (!products) {
+    if (!productsMongoose) {
       res.status(404).json({ error: 'Products not found' })
     } else {
       if (!limit) {
-        res.status(200).json({ products })
+        res.status(200).json({ products: productsMongoose })
       } else {
-        const limited = products.slice(0, limit)
+        const limited = productsMongoose.slice(0, limit)
         res.status(200).json({ limited })
       }
     }
@@ -42,9 +45,10 @@ route.get('/:pid', async (req, res) => {
 
 route.post('/', multiUploader, async (req, res) => {
   const product = req.body
-  console.log(product)
+  // console.log(product)
   const isValid = validateProduct(product)
   const newProduct = { ...product, status: true }
+
   try {
     if (!isValid) {
       res.status(400).json({ error: 'Invalid Data' })
@@ -57,6 +61,9 @@ route.post('/', multiUploader, async (req, res) => {
     const thumbnails = req.files.map(file => file.filename) // Map req.files = array
     const idCreated = await fileManager.addEntity({ ...newProduct, thumbnails }) // Producto spread mas array
     res.status(201).json({ id: idCreated })
+
+    const { _id } = await productModel.create(idCreated)
+    console.log('idMongoose desde el post', _id)
   } catch (error) {
     res.status(400).json({ error: error.message })
   }

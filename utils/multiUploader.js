@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 export const multiUploader = multer({
   storage,
   limits: {
-    files: 5, // número máximo de archivos permitidos
-    fileSize: 1024 * 1024 * 5 // tamaño máximo de archivo permitido (5MB)
+    // files: 5, // número máximo de archivos permitidos
+    // fileSize: 1024 * 1024 * 5 // tamaño máximo de archivo permitido (5MB)
   }
 }).array('files', 5)

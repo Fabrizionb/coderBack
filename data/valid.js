@@ -1,4 +1,4 @@
-const productKeys = ['title', 'description', 'price', 'code', 'stock', 'category', 'thumbnails']
+const productKeys = ['title', 'description', 'price', 'code', 'stock', 'category']
 const productKeysPartial = ['title', 'description', 'price', 'code', 'stock', 'category', 'status', 'thumbnails']
 
 export function validateProduct (maybeProduct) {
