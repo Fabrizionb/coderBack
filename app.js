@@ -7,7 +7,7 @@ import { create } from 'express-handlebars'
 import helpers from './lib/helpers.handlebars.js'
 import viewsRoute from './routes/views.route.js'
 import configureSocket from './socket/configure-socket.js'
-import mongoose from 'mongoose'
+import { mongoose } from 'mongoose'
 
 const { __dirname } = fileDirname(import.meta)
 const app = express()

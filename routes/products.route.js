@@ -1,38 +1,43 @@
-// import FileManager from '../controller/fileManager.js'
+// const productManager = new ProductManager('./data/products.json')
+// import ProductManager from '../controller/productManager.js'
+// import { validateProduct, validarProductPartial } from '../data/valid.js'
 import { Router } from 'express'
-import { validateProduct, validarProductPartial } from '../data/valid.js'
-import { userModel as fileManager, userModel } from '../models/user.model.js'
 import { multiUploader } from '../utils/multiUploader.js'
 import { productModel } from '../models/product.model.js'
-
 const route = Router()
-// const fileManager = new FileManager('./data/products.json')
 
 route.get('/', async (req, res) => {
-  const { limit } = req.query
-  const products = await fileManager.readFile()
-  const productsMongoose = await productModel.find()
-  console.log('ProductosMongoose desde el get ', productsMongoose)
+  const { limit, skip, ...query } = req.query
+
+  // const products = await productManager.readProducts()
   try {
-    if (!productsMongoose) {
-      res.status(404).json({ error: 'Products not found' })
-    } else {
-      if (!limit) {
-        res.status(200).json({ products: productsMongoose })
-      } else {
-        const limited = productsMongoose.slice(0, limit)
-        res.status(200).json({ limited })
-      }
-    }
+    const products = await productModel
+      .find(query)
+      .skip(Number(skip ?? 0))
+      .limit(Number(limit ?? 10))
+    res.status(200).json({ products })
+    // if (!products) {
+    //   res.status(404).json({ error: 'Products not found' })
+    // } else {
+    //   if (!limit) {
+    //     res.status(200).json({ products })
+    //   } else {
+    //     // const limited = products.slice(0, limit)
+    //     const limited = await productModel.find().limit(parseInt(limit))
+    //     res.status(200).json({ limited })
+    //   }
+    // }
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
 route.get('/:pid', async (req, res) => {
-  const pid = req.params.pid
+  const { pid } = req.params
+
   try {
-    const product = await fileManager.getEntityById(pid)
+    // const product = await productManager.getProductsById(pid)
+    const product = await productModel.findOne({ _id: pid })
     if (!product) {
       res.status(404).json({ error: `Product with id ${pid} not found` })
       return
@@ -45,54 +50,54 @@ route.get('/:pid', async (req, res) => {
 
 route.post('/', multiUploader, async (req, res) => {
   const product = req.body
-  // console.log(product)
-  const isValid = validateProduct(product)
-  const newProduct = { ...product, status: true }
+  // const isValid = validateProduct(product)
 
   try {
-    if (!isValid) {
-      res.status(400).json({ error: 'Invalid Data' })
-      return
-    }
+    // if (!isValid) {
+    //   res.status(400).json({ error: 'Invalid Data' })
+    //   return
+    // }
+
     if (!product) {
       res.status(400).json({ error: 'Product missing' })
       return
     }
-    const thumbnails = req.files.map(file => file.filename) // Map req.files = array
-    const idCreated = await fileManager.addEntity({ ...newProduct, thumbnails }) // Producto spread mas array
-    res.status(201).json({ id: idCreated })
-
-    const { _id } = await productModel.create(idCreated)
-    console.log('idMongoose desde el post', _id)
+    const thumbnails = req.files.map(file => file.filename)
+    const newProduct = { ...product, status: true, thumbnails }
+    const createdProduct = await productModel.create(newProduct)
+    res.status(201).json({ id: createdProduct._id })
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
 })
 
 route.put('/:id', async (req, res) => {
+  const { id } = req.params
   const updateProduct = req.body
-  const { id, ...productWithoutId } = updateProduct
   try {
-    const productById = await fileManager.getEntityById(id)
-    const isValid = validarProductPartial(productWithoutId)
+    // const productById = await productManager.getProductsById(id)
+    const productById = await productModel.find({ _id: id })
+    // const isValid = validarProductPartial(productData)
     if (!productById) res.status(404).json({ error: 'Product not found' })
-    if (!isValid) res.status(404).json({ error: 'Invalid Data' })
-    const updatedProduct = await fileManager.updateEntity(id, productWithoutId)
-    res.status(200).json(updatedProduct)
+    // if (!isValid) res.status(404).json({ error: 'Invalid Data' })
+    // const updatedProduct = await productManager.updateProduct(id, productData)
+    const result = await productModel.updateOne({ _id: id }, updateProduct)
+    res.status(200).json(result)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
 route.delete('/:pid', async (req, res) => {
-  const pid = req.params.pid
+  const { pid } = req.params
   try {
-    const product = await fileManager.getEntityById(pid)
-    if (!product) {
+    const productById = await productModel.find({ _id: pid })
+    if (!productById) {
       res.status(404).json({ error: 'Product not found' })
       return
     }
-    await fileManager.deleteEntity(pid)
+    // await productManager.deleteProduct(pid)
+    await productModel.deleteOne({ _id: pid })
     res.status(200).json({ message: 'Product deleted successfully' })
   } catch (error) {
     res.status(500).json({ error: error.message })

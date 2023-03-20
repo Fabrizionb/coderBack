@@ -10,9 +10,7 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true },
   stock: { type: Number, required: true },
   status: { type: Boolean, required: true },
-  thumbnails: { type: Array, required: true },
-  id: { type: String, required: true, unique: true }
-
+  thumbnails: { type: Array, required: true }
 })
 
 export const productModel = mongoose.model(productsCollection, productSchema)
