@@ -1,28 +1,32 @@
 // const productManager = new ProductManager('./data/products.json')
 // import ProductManager from '../controller/productManager.js'
-import { Router } from 'express'
 // import { validateProduct, validarProductPartial } from '../data/valid.js'
+import { Router } from 'express'
 import { multiUploader } from '../utils/multiUploader.js'
 import { productModel } from '../models/product.model.js'
 const route = Router()
 
 route.get('/', async (req, res) => {
-  const { limit } = req.query
-  const query = req.query
+  const { limit, skip, ...query } = req.query
+
   // const products = await productManager.readProducts()
-  const products = await productModel.find(query)
   try {
-    if (!products) {
-      res.status(404).json({ error: 'Products not found' })
-    } else {
-      if (!limit) {
-        res.status(200).json({ products })
-      } else {
-        // const limited = products.slice(0, limit)
-        const limited = await productModel.find().limit(parseInt(limit))
-        res.status(200).json({ limited })
-      }
-    }
+    const products = await productModel
+      .find(query)
+      .skip(Number(skip ?? 0))
+      .limit(Number(limit ?? 10))
+    res.status(200).json({ products })
+    // if (!products) {
+    //   res.status(404).json({ error: 'Products not found' })
+    // } else {
+    //   if (!limit) {
+    //     res.status(200).json({ products })
+    //   } else {
+    //     // const limited = products.slice(0, limit)
+    //     const limited = await productModel.find().limit(parseInt(limit))
+    //     res.status(200).json({ limited })
+    //   }
+    // }
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
