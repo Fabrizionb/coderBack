@@ -69,6 +69,7 @@ async function sendModify(event) {
   const category = document.getElementById("form-cat-modify").value;
   const stock = document.getElementById("form-stock-modify").value;
   const id = document.getElementById("form-id-modify").value;
+  const status = document.getElementById("form-status-modify").value;
 
   const formData = new FormData();
   formData.append("title", title);
@@ -78,6 +79,7 @@ async function sendModify(event) {
   formData.append("category", category);
   formData.append("stock", stock);
   formData.append("id", id);
+  formData.append("status", status);
 
   const product = {};
   for (const [key, value] of formData.entries()) {
@@ -95,7 +97,6 @@ async function sendModify(event) {
     id,
     product,
   };
-  console.log("segundo", bodyData);
 
   const response = await fetch(`/api/products/${id}`, {
     method: "PUT",
@@ -108,8 +109,8 @@ async function sendModify(event) {
   if (response.ok) {
     response.json().then((d) => {
       const p = document.getElementById("producto-modify");
-      p.innerText = `producto modificado ${d.id}`;
-      socket.emit("productModify", product); // Emit con los datos del nuevo producto creado
+      p.innerText = `producto modificado ${id}`;
+      socket.emit("productModify", product, id); // Emit con los datos del nuevo producto creado
       console.log("productModify emited");
     });
   } else {
@@ -124,7 +125,6 @@ async function sendModify(event) {
   document.getElementById("form-code-modify").value = "";
   document.getElementById("form-cat-modify").value = "";
   document.getElementById("form-stock-modify").value = "";
-  document.getElementById("form-images-modify").value = "";
   document.getElementById("form-id-modify").value = "";
 }
 
@@ -139,7 +139,6 @@ async function sendDelete(event) {
   if (response.ok) {
     const p = document.getElementById("delete-id");
     p.innerText = `producto eliminado ${id}`;
-    console.log("Emitted productDeleted with ID:", id);
     socket.emit("productDeleted", id); // Emit del producto eliminado
   } else {
     const p = document.getElementById("delete-id");
@@ -156,15 +155,33 @@ socket.on("productDeletedServer", (id) => {
   rowToRemove.remove();
 });
 
-socket.on("productCreatedServer", (updateData, id) => {
-  console.log("productCreatedServer escuchado", updateData, id);
+socket.on("productModifyServer", (updateData, id) => {
+  const row = document.querySelector(`#tableRealTime tr[id='${id}']`);
+  console.log("desde el socket", row);
+  if (row) {
+    const thumbnail = row.querySelectorAll("td")[8].innerHTML;
+    const { title, description, price, code, category, stock, status } =
+      updateData;
+    row.querySelector(":nth-child(2)").textContent = title;
+    row.querySelector(":nth-child(3)").textContent = description;
+    row.querySelector(":nth-child(4)").textContent = category;
+    row.querySelector(":nth-child(5)").textContent = price;
+    row.querySelector(":nth-child(6)").textContent = status;
+    row.querySelector(":nth-child(7)").textContent = code;
+    row.querySelector(":nth-child(8)").textContent = stock;
+    const thumbnailColumn = row.querySelector(":nth-child(9)");
+    thumbnailColumn.innerHTML = thumbnailColumn.innerHTML + thumbnail;
+    row.querySelector(":nth-child(10) a").href = `/view/product/${id}`;
+  }
+});
 
-  const tbody = document.querySelector('tbody');
-  const row = document.createElement('tr');
-  row.id = {id}
+socket.on("productCreatedServer", (updateData, id) => {
+  const tbody = document.querySelector("tbody");
+  const row = document.createElement("tr");
+  row.id = { id };
 
   const { title, description, price, code, category, stock } = updateData;
-  
+
   row.innerHTML = `
     <td class=" text-center align-middle">${id}</td>
     <td class=" text-center align-middle">${title}</td>
@@ -175,19 +192,17 @@ socket.on("productCreatedServer", (updateData, id) => {
     <td class=" text-center align-middle">${code}</td>
     <td class=" text-center align-middle">${stock}</td>
     <td class=" text-center align-middle">Loading</td>
-    <td class=" text-center align-middle"><span
-                    style="overflow: visible; position: relative; width: 110px;">
-                    <a title="View product" class="btn btn-sm btn-clean btn-icon btn-icon-md"
-                      href="/view/product/${id}">
-                      <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/visible.png" /> </a>
-                    </span></td>
+    <td class=" text-center align-middle">
+    <span  style="overflow: visible; position: relative; width: 110px;">
+      <a title="View product" class="btn btn-sm btn-clean btn-icon btn-icon-md"
+        href="/view/product/${id}">
+        <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/visible.png" />
+      </a>
+    </span>
+    </td>
   `;
-  
-  
-
   tbody.appendChild(row);
 });
-
 // Sintaxis
 // socket.emit('message')
 // Los de abajo listeners
