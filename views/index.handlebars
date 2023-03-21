@@ -30,29 +30,30 @@
                 <th class="order-4 text-center">Status</th>
                 <th class="order-4 text-center">Stock</th>
                 <th class="order-4 text-center">Thumbnails</th>
-                <th class="order-4 text-center">Acciones</th>
+                <th class="order-4 text-center">View Product</th>
               </tr>
             </thead>
             <tbody>
               {{#each data}}
               <tr>
-                <td class=" text-center align-middle">{{this.id}}</td>
+                <td class=" text-center align-middle">{{this._id}}</td>
                 <td class=" text-center align-middle">{{this.title}}</td>
                 <td class=" text-center align-middle">{{this.description}}</td>
                 <td class=" text-center align-middle">{{this.category}}</td>
                 <td class=" text-center align-middle">{{this.price}}</td>
                 <td class=" text-center align-middle">{{this.status}}</td>
                 <td class=" text-center align-middle">{{this.stock}}</td>
-                <td class=" text-center align-middle">{{this.thumbnails}}</td>
+                <td class="text-center align-middle">
+                  {{#each this.thumbnails}}
+                  <a href="/img/{{this}}" target="_blank"><img src="/img/{{this}}" alt="Thumbnail of product"></a>
+                  {{/each}}
+                </td>
                 <td class=" text-center align-middle"><span
                     style="overflow: visible; position: relative; width: 110px;">
                     <a title="View product" class="btn btn-sm btn-clean btn-icon btn-icon-md"
-                      href="/view/product/{{this.id}}">
+                      href="/view/product/{{this._id}}">
                       <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/visible.png" /> </a>
-                    <a title="Edit product" class="btn btn-sm btn-clean btn-icon btn-icon-md">
-                      <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/edit-property.png" /> </a>
-                    <a title="Delete product" class="btn btn-sm btn-clean btn-icon btn-icon-md">
-                      <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/recycle-bin.png" /> </a>
+                    
                   </span></td>
               </tr>
               {{/each}}
@@ -64,4 +65,3 @@
   </div>
 </div>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/index.js"></script>

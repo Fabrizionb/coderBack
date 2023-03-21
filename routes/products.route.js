@@ -1,9 +1,9 @@
-// const productManager = new ProductManager('./data/products.json')
 // import ProductManager from '../controller/productManager.js'
 // import { validateProduct, validarProductPartial } from '../data/valid.js'
 import { Router } from 'express'
 import { multiUploader } from '../utils/multiUploader.js'
 import { productModel } from '../models/product.model.js'
+// const productManager = new ProductManager('./data/products.json')
 const route = Router()
 
 route.get('/', async (req, res) => {
@@ -91,11 +91,16 @@ route.put('/:id', async (req, res) => {
 route.delete('/:pid', async (req, res) => {
   const { pid } = req.params
   try {
-    const productById = await productModel.find({ _id: pid })
-    if (!productById) {
-      res.status(404).json({ error: 'Product not found' })
-      return
-    }
+    // const productByIdCloud = await productModel.find({ _id: pid })
+    // const productByIdLocale = await productManager.getProductsById(pid)
+    // if (!productByIdCloud) {
+    //   res.status(404).json({ error: 'Product not found in Cloud' })
+    //   return
+    // }
+    // if (!productByIdLocale) {
+    //   res.status(404).json({ error: 'Product not found in Locale' })
+    //   return
+    // }
     // await productManager.deleteProduct(pid)
     await productModel.deleteOne({ _id: pid })
     res.status(200).json({ message: 'Product deleted successfully' })

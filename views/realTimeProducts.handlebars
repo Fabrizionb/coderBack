@@ -22,21 +22,34 @@
                       <th class="order-4 text-center">Categoria</th>
                       <th class="order-4 text-center">Precio</th>
                       <th class="order-4 text-center">Status</th>
+                      <th class="order-4 text-center">Code</th>
                       <th class="order-4 text-center">Stock</th>
                       <th class="order-4 text-center">Thumbnails</th>
+                      <th class="order-4 text-center">View Product</th>
                     </tr>
                   </thead>
                   <tbody id="tableRealTime">
                     {{#each data}}
-                    <tr id={{this.id}}>
-                      <td class=" text-center align-middle">{{this.id}}</td>
+                    <tr id={{this._id}}>
+                      <td class=" text-center align-middle">{{this._id}}</td>
                       <td class=" text-center align-middle">{{this.title}}</td>
                       <td class=" text-center align-middle">{{this.description}}</td>
                       <td class=" text-center align-middle">{{this.category}}</td>
                       <td class=" text-center align-middle">{{this.price}}</td>
                       <td class=" text-center align-middle">{{this.status}}</td>
+                      <td class=" text-center align-middle">{{this.code}}</td>
                       <td class=" text-center align-middle">{{this.stock}}</td>
-                      <td class=" text-center align-middle">{{this.thumbnails}}</td>
+                      <td class="text-center align-middle">
+                  {{#each this.thumbnails}}
+                  <a href="/img/{{this}}" target="_blank"><img src="/img/{{this}}" alt="Thumbnail of product"></a>
+                  {{/each}}
+                </td>
+                 <td class=" text-center align-middle"><span
+                    style="overflow: visible; position: relative; width: 110px;">
+                    <a title="View product" class="btn btn-sm btn-clean btn-icon btn-icon-md"
+                      href="/view/product/{{this._id}}">
+                      <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/visible.png" /> </a>
+                    </span></td>
                     </tr>
                     {{/each}}
                   </tbody>
@@ -64,7 +77,7 @@
                 <input id="form-images-create" type="file" name="form-images-create" accept="image/*" multiple />
                 <input class="btnReg " type="submit" value="Guardar Producto" />
               </form>
-              <p id="producto-id"></p>
+              <p id="producto-id-create"></p>
             </div>
           </div>
         </div>
@@ -75,7 +88,7 @@
             </div>
             <div class="container mt-2 register">
               <form onsubmit="sendDelete(event)">
-                <input id="form-id-delete" type="text" name="form-id" placeholder="Ingrese un id" />
+                <input id="form-id-delete" type="text" name="form-id-delete" placeholder="Ingrese un id" />
                 <input class="btnReg " type="submit" value="Eliminar Producto" />
               </form>
               <p id="delete-id"></p>
@@ -97,7 +110,6 @@
                 <input id="form-code-modify" type="text" name="form-code-modify" placeholder="Código de producto" />
                 <input id="form-cat-modify" type="text" name="form-cat-modify" placeholder="Categoria" />
                 <input id="form-stock-modify" type="number" name="form-stock-modify" placeholder="Cantidad en stock" />
-                {{!-- <input id="form-images-modify" type="file" name="form-images-modify" accept="image/*" multiple /> --}}
                 <input class="btnReg " type="submit" value="Guardar Producto" />
               </form>
               <p id="producto-modify"></p>
