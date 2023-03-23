@@ -7,13 +7,15 @@ import { create } from 'express-handlebars'
 import helpers from './lib/helpers.handlebars.js'
 import viewsRoute from './routes/views.route.js'
 import configureSocket from './socket/configure-socket.js'
-import { mongoose } from 'mongoose'
+import mongoose from 'mongoose'
+import config from './data.js'
+
+const { PORT, MONGO_URI } = config
 
 const { __dirname } = fileDirname(import.meta)
 const app = express()
 
-const port = 8080
-const httpServer = app.listen(port, () => console.log(`escuchando puerto ${port}`))
+const httpServer = app.listen(PORT, () => console.log(`escuchando puerto ${PORT}`))
 
 // config socket.io
 configureSocket(httpServer)
@@ -37,15 +39,18 @@ app.use('/api/cart', cartRoute)
 app.use(express.static(__dirname + '/public'))
 app.use('/', viewsRoute)
 
-// Coneccion de Mongoose
-mongoose.connect('mongodb+srv://fabrizio1007:Artura10@backendhouse.1cpbsvy.mongodb.net/mongoose?retryWrites=true&w=majority', {
+// Mongoose
+mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
 
 // Midleware de errores
 app.use((err, req, res, next) => {
-  console.error({ err })
-  res.status(500).json({ err: 'Error' })
-  next()
+  if (err.message) {
+    return res.status(400).send({
+      error: err.message
+    })
+  }
+  res.status(500).send({ err })
 })

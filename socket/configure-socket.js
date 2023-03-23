@@ -1,28 +1,25 @@
-/* eslint-disable */
-// import ProductManager from '../controller/productManager.js'
-import { productModel } from "../models/product.model.js";
-import { Server } from "socket.io";
-export let socketServer;
-export default function configureSocket(httpServer) {
-  socketServer = new Server(httpServer);
+import { Server } from 'socket.io'
+export let socketServer
+export default function configureSocket (httpServer) {
+  socketServer = new Server(httpServer)
 
-  socketServer.on("connection", (socket) => {
-    console.log("Client connected with id:", socket.id);
+  socketServer.on('connection', (socket) => {
+    console.log('Client connected with id:', socket.id)
 
-    socket.on("productDeleted", (id) => {
-      socketServer.emit("productDeletedServer", id);
-    });
+    socket.on('productDeleted', (id) => {
+      socketServer.emit('productDeletedServer', id)
+    })
 
     // Escuchar el mensaje 'productCreatedServer'
-    socket.on("productCreated", (updateData, id) => {
-      socketServer.emit("productCreatedServer", updateData, id);
-    });
+    socket.on('productCreated', (updateData, id) => {
+      socketServer.emit('productCreatedServer', updateData, id)
+    })
 
     // Escuchar el mensaje 'productModifyServer'
-    socket.on("productModify", (updateData, id) => {
-      socketServer.emit("productModifyServer", updateData, id);
-    });
-  });
+    socket.on('productModify', (updateData, id) => {
+      socketServer.emit('productModifyServer', updateData, id)
+    })
+  })
 }
 
 // sintaxis

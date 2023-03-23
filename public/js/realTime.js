@@ -68,7 +68,7 @@ async function sendModify(event) {
   const code = document.getElementById("form-code-modify").value;
   const category = document.getElementById("form-cat-modify").value;
   const stock = document.getElementById("form-stock-modify").value;
-  const id = document.getElementById("form-id-modify").value;
+  const _id = document.getElementById("form-id-modify").value;
   const status = document.getElementById("form-status-modify").value;
 
   const formData = new FormData();
@@ -78,7 +78,6 @@ async function sendModify(event) {
   formData.append("code", code);
   formData.append("category", category);
   formData.append("stock", stock);
-  formData.append("id", id);
   formData.append("status", status);
 
   const product = {};
@@ -94,11 +93,11 @@ async function sendModify(event) {
   }
 
   const bodyData = {
-    id,
+    _id,
     product,
   };
 
-  const response = await fetch(`/api/products/${id}`, {
+  const response = await fetch(`/api/products/${_id}`, {
     method: "PUT",
     body: JSON.stringify(bodyData),
     headers: {
@@ -109,13 +108,13 @@ async function sendModify(event) {
   if (response.ok) {
     response.json().then((d) => {
       const p = document.getElementById("producto-modify");
-      p.innerText = `producto modificado ${id}`;
-      socket.emit("productModify", product, id); // Emit con los datos del nuevo producto creado
+      p.innerText = `producto modificado ${_id}`;
+      socket.emit("productModify", product, _id); // Emit con los datos del nuevo producto creado
       console.log("productModify emited");
     });
   } else {
-    const p = document.getElementById("delete-id");
-    p.innerText = `producto con ${id} no encontrado`;
+    const p = document.getElementById("producto-modify");
+    p.innerText = `producto con ${_id} no encontrado`;
   }
 
   // Borrar los valores de los campos del formulario
@@ -157,7 +156,6 @@ socket.on("productDeletedServer", (id) => {
 
 socket.on("productModifyServer", (updateData, id) => {
   const row = document.querySelector(`#tableRealTime tr[id='${id}']`);
-  console.log("desde el socket", row);
   if (row) {
     const thumbnail = row.querySelectorAll("td")[8].innerHTML;
     const { title, description, price, code, category, stock, status } =
@@ -203,15 +201,3 @@ socket.on("productCreatedServer", (updateData, id) => {
   `;
   tbody.appendChild(row);
 });
-// Sintaxis
-// socket.emit('message')
-// Los de abajo listeners
-// socket.on('evento_para_socket_individual', data => {
-//   console.log(data)
-// })
-// socket.on('evento_para_todos_menos_actual', data => {
-//   console.log(data)
-// })
-// socket.on('evento_para_todos', data => {
-//   console.log(data)
-// })

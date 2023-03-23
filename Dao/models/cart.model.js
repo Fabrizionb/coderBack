@@ -12,4 +12,5 @@ const cartSchema = new mongoose.Schema({
   products: { type: [productSchema], required: true }
 })
 
-export const cartModel = mongoose.model(cartCollection, cartSchema)
+const cartModel = mongoose.model(cartCollection, cartSchema)
+export default cartModel

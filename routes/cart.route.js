@@ -1,75 +1,81 @@
 import { Router } from 'express'
-// import CartManager from '../controller/cartManager.js'
-import { cartModel } from '../models/cart.model.js'
+import cartManager from '../Dao/controller/cart.manager.js'
 
 const route = Router()
-// const cartManager = new CartManager('./data/cart.json')
 
-route.post('/', async (req, res) => {
+route.get('/', async (req, res, next) => {
   try {
-    // const carts = await cartManager.readCart()
-    const carts = await cartModel.create([{}])
-    res.status(200).json({ carts })
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
-
-route.get('/', async (req, res) => {
-  try {
-    // const carts = await cartManager.readCart()
-    const carts = await cartModel.find()
+    const carts = await cartManager.find()
     if (!carts) {
       res.status(404).json({ error: 'Carts not found' })
     } else {
       res.status(200).json(carts)
     }
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    next(error)
   }
 })
 
-route.get('/:id', async (req, res) => {
+route.get('/:id', async (req, res, next) => {
   const { id } = req.params
-
   try {
-    // const cart = await cartManager.getCartById(id)
-    const cart = await cartModel.findOne({ _id: id })
+    const cart = await cartManager.findOne({ _id: id })
     if (!cart) {
       res.status(404).json({ error: `Cart with id ${id} not found` })
+      return
     } else {
       res.status(200).json(cart)
     }
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    next(error)
   }
 })
 
-route.post('/:cid/product/:pid', async (req, res) => {
+route.post('/', async (req, res, next) => {
+  try {
+    const carts = await cartManager.create([{}])
+    res.status(200).json({ carts })
+  } catch (error) {
+    next(error)
+  }
+})
+
+route.delete('/:id', async (req, res, next) => {
+  const { id } = req.params
+  try {
+    const cart = await cartManager.findOne({ _id: id })
+    if (!cart) {
+      res.status(404).json({ error: `Cart with id ${id} not found` })
+      return
+    } else {
+      await cartManager.deleteOne(id)
+      res.status(200).json({ message: `Cart with id ${id} deleted` })
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+route.post('/:cid/product/:pid', async (req, res, next) => {
   const { cid } = req.params
   const { pid } = req.params
 
   try {
-    const cart = await cartModel.findOne({ _id: cid })
+    const cart = await cartManager.findOne({ _id: cid })
+    const product = cart.products.find(product => product._id.toString() === pid)
 
-    if (!cart) {
-      return res.status(404).json({ error: `Cart with id ${cid} not found` })
-    }
-
-    const productInCart = cart.products.find(product => product._id.toString() === pid)
-
-    if (productInCart) {
-      console.log('Product found in cart: +1 to quantity', productInCart)
-      await cartModel.updateOne({ _id: cid, 'products._id': pid }, { $inc: { 'products.$.quantity': 1 } })
+    if (!product) {
+      const newProduct = { _id: pid, quantity: 1 }
+      cart.products.push(newProduct)
+      await cartManager.findOneAndUpdate({ _id: cid }, cart)
+      res.status(201).json(newProduct)
     } else {
-      console.log('Product not found in cart:')
-      await cartModel.updateOne({ _id: cid }, { $push: { products: { _id: pid, quantity: 1 } } })
+      product.quantity += 1
+      await cartManager.findOneAndUpdate({ _id: cid }, cart)
+      res.status(201).json(product)
     }
-
-    res.status(201).json(cart)
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    next(error)
   }
 })
-
 export default route

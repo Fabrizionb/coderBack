@@ -1,30 +1,27 @@
-// import FileManager from '../controller/fileManager.js'
-// const fileManager = new FileManager('./data/products.json')
-// import { userModel as fileManager } from '../models/user.model.js'
 import { Router } from 'express'
-import { productModel } from '../models/product.model.js'
+import productManager from '../Dao/controller/product.manager.js'
 
 const route = Router()
 
 // Ruta estatica para los productos
-route.get('/', async (req, res) => {
-  // const data = await fileManager.readFile()
-  const data = await productModel.find()
-  const products = data.map(product => {
-    return {
-      ...product._doc,
-      _id: product._doc._id.toString()
+
+route.get('/', async (req, res, next) => {
+  const data = await productManager.find()
+  try {
+    if (!data) {
+      res.status(404).json({ error: 'Products not found' })
+    } else {
+      res.render('index', { title: 'Listado de Productos', data })
     }
-  })
-  res.render('index', { title: 'Listado de Productos', data: products })
+  } catch (error) {
+    next(error)
+  }
 })
 
 // ruta para ver cada uno de los productos
-route.get('/view/product/:pid', async (req, res) => {
+route.get('/view/product/:pid', async (req, res, next) => {
   const { pid } = req.params
-  const data = await productModel.findOne({ _id: pid })
-
-  console.log('data cruda', data)
+  const data = await productManager.findOne({ _id: pid })
   try {
     if (!data) {
       res.render('404', { id: pid })
@@ -34,25 +31,21 @@ route.get('/view/product/:pid', async (req, res) => {
         ...data._doc,
         _id: data._doc._id.toString()
       }
-      console.log('data cocinada', product)
       res.render('product', { titulo: 'Listado de Productos', data: product })
     }
   } catch (error) {
-    throw new Error(error.message)
+    next(error)
   }
 })
 
 // Ruta para ver los productos en tiempo real
-route.get('/realtimeproducts', async (req, res) => {
-  // const data = await fileManager.readFile()
-  const data = await productModel.find()
-  const products = data.map(product => {
-    return {
-      ...product._doc,
-      _id: product._doc._id.toString()
-    }
-  })
-  res.render('realTimeProducts', { titulo: 'Listado de Productos', data: products })
+route.get('/realtimeproducts', async (req, res, next) => {
+  const data = await productManager.find()
+  res.render('realTimeProducts', { titulo: 'Listado de Productos', data })
 })
 
+// Ruta para ver el chat en tiempo real
+route.get('/chat', async (req, res) => {
+  res.render('chat', { titulo: 'Chat' })
+})
 export default route
