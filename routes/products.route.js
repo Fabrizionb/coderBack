@@ -50,6 +50,7 @@ route.post('/', multiUploader, async (req, res, next) => {
 })
 
 route.put('/:id', async (req, res, next) => {
+  // Aca llega el body y el id bien
   const { id } = req.params
   const updateProduct = req.body
   try {

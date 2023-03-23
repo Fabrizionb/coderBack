@@ -79,7 +79,6 @@ async function sendModify(event) {
   formData.append("category", category);
   formData.append("stock", stock);
   formData.append("status", status);
-
   const product = {};
   for (const [key, value] of formData.entries()) {
     if (product[key]) {
@@ -92,14 +91,12 @@ async function sendModify(event) {
     }
   }
 
-  const bodyData = {
-    _id,
-    product,
-  };
+  const bodyData = product;
+  console.log(bodyData)
 
   const response = await fetch(`/api/products/${_id}`, {
     method: "PUT",
-    body: JSON.stringify(bodyData),
+    body: JSON.stringify(bodyData.product),
     headers: {
       "Content-Type": "application/json",
     },
@@ -168,7 +165,7 @@ socket.on("productModifyServer", (updateData, id) => {
     row.querySelector(":nth-child(7)").textContent = code;
     row.querySelector(":nth-child(8)").textContent = stock;
     const thumbnailColumn = row.querySelector(":nth-child(9)");
-    thumbnailColumn.innerHTML = thumbnailColumn.innerHTML + thumbnail;
+    thumbnailColumn.innerHTML = thumbnail;
     row.querySelector(":nth-child(10) a").href = `/view/product/${id}`;
   }
 });

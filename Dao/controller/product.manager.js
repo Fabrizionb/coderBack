@@ -20,8 +20,9 @@ class Products {
     return this.#persistencia.create(product)
   }
 
-  async findOneAndUpdate (id, updateProduct) {
-    return this.#persistencia.findOneAndUpdate(id, updateProduct)
+  async findOneAndUpdate ({ _id }, updateProduct) {
+    // Aca llega el body y el id bien
+    return this.#persistencia.findOneAndUpdate({ _id }, updateProduct)
   }
 
   async deleteOne (id) {
