@@ -9,19 +9,7 @@ class Chats {
   }
 
   async getAll () {
-    return this.#persistencia.getAll()
-  }
-
-  async create (cart) {
-    return this.#persistencia.create(cart)
-  }
-
-  async update (id, cart) {
-    return this.#persistencia.update(id, cart)
-  }
-
-  async delete (id) {
-    return this.#persistencia.delete(id)
+    return this.#persistencia.find()
   }
 }
 

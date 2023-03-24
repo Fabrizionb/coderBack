@@ -1,4 +1,5 @@
 import { Server } from 'socket.io'
+import { chatModel } from '../Dao/models/chat.model.js'
 export let socketServer
 export default function configureSocket (httpServer) {
   socketServer = new Server(httpServer)
@@ -18,6 +19,20 @@ export default function configureSocket (httpServer) {
     // Escuchar el mensaje 'productModifyServer'
     socket.on('productModify', (updateData, id) => {
       socketServer.emit('productModifyServer', updateData, id)
+    })
+
+    // Chat / Mensajes
+    socket.on('message', async (data) => {
+      const { user, message } = data
+      const newMessage = new chatModel({ user, message })
+      await newMessage.save()
+      socketServer.emit('messageLogs', await chatModel.find())
+    })
+
+    socket.on('new_user', async (data) => {
+      const messages = await chatModel.find({ user: data })
+      socket.emit('messageLogs', messages)
+      socket.broadcast.emit('user_connected', data)
     })
   })
 }

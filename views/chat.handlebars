@@ -1,3 +1,17 @@
-<div>
-    <h1>{{titulo}}</h1>
+<div class="container chatBox mt-5">
+  <div class="mt-5">
+    <h1 class="text-center">{{titulo}}</h1>
+  </div>
+
+  <div class="row border p-5">
+    <div id="messageLogs" class="col-12 mb-3" style="height: 600px; overflow-y: scroll;"></div>
+    <div class="col-12">
+      <input id="chatBox" class="form-control" placeholder="Escribe tu mensaje aquí, presione enter para enviar" />
+    </div>
+  </div>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js" ></script>
+<script src="/js/chat.js"></script>

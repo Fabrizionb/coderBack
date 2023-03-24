@@ -7,4 +7,4 @@ const chatSchema = new mongoose.Schema({
   message: { type: String, required: true }
 })
 
-export const productModel = mongoose.model(chatCollection, chatSchema)
+export const chatModel = mongoose.model(chatCollection, chatSchema)

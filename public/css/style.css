@@ -124,3 +124,8 @@ body{
 .notFound {
 background-color: #f8f9fa!important;;
 }
+
+
+.chatBox {
+  height: 75%;
+}

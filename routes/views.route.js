@@ -46,6 +46,6 @@ route.get('/realtimeproducts', async (req, res, next) => {
 
 // Ruta para ver el chat en tiempo real
 route.get('/chat', async (req, res) => {
-  res.render('chat', { titulo: 'Chat' })
+  res.render('chat', { titulo: 'Live Chat' })
 })
 export default route
