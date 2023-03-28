@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import cartManager from '../Dao/controller/cart.manager.js'
+import cartModel from '../Dao/models/cart.model.js'
 
 const route = Router()
 
@@ -19,7 +20,7 @@ route.get('/', async (req, res, next) => {
 route.get('/:id', async (req, res, next) => {
   const { id } = req.params
   try {
-    const cart = await cartManager.findOne({ _id: id })
+    const cart = await cartManager.find({ _id: id })
     if (!cart) {
       res.status(404).json({ error: `Cart with id ${id} not found` })
       return
@@ -33,7 +34,7 @@ route.get('/:id', async (req, res, next) => {
 
 route.post('/', async (req, res, next) => {
   try {
-    const carts = await cartManager.create([{}])
+    const carts = await cartModel.create([{}])
     res.status(200).json({ carts })
   } catch (error) {
     next(error)
@@ -61,21 +62,22 @@ route.post('/:cid/product/:pid', async (req, res, next) => {
   const { pid } = req.params
 
   try {
-    const cart = await cartManager.findOne({ _id: cid })
-    const product = cart.products.find(product => product._id.toString() === pid)
+    const cart = await cartModel.findOne({ _id: cid })
+    const product = cart.products.find(product => product.product.toString() === pid)
 
     if (!product) {
-      const newProduct = { _id: pid, quantity: 1 }
+      const newProduct = { quantity: 1, product: pid }
       cart.products.push(newProduct)
-      await cartManager.findOneAndUpdate({ _id: cid }, cart)
+      await cartModel.updateOne({ _id: cid }, cart)
       res.status(201).json(newProduct)
     } else {
       product.quantity += 1
-      await cartManager.findOneAndUpdate({ _id: cid }, cart)
+      await cartModel.updateOne({ _id: cid }, cart)
       res.status(201).json(product)
     }
   } catch (error) {
     next(error)
   }
 })
+
 export default route

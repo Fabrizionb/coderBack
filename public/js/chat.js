@@ -1,7 +1,5 @@
-console.log('desde el chat')
 const socket = io()
 let user
-let message
 const chatBox = document.querySelector('#chatBox')
 
 Swal.fire({
