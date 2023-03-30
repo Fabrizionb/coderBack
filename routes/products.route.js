@@ -1,21 +1,26 @@
+/* eslint-disable  */
 import { Router } from 'express'
 import { multiUploader } from '../utils/multiUploader.js'
 import productManager from '../Dao/controller/product.manager.js'
+import productModel from '../Dao/models/product.model.js'
 
 const route = Router()
 
 route.get('/', async (req, res, next) => {
-  const { limit, skip, ...query } = req.query
-
+  const query = req.query
   try {
-    const products = await productManager
-      .find(query)
-      .skip(Number(skip ?? 0))
-      .limit(Number(limit ?? 10))
+    const products = await productModel.paginate(
+      {},
+      { page: query.page ?? 1, limit: query.limit ?? 10, lean: true },
+    );
+
+
     res.status(200).json({ products })
   } catch (error) {
     next(error)
   }
+  //http://localhost:8080/api/products?limit=1
+
 })
 
 route.get('/:pid', async (req, res, next) => {

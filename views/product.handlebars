@@ -1,26 +1,61 @@
-<div class="container d-flex justify-content-center align-items-center vh-85">
-  <div class="mt-5 mb-5">
-    <h4 class="text-center mb-3">Product with id "<span
-        class="text-danger"
-      >{{data._id}}</span>"</h4>
-    <div class="card" style="height: 55vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px 0; text-align: center;"
->
-      <div class="bg-image hover-overlay ripple d-flex justify-content-center gap-3" style="position: relative; height: 300px;">
+<div class="container d-flex justify-content-center align-items-center ">
+  <div class="card card-product">
+    <div id="carouselExampleControls" data-interval="false">
+      <div class="carousel-inner">
         {{#each data.thumbnails}}
-          <a href="/img/{{this}}" target="_blank"><img src="/img/{{this}}" alt="Thumbnail of data" /></a>
+        <div class="carousel-item{{#if @first}} active{{/if}}">
+          <img id="product-image" src="/img/{{this}}" class="d-block w-100 h-100" alt="Thumbnail of data" />
+        </div>
         {{/each}}
-      
       </div>
-      <div class="card-body w-75" >
-        <h5 class="card-title">{{data.title}}</h5>
-        <p class="card-text">{{data.description}}</p>
-        <div class="card-footer text-black"><p>Category:
-            <span>{{data.category}}</span></p></div>
-        <div class="card-footer text-black"><p>Status:
-            <span class="text-primary">{{data.status}}</span></p></div>
-        <div class="card-footer text-black"><p>Stock:
-            <span>{{data.stock}}</span></p></div>
-      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <div class="card-body text-center">
+      <h5 class="card-title">{{data.title}}</h5>
+      <p class="card-text">{{data.description}}</p>
+      <p class="card-text">Category: <span class="span-text">{{data.category}}</span></p><span class="car">
+        <p class="card-text">Status: <span
+            class="span-status{{#if data.status}} available{{else}} not-available{{/if}}">{{#if
+            data.status}}Disponible{{else}}No disponible{{/if}}</span></p>
+        <p class="card-text">Stock: <span class="span-text">{{data.stock}}</span></p>
+        <p class="card-text">Price: <span class="span-text">€{{data.price}}</span></p>
+        <p class="card-text">Product code: <span class="car">{{data.code}}</span></p>
+        <a href="#" class="btn btn-primary">Agregar al carrito</a>
+    </div>
+    <div class="pt-5">
+      <h6 class="mb-0 text-center "><a href="/" class="text-body "><img class="icon"
+            src="https://img.icons8.com/ultraviolet/40/null/undo.png" />Back
+          to shop</a></h6>
     </div>
   </div>
+
 </div>
+
+
+<script>
+  const prevButton = document.querySelector('.carousel-control-prev');
+  const nextButton = document.querySelector('.carousel-control-next');
+  const carouselItems = document.querySelectorAll('.carousel-item');
+  let activeIndex = 0;
+
+  prevButton.addEventListener('click', () => {
+    carouselItems[activeIndex].classList.remove('active');
+    activeIndex = (activeIndex === 0) ? carouselItems.length - 1 : activeIndex - 1;
+    carouselItems[activeIndex].classList.add('active');
+  });
+
+  nextButton.addEventListener('click', () => {
+    carouselItems[activeIndex].classList.remove('active');
+    activeIndex = (activeIndex === carouselItems.length - 1) ? 0 : activeIndex + 1;
+    carouselItems[activeIndex].classList.add('active');
+  });
+</script>

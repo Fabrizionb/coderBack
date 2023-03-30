@@ -5,6 +5,39 @@
       <div class="card-header">
         {{> title titulo = "Listado de Productos"}}
       </div>
+      <div class="container">
+        <div class="row">
+          <div class="paginate-top container col-4 mt-2 border py-2">
+            <h6 class="text-center">Navegador</h6>
+            {{#if hasPrevPage}}
+            <button class="btn btn-secondary btn-sm btn-navigation" onclick='setPrev()'>Anterior</button>
+            {{/if}}
+            {{#if hasNextPage}}
+            <button class="btn btn-secondary btn-sm btn-navigation" onclick='setNext()'>Siguiente</button>
+            {{/if}}
+            <br />
+            <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setLimit(10)'>10</button>
+            <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setLimit(25)'>25</button>
+            <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setLimit(50)'>50</button>
+          </div>
+          <div class="paginate-top container col-4 mt-2 border py-2">
+            <h6 class="text-center">Filtrar por Categoria</h6>
+            <br />
+            <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setCategory("")'>Todas</button>
+            <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setCategory("Remeras")'>Remeras</button>
+            <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setCategory("Camperas")'>Camperas</button>
+            <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setCategory("Pantalones")'>Pantalones</button>
+          </div>
+     <div class="sort-top container col-4 mt-2 border py-2">
+  <h6 class="text-center">Ordenar por</h6>
+  <br />
+  <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setOrder("title", "asc")'>Nombre +</button>
+  <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setOrder("title", "desc")'>Nombre -</button>
+  <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setOrder("price", "desc")'>Price +</button>
+  <button class="btn btn-secondary btn-sm mt-3 btn-navigation" onclick='setOrder("price", "asc")'>Price -</button>
+</div>
+        </div>
+      </div>
       <div class="card-body">
         <div class="row">
           <div class="card-body">
@@ -26,8 +59,8 @@
               </tr>
             </thead>
             <tbody>
-              {{#each data}}
-              <tr>
+              {{#each products}}
+              <tr id="">
                 <td class=" text-center align-middle">{{this._id}}</td>
                 <td class=" text-center align-middle">{{this.title}}</td>
                 <td class=" text-center align-middle">{{this.description}}</td>
@@ -45,11 +78,23 @@
                     <a title="View product" class="btn btn-sm btn-clean btn-icon btn-icon-md"
                       href="/view/product/{{this._id}}">
                       <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/visible.png" /> </a>
-                    
+                    <a title="Add to cart" class="btn btn-sm btn-clean btn-icon btn-icon-md"
+                      href="/view/product/{{this._id}}">
+                      <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/shopping-cart.png"/> </a>
                   </span></td>
               </tr>
               {{/each}}
             </tbody>
+            <tfoot>
+              <tr>
+                <td colspan='1'>Total paginas</td>
+                <td colspan='2'>{{pages}}</td>
+              </tr>
+              <tr>
+                <td colspan='1'>Pagina Actual</td>
+                <td colspan='2'>{{page}}</td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>
@@ -57,3 +102,32 @@
   </div>
 </div>
 <script src="/socket.io/socket.io.js"></script>
+<script>
+const query = new URLSearchParams(window.location.search);
+function setPrev() {
+  const previusPage = Number(query.get('page')) - 1;
+  query.set('page', previusPage);
+  window.location.search = query.toString();
+}
+function setNext() {
+  const nextPage = Number(query.get('page')) + 1;
+  query.set('page', nextPage);
+  window.location.search = query.toString();
+}
+function setLimit(limit) {
+  query.set('limit', limit);
+  query.set('page', 1);
+  window.location.search = query.toString();
+}
+function setCategory(category) {
+  query.set('category', category);
+  query.set('page', 1);
+  window.location.search = query.toString();
+}
+function setOrder(field, direction) {
+  query.set('sort', field);
+  query.set('order', direction);
+  query.set('page', 1);
+  window.location.search = query.toString();
+}
+</script>

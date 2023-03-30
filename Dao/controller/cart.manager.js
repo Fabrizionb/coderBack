@@ -8,8 +8,8 @@ class Carts {
     this.#persistencia = persistencia
   }
 
-  async find () {
-    return this.#persistencia.find()
+  async find ({ _id }) {
+    return this.#persistencia.find({ _id })
   }
 
   async findOne (_id) {

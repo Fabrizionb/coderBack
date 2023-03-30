@@ -1,0 +1,88 @@
+<section class="h-50 h-custom" style="background-color: #f8f9fa;">
+  <div class="container py-5 h-50">
+    <div class="row d-flex justify-content-center align-items-center h-50">
+      <div class="col-12">
+        <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+          <div class="card-body p-0">
+            <div class="row g-0">
+              <div class="col-lg-8">
+                <div class="p-5">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1 class="fw-bold mb-0 text-black">{{titulo}}</h1>
+                    <h6 class="mb-0 text-muted">{{cart.products.length}}</h6>
+                  </div>
+                  {{#each cart.products}}
+                  <hr class="my-4">
+                  <div class="row mb-4 d-flex justify-content-between align-items-center">
+                    <div class="col-md-2 col-lg-2 col-xl-2 ">
+                      <img src="/img/{{product.thumbnails.[0]}}" class="img-fluid rounded-3" alt="{{product.title}}">
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xl-3">
+                      <h6 class="text-muted">{{product.title}}</h6>
+                      <h6 class="text-black mb-0">{{product.description}}</h6>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                      <button class="btn btn-link px-2"
+                        onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                        <i class="fas fa-minus"></i>
+                      </button>
+
+                      <input id="form1" min="0" name="quantity" value={{quantity}} type="number"
+                        class="form-control form-control-sm" />
+
+                      <button class="btn btn-link px-2"
+                        onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                      <h6 class="mb-0">€{{multiply quantity product.price}}</h6>
+                    </div>
+                    <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                      <a title="Delete from cart" class="btn btn-sm btn-clean btn-icon btn-icon-md"
+                      href="/view/product/{{this._id}}">
+                      <img class="icon" src="https://img.icons8.com/ultraviolet/80/null/waste.png"/> </a>
+                    </div>
+                  </div>
+                  {{/each}}
+                  <div class="pt-5">
+                    <h6 class="mb-0"><a href="/" class="text-body"><i class="fas fa-long-arrow-alt-left me-2"></i>Back
+                        to shop</a></h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4 summary">
+                <div class="p-5">
+                  <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
+                  <hr class="my-4">
+
+                  <div class="d-flex justify-content-between mb-4">
+                    <h5 class="text-uppercase">items {{cart.products.length}}</h5>
+                    <h5>{{total cart}}</h5>
+                  </div>
+
+                  <div class="d-flex justify-content-between mb-4">
+                    <h5 class="text-uppercase">Global Shipping </h5>
+                    <h5>5 €</h5>
+                  </div>
+
+
+                  <hr class="my-4">
+
+                  <div class="d-flex justify-content-between mb-2">
+                    <h5 class="text-uppercase">Total price</h5>
+                    <h5 id="total-price">€ {{finalPrice cart shippingValue }}</h5>
+                  </div>
+
+                  <button type="button" class="btn btn-dark btn-block btn-lg" data-mdb-ripple-color="dark">Buy</button>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="/lib/helpers.handlebars.js"></script>

@@ -1,4 +1,5 @@
 import mongoose, { Schema, model } from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 import { productsCollection } from './product.model.js'
 /* eslint-disable  */
@@ -33,6 +34,7 @@ products : {
 cartSchema.pre('find', function(){
   this.populate('products.product')
 })
+cartSchema.plugin(mongoosePaginate)
 
 const cartModel = model(cartCollection, cartSchema)
 export default cartModel

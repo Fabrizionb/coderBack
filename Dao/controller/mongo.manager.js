@@ -5,8 +5,8 @@ export default class MongoManager {
 
   async find () {
     try {
-      const entidades = await this.model.find()
-      return entidades.map((e) => e.toObject())
+      const entities = await this.model.find()
+      return entities.map((e) => e.toObject())
     } catch (e) {
       console.log(e)
       throw e
@@ -15,18 +15,18 @@ export default class MongoManager {
 
   async findOne (_id) {
     try {
-      const entidad = await this.model.findOne(_id)
-      return entidad
+      const entity = await this.model.findOne(_id)
+      return entity
     } catch (e) {
       console.log(e)
       throw e
     }
   }
 
-  async create (entidad) {
+  async create (entity) {
     try {
-      const nuevaEntidad = this.model.create(entidad)
-      return nuevaEntidad
+      const newEntity = this.model.create(entity)
+      return newEntity
     } catch (e) {
       console.log(e)
       throw e

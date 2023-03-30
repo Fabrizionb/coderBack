@@ -129,3 +129,156 @@ background-color: #f8f9fa!important;;
 .chatBox {
   height: 75%;
 }
+
+/* Cart */
+@media (min-width: 1025px) {
+  .h-custom {
+  height: 100vh !important;
+  }
+  }
+  
+  .card-registration .select-input.form-control[readonly]:not([disabled]) {
+  font-size: 1rem;
+  line-height: 2.15;
+  padding-left: .75em;
+  padding-right: .75em;
+  }
+  
+  .card-registration .select-arrow {
+  top: 13px;
+  }
+  
+  .bg-grey {
+  background-color: #eae8e8;
+  }
+  
+  @media (min-width: 992px) {
+  .card-registration-2 .bg-grey {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  }
+  }
+  
+  @media (max-width: 991px) {
+  .card-registration-2 .bg-grey {
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  }
+  }
+
+ #product-image {
+  width: 450px!important;
+  height: 350px!important;
+
+} 
+.span-text {
+ font-weight: bold;
+}
+
+.span-status.available {
+  color: #28aa4f;
+}
+
+.span-status.not-available {
+  color: crimson;
+}
+
+.card-product{
+  background-color: #b6dcfe;
+}
+
+.carousel-control-next-icon, .carousel-control-prev-icon {
+  background-color: #1e221f;
+}
+
+.chat-container {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.message-logs {
+  height: 500px;
+  width: 100%;
+  overflow-y: scroll;
+  padding: 10px;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.message .message-content {
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  max-width: 60%;
+  word-break: break-word;
+}
+
+.message .message-content.sent {
+  background-color: #007bff;
+  align-self: flex-end;
+}
+
+.message .message-content.received {
+  background-color: #f8f8f8;
+  align-self: flex-start;
+  color: #000;
+}
+
+.message .message-time {
+  font-size: 12px;
+  margin-top: 5px;
+  color: #aaa;
+}
+
+.message-input-container {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.message-input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  outline: none;
+}
+
+@media screen and (min-width: 768px) {
+  .chat-container {
+    max-width: 500px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .chat-container {
+    max-width: 700px;
+  }
+}
+
+
+.btn-navigation {
+  background-color: #b6dcfe!important;
+  color: black;
+}
+.btn-navigation:hover {
+  background-color: #3a8bd1!important;
+  color: black;
+}
+
+.summary {
+  background-color: #b6dcfe!important;
+}
