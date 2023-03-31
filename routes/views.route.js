@@ -13,9 +13,17 @@ route.get('/', async (req, res, next) => {
   if (query.sort && ['title', 'price'].includes(query.sort)) {
     sort[query.sort] = query.order === 'desc' ? -1 : 1
   }
+  // Crear el objeto de condiciones para la consulta
+  const conditions = {}
+  if (query.category) {
+    conditions.category = query.category
+  }
+  if (query.status) {
+    conditions.status = query.status === 'true'
+  }
   try {
     const products = await productModel.paginate(
-      query.category ? { category: query.category } : {},
+      conditions,
       {
         page: query.page ?? 1,
         limit: query.limit ?? 10,

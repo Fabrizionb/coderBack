@@ -285,3 +285,6 @@ background-color: #f8f9fa!important;;
 .empty {
  min-height: 550px;
 }
+.pagination{
+  justify-content: center!important;
+}
