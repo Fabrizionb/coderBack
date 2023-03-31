@@ -44,7 +44,7 @@ mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-
+app.use(cookieParser())
 // Midleware de errores
 app.use((err, req, res, next) => {
   if (err.message) {
