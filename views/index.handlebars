@@ -1,125 +1,192 @@
-{{!-- <h2>{{saludar user.nombre}}</h2> helper, primero funcion dsp parametro--}}
-<div class="content">
-  <div class="p-0 container">
-    <div class="card">
-      <div class="card-header">
-        {{> title titulo = "Listado de Productos"}}
-      </div>
-      <div class="container"> 
-        
-<div class="row">
-<div class="paginate-top container col-md-4 col-sm-12 mt-2 border py-2">
-  <h6 class="text-center">Navegador</h6>
-  <div class="btn-group d-flex">
-    {{#if hasPrevPage}}
-      <button class="btn btn-secondary btn-sm btn-navigation btn-block d-flex justify-content-between col-6 pagination " onclick='setPrev()'>Anterior</button>
-    {{/if}}
-    {{#if hasNextPage}}
-      <button class="btn btn-secondary btn-sm btn-navigation btn-block d-flex justify-content-between col-6 pagination " onclick='setNext()'>Siguiente</button>
-    {{/if}}
+<main>
+  <div class="card-header">
+    {{> title titulo = "Listado de Productos"}}
   </div>
-  <div class="d-flex justify-content-center mt-3">
-    <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setLimit(10)'>10</button>
-    <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setLimit(25)'>25</button>
-    <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setLimit(50)'>50</button>
-  </div>
-</div>
-  <div class="paginate-top container col-md-4 col-sm-12 mt-2 border py-2">
-    <h6 class="text-center">Filtrar por Categoria</h6>
-    <div class="d-flex justify-content-center mt-3">
-      <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setCategory("")'>Todas</button>
-      <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setCategory("Remeras")'>Remeras</button>
-    </div>
-    <div class="d-flex justify-content-center mt-3">
-      <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setCategory("Camperas")'>Camperas</button>
-      <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setCategory("Pantalones")'>Pantalones</button>
-    </div>
-  </div>
-  <div class="sort-top container col-md-4 col-sm-12 mt-2 border py-2">
-    <h6 class="text-center">Ordenar por</h6>
-    <div class="d-flex justify-content-center mt-3">
-      <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setOrder("title", "asc")'>Nombre ↑</button>
-      <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setOrder("title", "desc")'>Nombre ↓</button>
-      <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setOrder("price", "desc")'>Precio ↑</button>
-      <button class="btn btn-secondary btn-sm mx-1 btn-navigation btn-block d-flex justify-content-between" onclick='setOrder("price", "asc")'>Precio ↓</button>
-    </div>
-    <div class="d-flex justify-content-center mt-3">
-      <button class="btn btn-secondary btn-sm col-5 mx-1 btn-navigation" onclick='setDisp(true)'>Disponibles</button>
-      <button class="btn btn-secondary btn-sm col-5 mx-1 btn-navigation" onclick='setDisp(false)'>No Disponibles</button>
-    </div>
-  </div>
-  <div class=" mt-2 border  py-2">
-<button class="btn btn-secondary btn-block btn-navigation col-12" onclick='resetFilters()'>Borrar filtros</button>  </div>
-</div>
+  <div class="container card">
+    <div class="container  pt-3">
+      <div class="row pt-4">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+          <div class="">
+            <!-- Grid row -->
+            <div class="row">
+              <div class="col-md-6 col-lg-12 mb-5">
+                <!-- Panel -->
+                <h5 class="font-weight-bold dark-grey-text"><strong>Order By</strong></h3>
+                  <div class="divider"></div>
+                  <p class="blue-text"><a onclick='resetFilters()'>Reset Filters</a></p>
+                  <p class="dark-grey-text"><a onclick='setDisp(true)'>Available</a></p>
+                  <p class="dark-grey-text"><a onclick='setDisp(false)'>Unavailable</a></p>
+                  <p class="dark-grey-text"><a onclick='setOrder("price", "desc")'>Price: low to high</a></p>
+                  <p class="dark-grey-text"><a onclick='setOrder("price", "asc")'>Price: high to low</a></p>
+                  <p class="dark-grey-text"><a onclick='setOrder("title", "asc")'>Name: A to Z</a></p>
+                  <p class="dark-grey-text"><a onclick='setOrder("title", "desc")'>Name: Z to A</a></p>
+              </div>
+              <!-- Filter by category -->
+              <div class="col-md-6 col-lg-12 mb-5">
+                <h5 class="font-weight-bold dark-grey-text"><strong>Category</strong></h3>
+                  <div class="divider"></div>
+                  <!-- Radio group -->
+                  <div class="form-group">
+                    <input class="form-check-input" name="group100" type="radio" id="radio100"
+                      onclick="setCategory('')">
+                    <label for="radio100" class="form-check-label dark-grey-text">All</label>
+                  </div>
+                  <div class="form-group">
+                    <input class="form-check-input" name="group100" type="radio" id="radio101"
+                      onclick="setCategory('Remeras')">
+                    <label for="radio101" class="form-check-label dark-grey-text">T-shirts</label>
+                  </div>
+                  <div class="form-group">
+                    <input class="form-check-input" name="group100" type="radio" id="radio102"
+                      onclick="setCategory('Camperas')">
+                    <label for="radio102" class="form-check-label dark-grey-text">Jackets</label>
+                  </div>
+                  <div class="form-group">
+                    <input class="form-check-input" name="group100" type="radio" id="radio103"
+                      onclick="setCategory('Pantalones')">
+                    <label for="radio103" class="form-check-label dark-grey-text">Pants</label>
+                  </div>
+                  <!-- Radio group -->
+              </div>
+              <!-- Filter by category -->
+            </div>
+            <!-- Grid row -->
 
-
-      </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="card-body">
+            <!-- Grid row -->
+            <div class="row">
+            </div>
+            <!-- Grid row -->
           </div>
         </div>
-        <div class="table-responsive">
-          <table class="my-0 table table-striped" id="ticketTable">
-            <thead>
-              <tr>
-                <th class="order-4 text-center">Id</th>
-                <th class="order-4 text-center">Titulo</th>
-                <th class="order-4 text-center">Descripcion</th>
-                <th class="order-4 text-center">Categoria</th>
-                <th class="order-4 text-center">Precio</th>
-                <th class="order-4 text-center">Status</th>
-                <th class="order-4 text-center">Stock</th>
-                <th class="order-4 text-center">Thumbnails</th>
-                <th class="order-4 text-center">View Product</th>
-              </tr>
-            </thead>
-            <tbody>
+        <!-- Sidebar -->
+        <!-- Content -->
+        <div class="col-lg-9">
+          <!-- Filter Area -->
+          <div class="row">
+            <div class="col-md-8 text-right">
+              <!-- View Switcher -->
+              <p>Resultados por Pagina</p>
+              <a class="btn blue darken-3 btn-sm" onclick="setLimit(3)">
+                <i class="fas fa-th mr-2" aria-hidden="true"></i>
+                <strong>3</strong>
+              </a>
+              <a class="btn blue darken-3 btn-sm" onclick="setLimit(9)">
+                <i class="fas fa-th mr-2" aria-hidden="true"></i>
+                <strong>9</strong>
+              </a>
+              <a class="btn blue darken-3 btn-sm" onclick="setLimit(18)">
+                <i class="fas fa-th mr-2" aria-hidden="true"></i>
+                <strong>18</strong>
+              </a>
+              <a class="btn blue darken-3 btn-sm" onclick="setLimit(27)">
+                <i class="fas fa-th mr-2" aria-hidden="true"></i>
+                <strong>27</strong>
+              </a>
+              <!-- View Switcher -->
+            </div>
+          </div>
+          <!-- Filter Area -->
+          <!-- Products Grid -->
+          <section class="section pt-4">
+            <!-- Grid row -->
+            <div class="row">
               {{#each products}}
-              <tr id="">
-                <td class=" text-center align-middle">{{this._id}}</td>
-                <td class=" text-center align-middle">{{this.title}}</td>
-                <td class=" text-center align-middle">{{this.description}}</td>
-                <td class=" text-center align-middle">{{this.category}}</td>
-                <td class=" text-center align-middle">{{this.price}}</td>
-                <td class=" text-center align-middle">{{this.status}}</td>
-                <td class=" text-center align-middle">{{this.stock}}</td>
-                <td class="text-center align-middle">
-                  {{#each this.thumbnails}}
-                  <a href="/img/{{this}}" target="_blank"><img src="/img/{{this}}" alt="Thumbnail of product"></a>
-                  {{/each}}
-                </td>
-                <td class=" text-center align-middle"><span
-                    style="overflow: visible; position: relative; width: 110px;">
-                    <a title="View product" class="btn btn-sm btn-clean btn-icon btn-icon-md"
-                      href="/view/product/{{this._id}}">
-                      <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/visible.png" /> </a>
-                    <a title="Add to cart" class="btn btn-sm btn-clean btn-icon btn-icon-md"
-                      href="/view/product/{{this._id}}">
-                      <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/shopping-cart.png" /> </a>
-                  </span></td>
-              </tr>
+              <!-- Grid column -->
+              <div class="col-lg-4 col-md-12 mb-4">
+                <!-- Card -->
+                <div class="card card-ecommerce">
+                  <!-- Card image -->
+                  <div class="view overlay">
+                    <img src="/img/{{thumbnails.[0]}}" class="img-fluid" alt="">
+                    <a href="/view/product/{{this._id}}">
+                      <div class="mask rgba-white-slight"></div>
+                    </a>
+                  </div>
+                  <!-- Card image -->
+                  <!-- Card content -->
+                  <div class="card-body">
+                    <!-- Category & Title -->
+                    <h5 class="card-title mb-1"><strong><a href="" class="dark-grey-text">{{this.title}}</a></strong>
+                    </h5>
+                    {{#if this.status}}
+                    <span class="status available badge badge-success mb-2">Status: Available</span>
+                    {{else}}
+                    <span class="status not-available badge badge-danger mb-2">Status: Unavailable</span>
+                    {{/if}}
+                    <p class="fw-bold">Description:<span class="fw-light"> {{this.description}}</span></p>
+                    <p class="fw-bold">Category:<span class="fw-light"> {{this.category}}</span></p>
+                    <p class="fw-bold">Stock:<span class="fw-light"> {{this.stock}}</span></p>
+                    <p class="fw-bold">Product code:<span class="fw-light"> {{this.code}}</span></p>
+                    <!-- Card footer -->
+                    <div class="card-footer pb-0">
+                      <div class="row mb-0">
+                        <span class="float-left"><strong>€ {{this.price}}</strong></span>
+                        <span class="float-right">
+                          {{#if this.status}}
+                          <button class="cart-btn" data-toggle="tooltip" data-placement="top" title="Add to Cart">
+                            <i class="fas fa-shopping-cart ml-3 status available"></i>
+                          </button>
+                          {{else}}
+                          <button class="cart-btn disabled" data-toggle="tooltip" data-placement="top"
+                            title="Product not available">
+                            <i class="fas fa-shopping-cart ml-3 status not-available"></i>
+                          </button>
+                          {{/if}}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Card content -->
+                </div>
+                <!-- Card -->
+              </div>
+              <!-- Grid column -->
               {{/each}}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan='1'>Total paginas</td>
-                <td colspan='2'>{{pages}}</td>
-              </tr>
-              <tr>
-                <td colspan='1'>Pagina Actual</td>
-                <td colspan='2'>{{page}}</td>
-              </tr>
-            </tfoot>
-          </table>
+            </div>
+            <!-- Grid row -->
+            <!-- Grid row -->
+            <div class="row justify-content-center mb-4">
+              <!-- Pagination -->
+              <nav class="mb-4">
+                <ul class="pagination pagination-circle pg-blue mb-0">
+                  <div class="btn-group d-flex">
+                    {{#if hasPrevPage}}
+                    <button
+                      class="btn btn-secondary btn-sm btn-navigation btn-block d-flex justify-content-between col-6 pagination "
+                      onclick='setPrev()'>Anterior</button>
+                    {{/if}}
+                    {{#if hasNextPage}}
+                    <button
+                      class="btn btn-secondary btn-sm btn-navigation btn-block d-flex justify-content-between col-6 pagination "
+                      onclick='setNext()'>Siguiente</button>
+                    {{/if}}
+                  </div>
+                </ul>
+                <div class="row ">
+                  <div class="col-2">
+                    <p>Total páginas: {{pages}}</p>
+                  </div>
+                  <div class="col-2">
+                    <p>Página actual: {{page}}</p>
+                  </div>
+                </div>
+              </nav>
+              <!-- Pagination -->
+            </div>
+            <!-- Grid row -->
+          </section>
+          <!-- Products Grid -->
         </div>
+        <!-- Content -->
       </div>
     </div>
   </div>
-</div>
+</main>
 <script src="/socket.io/socket.io.js"></script>
 <script>
   const query = new URLSearchParams(window.location.search);
+
   function setPrev() {
     const previusPage = Number(query.get('page')) - 1;
     query.set('page', previusPage);
@@ -160,4 +227,17 @@
     query.delete('page');
     window.location.search = query.toString();
   }
+</script>
+<script>
+  const cartBtns = document.querySelectorAll('.cart-btn');
+  cartBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.available === 'true') {
+        // Agregar código para agregar producto al carrito aquí
+        console.log('Producto agregado al carrito');
+      } else {
+        alert('Producto no disponible');
+      }
+    });
+  });
 </script>

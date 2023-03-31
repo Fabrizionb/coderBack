@@ -65,7 +65,7 @@ route.get('/view/product/:pid', async (req, res, next) => {
         ...data._doc,
         _id: data._doc._id.toString()
       }
-      res.render('product', { titulo: 'Listado de Productos', data: product })
+      res.render('product', { titulo: 'List of Products', data: product })
     }
   } catch (error) {
     next(error)

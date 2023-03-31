@@ -1,15 +1,84 @@
-<div class="container chatBox mt-5">
+{{!-- <div class="container chatBox mt-5">
   <div class="mt-5">
     <h1 class="text-center">{{titulo}}</h1>
   </div>
+  <main>
+    <div class="container card chatContainer">
+      <section class="section my-5 pb-5">
+        <!-- Chat container -->
+        <div class="chat-container">
+          <div id="messageLogs" class="message-logs"></div>
+          <div class="message-input-container">
+            <input id="chatBox" class="message-input"
+              placeholder="Escribe tu mensaje aquí, presione enter para enviar" />
+          </div>
+        </div>
+        <!-- Chat container -->
+      </section>
+    </div>
+  </main> --}}
 
-<div class="chat-container">
-  <div id="messageLogs" class="message-logs"></div>
-  <div class="message-input-container">
-    <input id="chatBox" class="message-input" placeholder="Escribe tu mensaje aquí, presione enter para enviar" />
-  </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/socket.io/socket.io.js" ></script>
-<script src="/js/chat.js"></script>
+  <div class="container chatBox mt-5">
+    <main>
+      <!-- Chat container -->
+      <main class="max-w-5xl mx-auto flex-grow w-full h-full">
+        <div class="relative" style="opacity: 1; width: auto;">
+          <div style="height: 874px;" class="max-w-7xl mx-auto">
+            <div class="py-4 flex flex-col h-full">
+              <div class="bg-background-3 flex-grow flex flex-col h-full p-4 rounded relative" style="opacity: 1;">
+                <div class="pb-2 border-b border-border-1">
+                  <div class="flex items-center gap-4 ">
+                    <div class="flex gap-2 items-center flex-grow">
+                      <div></div>
+                      <div class="hidden md:block">
+                        <div>
+                          <div class="flex items-center h-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="hidden md:flex gap-4 items-center">
+                      <div></div>
+                    </div>
+                  </div>
+                  <div class="flex gap-4   mt-2 bg-background-2/20 md:bg-transparent p-2 md:p-0 rounded ">
+                    <div class="live-chat">
+                      <span class="dot"></span>
+                      <span class="textLive">{{titulo}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex-grow py-4 flex flex-col gap-4 overflow-y-auto">
+                  <div id="messageLogs" class="message-logs"></div>
+                </div>
+                <div
+                  class="bg-highlight-blue-2 border-highlight-blue-2 focus-within:border-[#282e5f] border p-4 rounded flex items-center w-full gap-2 transition duration-200 ease-in-out">
+                  <input id="chatBox" class="bg-transparent p-0 !outline-none flex-grow border-none ring-0 focus:ring-0"
+                    style="resize: none; height: 24px; max-height: 144px;"
+                    placeholder="Write your message here, press enter to send" />
+                  <span class="h-5 w-5 flex items-center justify-center">
+                    <span
+                      class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <!-- Chat container -->
+    </main>
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>

@@ -1,34 +1,62 @@
--Errores:
+Objetivos generales
 
-- No estás manejando el envío de archivos con multer // Necesario para aprobar
+Contarás con Mongo como sistema de persistencia principal
+Tendrás definidos todos los endpoints para poder trabajar con productos y carritos.
 
-Agregado el manejo de envios con multer.
+Objetivos específicos
 
-- No estás haciendo correctamente las validaciones pedidas para el addProduct (que el status sea true por default, y que no mande los thumbnails, sino que se complete con la ruta de las imágenes cargadas) // Necesario para aprobar
+Profesionalizar las consultas de productos con filtros, paginación y ordenamientos
+Profesionalizar la gestión de carrito para implementar los últimos conceptos vistos.
 
-Ahora las imagenes se toman del array de multer y se cargan luego en el nuevo producto.
-Las funcion validadora fue modifcada para que no acepte ningun valor de las claves que valida, como undefined, null ni string vacio.
-La validacion se ejecuta en el endpoint de products.route.
-Primero se valida que los campos que llegan por req.body cargados en product, tenga los campos necesarios y no tengan ningun campo vacio.
-Segundo se valida que llegue un producto por req.body.
-Tercero le asigno a newProducts las propiedades de ...product y le sumo  status: true
-Finalmente se lo envio al metodo addProducts, tanto ...newProduct como el array de imagenes thumbnails.
+Formato
 
+Link al repositorio de Github, sin la carpeta de node_modules 
 
-- No era necesario que haya un html estático, y veo que copiaste el que usamos en clase, sin terminar de leer bien qué cambios tenías que hacer (fijate que todavía hay menciones a mascotas)
+Sugerencias
 
-Cambie las referencias y variables de mascotas por productos y le agregue los campos necesarios para que valide. 
-No es funcional, queria ver si podia implementar una interfaz grafica para hacerlo dinamico. 
-Falle miserablemente. 
-Dejare los archivos para agregar esta funcionalidad mas adelante.
+Permitir comentarios en el archivo
+La lógica del negocio que ya tienes hecha no debería cambiar, sólo su persistencia. 
+Los nuevos endpoints deben seguir la misma estructura y lógica que hemos seguido. 
 
-- Comentarios:
+Se debe entregar
 
- - Muy bien mandando los status codes en todos los endpoints! solo que algunos no los estarías usando correctamente (Cuál es el status code para cuando no existe la entidad buscada?)
+Con base en nuestra implementación actual de productos, modificar el método GET / para que cumpla con los siguientes puntos:
+Deberá poder recibir por query params un limit (opcional), una page (opcional), un sort (opcional) y un query (opcional)
+-limit permitirá devolver sólo el número de elementos solicitados al momento de la petición, en caso de no recibir limit, éste será de 10.
+page permitirá devolver la página que queremos buscar, en caso de no recibir page, ésta será de 1
 
- Agregados los codigos de errores que faltaban (creo que es lo que pedia), no entendi bien lo de los codes mas de lo que hice. Entendi que las res.send van solamente del lado del route, no del productManager. Asi que del productManager, hice throw new Error({ error: error.message }). Si no es lo pedido, por favor mostrame un ejemplo en el codigo y que iria, porque estoy medio perdido.
+query, el tipo de elemento que quiero buscar (es decir, qué filtro aplicar), en caso de no recibir query, realizar la búsqueda general
+sort: asc/desc, para realizar ordenamiento ascendente o descendente por precio, en caso de no recibir sort, no realizar ningún ordenamiento
 
- - Siempre es buena práctica devolver un json y no un string en la respuesta de los endpoints (Tus manager deberían de devolver un objeto, o null, o un error, y manejar dependiendo de eso la respuesta enviada al frontend por el endpoint, con su respectivo status code)
+El método GET deberá devolver un objeto con el siguiente formato:
+{
+	status:success/error
+payload: Resultado de los productos solicitados
+totalPages: Total de páginas
+prevPage: Página anterior
+nextPage: Página siguiente
+page: Página actual
+hasPrevPage: Indicador para saber si la página previa existe
+hasNextPage: Indicador para saber si la página siguiente existe.
+prevLink: Link directo a la página previa (null si hasPrevPage=false)
+nextLink: Link directo a la página siguiente (null si hasNextPage=false)
 
- Cambiado send x json, agregados los codigos y bloques try catch que faltaban.
+}
 
+Se deberá poder buscar productos por categoría o por disponibilidad, y se deberá poder realizar un ordenamiento de estos productos de manera ascendente o descendente por precio. LISTO
+
+Además, agregar al router de carts los siguientes endpoints:
+DELETE api/carts/:cid/products/:pid deberá eliminar del carrito el producto seleccionado. LISTO
+PUT api/carts/:cid deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
+PUT api/carts/:cid/products/:pid deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
+
+DELETE api/carts/:cid deberá eliminar todos los productos del carrito LISTO
+Esta vez, para el modelo de Carts, en su propiedad products, el id de cada producto generado dentro del array tiene que hacer referencia al modelo de Products. 
+Modificar la ruta /:cid para que al traer todos los productos, los traiga completos mediante un “populate”. De esta manera almacenamos sólo el Id, pero al solicitarlo podemos desglosar los productos asociados. LISTO
+
+Crear una vista en el router de views ‘/products’ para visualizar todos los productos con su respectiva paginación.  LISTO
+Cada producto mostrado puede resolverse de dos formas:
+Llevar a una nueva vista con el producto seleccionado con su descripción completa, detalles de precio, categoría, etc. Además de un botón para agregar al carrito. LISTO
+Contar con el botón de “agregar al carrito” directamente, sin necesidad de abrir una página adicional con los detalles del producto. LISTO
+
+Además, agregar una vista en ‘/carts/:cid (cartId) para visualizar un carrito específico, donde se deberán listar SOLO los productos que pertenezcan a dicho carrito. LISTO

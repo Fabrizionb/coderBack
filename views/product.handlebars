@@ -1,61 +1,127 @@
-<div class="container d-flex justify-content-center align-items-center ">
-  <div class="card card-product">
-    <div id="carouselExampleControls" data-interval="false">
-      <div class="carousel-inner">
-        {{#each data.thumbnails}}
-        <div class="carousel-item{{#if @first}} active{{/if}}">
-          <img id="product-image" src="/img/{{this}}" class="d-block w-100 h-100" alt="Thumbnail of data" />
+<!-- News card -->
+<div class="container pt-3">
+  <!-- News card -->
+  <div class="card mt-5 hoverable mainCard">
+    <div class="row mt-5">
+      <div class="col-lg-6">
+        <!-- Carousel Wrapper -->
+        <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails w-100" data-ride="carousel">
+          <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+              {{#each data.thumbnails}}
+              <div class="carousel-item {{#if @first}} active{{/if}}">
+                <img id="product-image" src="/img/{{this}}" class="d-block w-100" alt="Thumbnail of data">
+              </div>
+              {{/each}}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+              data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+              data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
         </div>
-        {{/each}}
+        <!-- Carousel Wrapper -->
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-        data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-        data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-    <div class="card-body text-center">
-      <h5 class="card-title">{{data.title}}</h5>
-      <p class="card-text">{{data.description}}</p>
-      <p class="card-text">Category: <span class="span-text">{{data.category}}</span></p><span class="car">
-        <p class="card-text">Status: <span
-            class="span-status{{#if data.status}} available{{else}} not-available{{/if}}">{{#if
-            data.status}}Disponible{{else}}No disponible{{/if}}</span></p>
-        <p class="card-text">Stock: <span class="span-text">{{data.stock}}</span></p>
-        <p class="card-text">Price: <span class="span-text">€{{data.price}}</span></p>
-        <p class="card-text">Product code: <span class="car">{{data.code}}</span></p>
-        <a href="#" class="btn btn-primary">Agregar al carrito</a>
-    </div>
-    <div class="pt-5">
-      <h6 class="mb-0 text-center "><a href="/" class="text-body "><img class="icon"
-            src="https://img.icons8.com/ultraviolet/40/null/undo.png" />Back
-          to shop</a></h6>
+      <div class="col-lg-5 mr-3 text-center text-md-left">
+        <h2
+          class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
+          <strong>{{data.title}}</strong>
+        </h2>
+        <span class="badge badge-danger product mb-4 ml-xl-0 ml-4">bestseller</span>
+        <h3 class="h3-responsive text-center text-md-left mb-5 ml-xl-0 ml-4">
+          <span class="red-text font-weight-bold">
+            <strong>€{{data.price}}</strong>
+          </span>
+        </h3>
+        <!-- Accordion wrapper -->
+        <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+          <!-- Accordion card -->
+          <div class="card">
+            <!-- Card header -->
+            <div class="card-header" role="tab" id="headingOne1">
+              <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1"
+                aria-expanded="false" aria-controls="collapseOne1">
+                <h5 class="mb-0">
+                  Description
+                  <i class="fas fa-angle-down rotate-icon"></i>
+                </h5>
+              </a>
+            </div>
+            <!-- Card body -->
+            <div id="collapseOne1" class="collapse" role="tabpanel" aria-labelledby="headingOne1"
+              data-parent="#accordionEx">
+              <div class="card-body">
+                <p class="card-text"> {{data.description}}</span></p>
+
+              </div>
+            </div>
+          </div>
+          <!-- Accordion card -->
+          <!-- Accordion card -->
+          <div class="card">
+            <!-- Card header -->
+            <div class="card-header" role="tab" id="headingTwo2">
+              <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo2"
+                aria-expanded="false" aria-controls="collapseTwo2">
+                <h5 class="mb-0">
+                  Product Info
+                  <i class="fas fa-angle-down rotate-icon"></i>
+                </h5>
+              </a>
+            </div>
+            <!-- Card body -->
+            <div id="collapseTwo2" class="collapse" role="tabpanel" aria-labelledby="headingTwo2"
+              data-parent="#accordionEx">
+              <div class="card-body">
+                <p class="card-text">Category: <span class="span-text">{{data.category}}</span></p>
+                <p class="card-text">Product code: <span class="car">{{data.code}}</span></p>
+                <p class="card-text">Stock: <span class="span-text">{{data.stock}}</span></p>
+                <p class="card-text">Status: <span
+                    class="span-status{{#if data.status}} available{{else}} not-available{{/if}}">{{#if
+                    data.status}}Disponible{{else}}No disponible{{/if}}</span></p>
+              </div>
+            </div>
+            <!-- Accordion card -->
+          </div>
+          <!-- Accordion wrapper -->
+          <!-- Add to Cart -->
+          <section class="color">
+            <div class="mt-5">
+              <div class="row mt-3 mb-4">
+                <div class="col-md-12 text-center text-md-left text-md-right">
+                  <button class="btn btn-primary btn-rounded" {{#unless data.status}}disabled{{/unless}}>
+                    <i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>
+                    Add to cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+          <!-- Add to Cart -->
+        </div>
+      </div>
     </div>
   </div>
-
-</div>
-
-
-<script>
-  const prevButton = document.querySelector('.carousel-control-prev');
-  const nextButton = document.querySelector('.carousel-control-next');
-  const carouselItems = document.querySelectorAll('.carousel-item');
-  let activeIndex = 0;
-
-  prevButton.addEventListener('click', () => {
-    carouselItems[activeIndex].classList.remove('active');
-    activeIndex = (activeIndex === 0) ? carouselItems.length - 1 : activeIndex - 1;
-    carouselItems[activeIndex].classList.add('active');
-  });
-
-  nextButton.addEventListener('click', () => {
-    carouselItems[activeIndex].classList.remove('active');
-    activeIndex = (activeIndex === carouselItems.length - 1) ? 0 : activeIndex + 1;
-    carouselItems[activeIndex].classList.add('active');
-  });
-</script>
+  <script>
+    const accordionHeaders = document.querySelectorAll('.card-header');
+    accordionHeaders.forEach(header => {
+      header.addEventListener('click', () => {
+        const targetBody = header.nextElementSibling;
+        targetBody.classList.toggle('collapse');
+      });
+    });
+  </script>
