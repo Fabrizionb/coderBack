@@ -282,3 +282,6 @@ background-color: #f8f9fa!important;;
 .summary {
   background-color: #b6dcfe!important;
 }
+.empty {
+ min-height: 550px;
+}

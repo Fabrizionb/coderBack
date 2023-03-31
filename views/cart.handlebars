@@ -1,3 +1,14 @@
+{{#if (eq cart.products.length 0)}}
+  <div class="text-center mt-5 empty v-100">
+    
+    <img class="w-25 h-25  mb-5" src="http://hsnbazar.com/images/empty-cart.png">
+    <div class="pt-5">
+      <h6 class="mb-0 text-center "><a href="/" class="text-body ">Back
+          to shop</a></h6>
+    </div>
+  </div>
+
+  {{else}}
 <section class="h-50 h-custom" style="background-color: #f8f9fa;">
   <div class="container py-5 h-50">
     <div class="row d-flex justify-content-center align-items-center h-50">
@@ -26,10 +37,8 @@
                         onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
                         <i class="fas fa-minus"></i>
                       </button>
-
                       <input id="form1" min="0" name="quantity" value={{quantity}} type="number"
                         class="form-control form-control-sm" />
-
                       <button class="btn btn-link px-2"
                         onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
                         <i class="fas fa-plus"></i>
@@ -39,15 +48,20 @@
                       <h6 class="mb-0">€{{multiply quantity product.price}}</h6>
                     </div>
                     <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                      <a title="Delete from cart" class="btn btn-sm btn-clean btn-icon btn-icon-md"
-                      href="/view/product/{{this._id}}">
-                      <img class="icon" src="https://img.icons8.com/ultraviolet/80/null/waste.png"/> </a>
+                      <button title="Delete from cart" class="btn btn-sm btn-clean btn-icon btn-icon-md"
+                        onclick="deleteProduct('{{../cart._id}}', '{{this.product._id}}')">
+                        <img class="icon" src="https://img.icons8.com/ultraviolet/80/null/waste.png" />
+                      </button>
                     </div>
                   </div>
                   {{/each}}
-                  <div class="pt-5">
-                    <h6 class="mb-0"><a href="/" class="text-body"><i class="fas fa-long-arrow-alt-left me-2"></i>Back
+                  <hr class="my-4 mt-5">
+                  <div class="pt-5 d-flex">
+                    <h6 class="mb-0 me-auto"><a href="/" class="text-body "><img class="icon"
+                          src="https://img.icons8.com/ultraviolet/40/null/undo.png" />Back
                         to shop</a></h6>
+                    <h6 class="mb-0 ms-auto"><a href="#" class="text-body" onclick="emptyCart('{{cart._id}}')"><img
+                          class="icon" src="https://img.icons8.com/ultraviolet/80/null/waste.png" />Empty Cart</a></h6>
                   </div>
                 </div>
               </div>
@@ -55,27 +69,20 @@
                 <div class="p-5">
                   <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
                   <hr class="my-4">
-
                   <div class="d-flex justify-content-between mb-4">
                     <h5 class="text-uppercase">items {{cart.products.length}}</h5>
                     <h5>{{total cart}}</h5>
                   </div>
-
                   <div class="d-flex justify-content-between mb-4">
                     <h5 class="text-uppercase">Global Shipping </h5>
                     <h5>5 €</h5>
                   </div>
-
-
                   <hr class="my-4">
-
                   <div class="d-flex justify-content-between mb-2">
                     <h5 class="text-uppercase">Total price</h5>
                     <h5 id="total-price">€ {{finalPrice cart shippingValue }}</h5>
                   </div>
-
                   <button type="button" class="btn btn-dark btn-block btn-lg" data-mdb-ripple-color="dark">Buy</button>
-
                 </div>
               </div>
             </div>
@@ -85,4 +92,30 @@
     </div>
   </div>
 </section>
+{{/if}}
 <script src="/lib/helpers.handlebars.js"></script>
+<script>
+  async function emptyCart(cid) {
+    try {
+      const response = await fetch(`/api/cart/${cid}`, { method: 'DELETE' })
+      const data = await response.json()
+      console.log(data.message)
+      window.location.href = "/"
+      // Aquí podemos actualizar la página o mostrar un mensaje al usuario
+    } catch (error) {
+      console.error(error)
+      // Aquí podemos mostrar un mensaje de error al usuario
+    }
+  }
+  function deleteProduct(cid, pid) {
+    fetch(`/api/cart/${cid}/products/${pid}`, { method: 'DELETE' })
+      .then(res => {
+        if (res.ok) {
+          location.reload(); // recargar la página después de borrar el producto
+        } else {
+          throw new Error('Failed to delete product from cart');
+        }
+      })
+      .catch(error => console.error(error));
+  }
+</script>

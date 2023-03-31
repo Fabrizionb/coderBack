@@ -1,8 +1,7 @@
 import { Router } from 'express'
 import productManager from '../Dao/controller/product.manager.js'
-import cartManager from '../Dao/controller/cart.manager.js'
 import productModel from '../Dao/models/product.model.js'
-// import cartModel from '../Dao/models/cart.model.js'
+import cartModel from '../Dao/models/cart.model.js'
 
 const route = Router()
 
@@ -68,9 +67,8 @@ route.get('/view/product/:pid', async (req, res, next) => {
 // ruta para ver el carrito
 route.get('/view/cart/:cid', async (req, res, next) => {
   const { cid } = req.params
-  const result = await cartManager.find({ _id: cid })
-  const cart = result[0]
-
+  const result = await cartModel.findById(cid).populate('products.product')
+  const cart = result.toObject()
   try {
     if (!result) {
       res.render('404', { id: cid })
