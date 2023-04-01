@@ -14,7 +14,7 @@ route.get('/', async (req, res, next) => {
   if (query.sort && ['title', 'price'].includes(query.sort)) {
     sort[query.sort] = query.order === 'desc' ? -1 : 1
   }
-  // Crear el objeto de condiciones para la consulta
+  // Crear el objeto para la consulta
   const conditions = {}
   if (query.category) {
     conditions.category = query.category
