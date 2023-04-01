@@ -7,15 +7,50 @@ import productModel from '../Dao/models/product.model.js'
 const route = Router()
 
 route.get('/', async (req, res, next) => {
+  const baseUrl = 'http://localhost:3000';
   const query = req.query
+  const sort = {}
+  // Verificar si se ha enviado un parámetro de ordenamiento
+  if (query.sort && ['title', 'price'].includes(query.sort)) {
+    sort[query.sort] = query.order === 'desc' ? -1 : 1
+  }
+  // Crear el objeto de condiciones para la consulta
+  const conditions = {}
+  if (query.category) {
+    conditions.category = query.category
+  }
+  if (query.status) {
+    conditions.status = query.status === 'true'
+  }
   try {
     const products = await productModel.paginate(
-      {},
-      { page: query.page ?? 1, limit: query.limit ?? 10, lean: true },
-    );
+      conditions,
+      {
+        page: query.page ?? 1,
+        limit: query.limit ?? 10,
+        lean: true,
+        sort
+      }
+    )
+    if (!products) {
+      res.status(404).json({ error: 'Products not found' })
+    } else {
+      res.status(200).json( {
+        status: "success",
+        payload: products.docs,
+        totalPages: products.totalPages,
+        prevPage: products.prev,
+        nextPage: products.next,
+        page: products.page,
+        hasPrevPage: products.hasPrevPage,
+        hasNextPage: products.hasNextPage,
+        prevLink: products.hasPrevPage ? `${baseUrl}?page=${products.prev}&limit=${products.limit}` : null,
+        nextLink: products.hasNextPage ? `${baseUrl}?page=${products.next}&limit=${products.limit}` : null
+      }
+      )
+    }
 
-
-    res.status(200).json({ products })
+    
   } catch (error) {
     next(error)
   }
