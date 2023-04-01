@@ -260,16 +260,6 @@
 }
 
   const cartBtns = document.querySelectorAll('.cart-btn');
-  cartBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      if (btn.dataset.available === 'true') {
-        // Agregar código para agregar producto al carrito aquí
-        console.log('Producto added to cart');
-      } else {
-        console.log('Producto not available');
-      }
-    });
-  });
 
   cartBtns.forEach(function (btn) {
   btn.addEventListener('click', async function (event) {
