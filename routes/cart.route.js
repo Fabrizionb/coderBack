@@ -122,4 +122,28 @@ route.delete('/:cid', async (req, res, next) => {
     next(error)
   }
 })
+
+// Update product quantity in a cart
+route.put('/:cid/product/:pid', async (req, res, next) => {
+  const { cid, pid } = req.params
+  const { quantity } = req.body
+  try {
+    const cart = await cartModel.findById(cid)
+    if (!cart) {
+      res.status(404).json({ error: `Cart with id ${cid} not found` })
+      return
+    }
+    const productIndex = cart.products.findIndex(p => p.product.toString() === pid)
+    if (productIndex === -1) {
+      res.status(404).json({ error: `Product with id ${pid} not found in cart` })
+      return
+    }
+    cart.products[productIndex].quantity = quantity
+    await cart.save()
+    res.status(200).json({ message: `Product with id ${pid} updated to quantity ${quantity} in cart with id ${cid}` })
+  } catch (error) {
+    next(error)
+  }
+})
+
 export default route

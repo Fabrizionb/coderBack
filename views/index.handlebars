@@ -95,7 +95,7 @@
               <!-- Grid column -->
               <div class="col-lg-4 col-md-12 mb-4">
                 <!-- Card -->
-                <div class="card card-ecommerce">
+                <div class="card card-ecommerce " data-product-id="{{this._id}}">
                   <!-- Card image -->
                   <div class="view overlay">
                     <img src="/img/{{thumbnails.[0]}}" class="img-fluid" alt="">
@@ -184,6 +184,7 @@
   </div>
 </main>
 <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   const query = new URLSearchParams(window.location.search);
 
@@ -229,15 +230,56 @@
   }
 </script>
 <script>
+
+  async function createCart() {
+  const response = await fetch('http://localhost:8080/api/cart', {
+    method: 'POST',
+  });
+  const data = await response.json();
+  const cartId = data.carts[0]._id;
+  localStorage.setItem('cartId', cartId);
+}
+
+  async function addProductToCart(cartId, productId) {
+  const response = await fetch(`http://localhost:8080/api/cart/${cartId}/product/${productId}`, {
+    method: 'POST',
+  });
+  const data = await response.json();
+  Swal.fire({
+  title: 'Product added to cart',
+  icon: 'success',
+  showCancelButton: true,
+  confirmButtonText: `<a href="/view/cart/${cartId}">Go to cart</a>`,
+  cancelButtonText: 'Continue shopping',
+  position: 'top-right',
+  timer: 5000,
+  timerProgressBar: true,
+  toast: true
+})
+  console.log('Producto added to cart', data);
+}
+
   const cartBtns = document.querySelectorAll('.cart-btn');
   cartBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       if (btn.dataset.available === 'true') {
         // Agregar código para agregar producto al carrito aquí
-        console.log('Producto agregado al carrito');
+        console.log('Producto added to cart');
       } else {
-        alert('Producto no disponible');
+        console.log('Producto not available');
       }
     });
   });
+
+  cartBtns.forEach(function (btn) {
+  btn.addEventListener('click', async function (event) {
+    const productId = event.target.closest('.card').dataset.productId;
+    let cartId = localStorage.getItem('cartId');
+    if (!cartId) {
+      await createCart();
+      cartId = localStorage.getItem('cartId');
+    }
+    await addProductToCart(cartId, productId);
+  });
+});
 </script>

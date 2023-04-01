@@ -1,34 +1,52 @@
 <header class="navbar-c">
-           <!-- Navbar -->
-      <nav class="navbar fixed-top navbar-expand-lg navbar-light scrolling-navbar white">
-        <div class="container">
-          <a class="navbar-brand font-weight-bold" href="/">
-            <strong>Milogo</strong>
-          </a>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light"   href="/view/product/{{this._id}}" data-toggle="modal" data-target="#cart-modal-ex">
-                  <i class="fas fa-shopping-cart blue-text" aria-hidden="true"></i>
-                  <span class="clearfix d-none d-sm-inline-block">Cart</span>
-                </a>
-              </li>
-              <li class="nav-item ml-3">
-                <a class="nav-link waves-effect waves-light dark-grey-text font-weight-bold" href="/">
-                  <i class="fas fa-cog blue-text"></i> Products</a>
-              </li>
-              <li class="nav-item ml-3">
-                <a class="nav-link waves-effect waves-light dark-grey-text font-weight-bold" href="/realtimeproducts">
-                  <i class="fas fa-cog blue-text"></i> Admin</a>
-              </li>
-              <li class="nav-item dropdown ml-3">
-                <a class="nav-link dropdown-toggle waves-effect waves-light dark-grey-text font-weight-bold" href="/chat" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fas fa-user blue-text"></i> Chat
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- Navbar -->
-    </header>
+  <!-- Navbar -->
+<header class="navbar-c">
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light scrolling-navbar white">
+    <div class="container">
+      <a class="navbar-brand font-weight-bold" href="/">
+        <strong>Milogo</strong>
+      </a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item cart-item">
+            <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light" href="" data-toggle="modal" data-target="#cart-modal-ex">
+              <i class="fas fa-shopping-cart blue-text" aria-hidden="true"></i>
+              <span class="clearfix d-none d-sm-inline-block">Cart</span>
+            </a>
+          </li>
+          <li class="nav-item ml-3">
+            <a class="nav-link waves-effect waves-light dark-grey-text font-weight-bold" href="/">
+              <i class="fas fa-cog blue-text"></i> Products</a>
+          </li>
+          <li class="nav-item ml-3">
+            <a class="nav-link waves-effect waves-light dark-grey-text font-weight-bold" href="/realtimeproducts">
+              <i class="fas fa-cog blue-text"></i> Admin</a>
+          </li>
+          <li class="nav-item dropdown ml-3">
+            <a class="nav-link dropdown-toggle waves-effect waves-light dark-grey-text font-weight-bold" href="/chat" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user blue-text"></i> Chat
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Navbar -->
+<script>
+  function updateCartButton() {
+    const cartId = localStorage.getItem('cartId');
+    
+    const cartLink = document.querySelector('.cart-item .nav-link');
+    if (cartId === null) {
+      null;
+    } else {
+      
+      cartLink.href = `/view/cart/${cartId}`;
+    }
+  }
+  updateCartButton();
+  window.addEventListener('storage', () => {
+    updateCartButton();
+  });
+</script>

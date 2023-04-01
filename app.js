@@ -9,8 +9,9 @@ import viewsRoute from './routes/views.route.js'
 import configureSocket from './socket/configure-socket.js'
 import mongoose from 'mongoose'
 import config from './data.js'
+import session from 'express-session'
 
-const { PORT, MONGO_URI } = config
+const { PORT, MONGO_URI, COOKIE_SECRET } = config
 
 const { __dirname } = fileDirname(import.meta)
 const app = express()
@@ -44,7 +45,10 @@ mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
+
+// app.use(cookieParser(COOKIE_SECRET))
 app.use(cookieParser())
+
 // Midleware de errores
 app.use((err, req, res, next) => {
   if (err.message) {
