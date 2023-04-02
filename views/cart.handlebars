@@ -1,7 +1,7 @@
 <main>
   {{#if (eq cart.products.length 0)}}
   <div class="text-center mt-5 empty v-100">
-    
+
     <img class="w-25 h-25  mb-5" src="http://hsnbazar.com/images/empty-cart.png">
     <div class="pt-5">
       <h6 class="mb-0 text-center "><a href="/" class="text-body ">Back
@@ -56,7 +56,7 @@
               <td>{{product.description}}</td>
               <td></td>
               <td>${{product.price}}</td>
-   <!-- Product row -->
+              <!-- Product row -->
               <td class="text-center text-md-left">
                 <div style="display: inline-flex; align-items: center;">
                   <span class="qty">{{quantity}} </span>
@@ -113,15 +113,14 @@
       <!-- Shopping Cart table -->
     </section>
     <div class="text-center">
-  <button type="button" class="btn btn-danger btn-sm btn-rounded" onclick="emptyCart('{{cart._id}}')">
-    <i class="fas fa-trash"></i> Empty Cart
-  </button>
-</div>
+      <button type="button" class="btn btn-danger btn-sm btn-rounded" onclick="emptyCart('{{cart._id}}')">
+        <i class="fas fa-trash"></i> Empty Cart
+      </button>
+    </div>
   </div>
 </main>
 {{/if}}
 <script src="/lib/helpers.handlebars.js"></script>
-
 <script>
   async function emptyCart(cid) {
     try {
@@ -153,7 +152,7 @@
     const productStock = parseInt(element.getAttribute("data-product-stock"));
     const quantityElement = element.closest("td").querySelector(".qty");
     let quantity = parseInt(quantityElement.textContent);
-    
+
     quantity += change;
     if (quantity < 1 || quantity > productStock) {
       return;
@@ -186,7 +185,7 @@
       }
     } catch (error) {
       console.error(error);
-     
+
     }
   }
 </script>
