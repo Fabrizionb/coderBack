@@ -19851,3 +19851,18 @@ margin-bottom: 10vh!important;
   .status.not-available {
     color: crimson;
   }
+
+  .btn-go-to-cart {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    text-decoration: none;
+    border: 1px solid black;
+    border-radius: 5px;
+  }
+  .btn-go-to-cart:hover {
+    background-color: black;
+    color: white;
+  }

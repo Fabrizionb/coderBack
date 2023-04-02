@@ -1,4 +1,15 @@
 <main>
+  {{#if (eq cart.products.length 0)}}
+  <div class="text-center mt-5 empty v-100">
+    
+    <img class="w-25 h-25  mb-5" src="http://hsnbazar.com/images/empty-cart.png">
+    <div class="pt-5">
+      <h6 class="mb-0 text-center "><a href="/" class="text-body ">Back
+          to shop</a></h6>
+    </div>
+  </div>
+
+  {{else}}
   <div class="container card">
     <section class="section my-5 pb-5">
       <!-- Shopping Cart table -->
@@ -45,8 +56,7 @@
               <td>{{product.description}}</td>
               <td></td>
               <td>${{product.price}}</td>
-
-
+   <!-- Product row -->
               <td class="text-center text-md-left">
                 <div style="display: inline-flex; align-items: center;">
                   <span class="qty">{{quantity}} </span>
@@ -102,8 +112,14 @@
       </div>
       <!-- Shopping Cart table -->
     </section>
+    <div class="text-center">
+  <button type="button" class="btn btn-danger btn-sm btn-rounded" onclick="emptyCart('{{cart._id}}')">
+    <i class="fas fa-trash"></i> Empty Cart
+  </button>
+</div>
   </div>
 </main>
+{{/if}}
 <script src="/lib/helpers.handlebars.js"></script>
 
 <script>
@@ -113,10 +129,10 @@
       const data = await response.json()
       console.log(data.message)
       window.location.href = "/"
-      // Aquí podemos actualizar la página o mostrar un mensaje al usuario
+      //  actualizar la página o mostrar un mensaje
     } catch (error) {
       console.error(error)
-      // Aquí podemos mostrar un mensaje de error al usuario
+      // mostrar un mensaje de error al usuario
     }
   }
   function deleteProduct(cid, pid) {
@@ -152,13 +168,13 @@
         body: JSON.stringify({ quantity }),
       });
       if (response.ok) {
-        // Actualizar la cantidad en la interfaz
+        // Actualizar la cantidad
         quantityElement.textContent = quantity;
-        // 1. Actualizar el total del producto en la fila correspondiente
+        // 1. Actualizar el total del producto
         const productPrice = parseFloat(element.closest('tr').querySelector('td:nth-child(5)').textContent.trim().slice(1));
         const productTotalElement = element.closest('tr').querySelector('td:nth-child(7) strong');
         productTotalElement.textContent = `$${(quantity * productPrice).toFixed(2)}`;
-        // 2. Recalcular el total del carrito y actualizarlo en la interfaz
+        // 2. Recalcular el total del carrito y actualizarlo
         const allProductTotalElements = document.querySelectorAll('td:nth-child(7) strong');
         let cartTotal = 0;
         for (const elem of allProductTotalElements) {
@@ -170,7 +186,7 @@
       }
     } catch (error) {
       console.error(error);
-      // Aquí puedes mostrar un mensaje de error al usuario
+     
     }
   }
 </script>
