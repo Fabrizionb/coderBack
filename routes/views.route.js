@@ -2,10 +2,10 @@ import { Router } from 'express'
 import productManager from '../Dao/controller/product.manager.js'
 import productModel from '../Dao/models/product.model.js'
 import cartModel from '../Dao/models/cart.model.js'
-
+/* eslint-disabled */
 const route = Router()
 
-// Ruta estatica para los productos
+// Ruta para los productos
 route.get('/', async (req, res, next) => {
   const query = req.query
   const sort = {}
@@ -32,9 +32,11 @@ route.get('/', async (req, res, next) => {
       }
     )
     if (!products) {
-      res.status(404).json({ error: 'Products not found' })
+      res.status(404).render('404', {
+        title: 'Products not found', msg: 'Products not Found'
+      })
     } else {
-      res.render('index', {
+      res.status(200).render('index', {
         title: 'Listado de Productos',
         products: products.docs,
         pages: products.totalPages,
@@ -58,14 +60,14 @@ route.get('/view/product/:pid', async (req, res, next) => {
   const data = await productManager.findOne({ _id: pid })
   try {
     if (!data) {
-      res.render('404', { id: pid })
+      res.status(404).render('404', { msg: `The product with id: ${pid} you’re looking for doesn’t exist`, title: 'Product not Found' })
       return
     } else {
       const product = {
         ...data._doc,
         _id: data._doc._id.toString()
       }
-      res.render('product', { titulo: 'List of Products', data: product })
+      res.status(200).render('product', { titulo: 'List of Products', data: product })
     }
   } catch (error) {
     next(error)
@@ -79,10 +81,10 @@ route.get('/view/cart/:cid', async (req, res, next) => {
   const cart = result.toObject()
   try {
     if (!result) {
-      res.render('404', { id: cid })
+      res.status(404).render('404', { msg: `The cart with id: ${cid} you’re looking for doesn’t exist`, title: 'Cart not Found' })
       return
     } else {
-      res.render('cart', { titulo: 'Shopping Cart', cart })
+      res.status(200).render('cart', { titulo: 'Shopping Cart', cart })
     }
   } catch (error) {
     next(error)
@@ -92,11 +94,25 @@ route.get('/view/cart/:cid', async (req, res, next) => {
 // Ruta para ver los productos en tiempo real
 route.get('/realtimeproducts', async (req, res, next) => {
   const data = await productManager.find()
-  res.render('realTimeProducts', { titulo: 'Listado de Productos', data })
+  try {
+    if (!data) {
+      res.status(404).render('404', {
+        title: 'Products not found', msg: 'Products not Found'
+      })
+    } else {
+      res.status(200).render('realTimeProducts', { titulo: 'Listado de Productos', data })
+    }
+  } catch (error) {
+    next(error)
+  }
 })
 
 // Ruta para ver el chat en tiempo real
-route.get('/chat', async (req, res) => {
-  res.render('chat', { titulo: 'Live Chat' })
+route.get('/chat', async (req, res, next) => {
+  try {
+    res.status(200).render('chat', { title: 'Live Chat' })
+  } catch (error) {
+    next(error)
+  }
 })
 export default route
