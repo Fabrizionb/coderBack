@@ -2,6 +2,7 @@ import { Router } from 'express'
 import productManager from '../Dao/controller/product.manager.js'
 import productModel from '../Dao/models/product.model.js'
 import cartModel from '../Dao/models/cart.model.js'
+import util from '../utils/view.util.js'
 /* eslint-disabled */
 const route = Router()
 
@@ -10,8 +11,9 @@ route.get('/', async (req, res, next) => {
   const query = req.query
   const sort = {}
   // Verificar si se ha enviado un parámetro de ordenamiento
-  if (query.sort && ['title', 'price'].includes(query.sort)) {
-    sort[query.sort] = query.order === 'desc' ? -1 : 1
+  sort[query.sort] = query.order === 'desc' ? -1 : 1
+  if (query.sort === 'price' && query[query.sort]) {
+    sort[query.sort] = sort[query.sort] * parseInt(query[query.sort])
   }
   // Crear el objeto de la consulta
   const conditions = {}
@@ -31,6 +33,13 @@ route.get('/', async (req, res, next) => {
         sort
       }
     )
+    if (!util.isValidPage(query.page, products.totalPages)) {
+      res.status(404).render('404', {
+        title: 'Invalid page number',
+        msg: `Page number '${query.page}' is invalid for this query`
+      })
+      return
+    }
     if (!products) {
       res.status(404).render('404', {
         title: 'Products not found', msg: 'Products not Found'
