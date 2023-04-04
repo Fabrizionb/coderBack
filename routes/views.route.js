@@ -87,14 +87,13 @@ route.get('/view/product/:pid', async (req, res, next) => {
 route.get('/view/cart/:cid', async (req, res, next) => {
   const { cid } = req.params
   const result = await cartModel.findById(cid).populate('products.product')
-  const cart = result.toObject()
   try {
     if (!result) {
       res.status(404).render('404', { msg: `The cart with id: ${cid} you’re looking for doesn’t exist`, title: 'Cart not Found' })
       return
-    } else {
-      res.status(200).render('cart', { titulo: 'Shopping Cart', cart })
     }
+    const cart = result.toObject()
+    res.status(200).render('cart', { titulo: 'Shopping Cart', cart })
   } catch (error) {
     next(error)
   }
