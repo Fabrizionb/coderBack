@@ -1,12 +1,12 @@
 <main>
-  <div class="card-header">
-    {{> title titulo = "Listado de Productos"}}
+  <div class="card-header mt-3">
+    {{!-- {{> title titulo = "Listado de Productos"}} --}}
   </div>
   <div class="container card">
     <div class="container  pt-3">
       <div class="row pt-4">
         <!-- Sidebar -->
-        <div class="col-lg-3">
+        <div class="col-lg-2">
           <div class="">
             <!-- Grid row -->
             <div class="row">
@@ -47,12 +47,12 @@
                       onclick="setCategory('Pants')">
                     <label for="radio103" class="form-check-label dark-grey-text">Pants</label>
                   </div>
-                   <div class="form-group">
+                  <div class="form-group">
                     <input class="form-check-input" name="group100" type="radio" id="radio104"
                       onclick="setCategory('Dresses')">
                     <label for="radio104" class="form-check-label dark-grey-text">Dresses</label>
                   </div>
-                   <div class="form-group">
+                  <div class="form-group">
                     <input class="form-check-input" name="group100" type="radio" id="radio105"
                       onclick="setCategory('Sweaters')">
                     <label for="radio105" class="form-check-label dark-grey-text">Sweaters</label>
@@ -71,12 +71,12 @@
         </div>
         <!-- Sidebar -->
         <!-- Content -->
-        <div class="col-lg-9">
+        <div class="col-lg-10">
           <!-- Filter Area -->
           <div class="row">
             <div class="col-md-8 text-right">
               <!-- View Switcher -->
-              <p>Resultados por Pagina</p>
+              <p>Results per Page</p>
               <a class="btn blue darken-3 btn-sm" onclick="setLimit(3)">
                 <i class="fas fa-th mr-2" aria-hidden="true"></i>
                 <strong>3</strong>
@@ -103,12 +103,13 @@
             <div class="row card-deck">
               {{#each products}}
               <!-- Grid column -->
-              <div class="col-lg-4 col-md-12 mb-4">
+              <div class="col-lg-3 col-md-12 mb-4">
                 <!-- Card -->
                 <div class="card card-ecommerce " data-product-id="{{this._id}}">
                   <!-- Card image -->
                   <div class="view overlay">
-                    <img class="card-img-top mx-auto d-block p-0" src="/img/{{thumbnails.[0]}}" class="img-fluid" alt="image of {{this.title}}">
+                    <img class="card-img-top mx-auto d-block p-0" src="/img/{{thumbnails.[0]}}" class="img-fluid"
+                      alt="image of {{this.title}}">
                     <a href="/view/product/{{this._id}}">
                       <div class="mask rgba-white-slight"></div>
                     </a>
@@ -117,16 +118,17 @@
                   <!-- Card content -->
                   <div class="card-body">
                     <!-- Category & Title -->
-                    <h5 class="card-title mb-1"><strong><a href="" class="dark-grey-text">{{this.title}}</a></strong>
+                    <h5 class="card-title mb-1 text-center"><strong><a href=""
+                          class="dark-grey-text">{{this.title}}</a></strong>
                     </h5>
                     {{#if this.status}}
-                    <span class="status available badge badge-success mb-2">Status: Available</span>
+                    <span class="status available badge badge-success mb-2 w-100">Status: Available</span>
                     {{else}}
-                    <span class="status not-available badge badge-danger mb-2">Status: Unavailable</span>
+                    <span class="status not-available badge badge-danger mb-2 w-100">Status: Unavailable</span>
                     {{/if}}
                     <!-- Card footer -->
                     <div class="card-footer pb-0">
-                      <div class="row mb-0">
+                      <div class="row mb-0 text-center">
                         <span class="float-left"><strong>€ {{this.price}}</strong></span>
                         <span class="float-right">
                           {{#if this.status}}
@@ -154,27 +156,26 @@
             <!-- Grid row -->
             <div class="row justify-content-center mb-4">
               <!-- Pagination -->
-              <nav class="mb-4">
-                <ul class="pagination pagination-circle pg-blue mb-0">
-                  <div class="btn-group d-flex">
-                    {{#if hasPrevPage}}
-                    <button
-                      class="btn btn-secondary btn-sm btn-navigation btn-block d-flex justify-content-between col-6 pagination "
-                      onclick='setPrev()'>Anterior</button>
-                    {{/if}}
-                    {{#if hasNextPage}}
-                    <button
-                      class="btn btn-secondary btn-sm btn-navigation btn-block d-flex justify-content-between col-6 pagination "
-                      onclick='setNext()'>Siguiente</button>
-                    {{/if}}
-                  </div>
-                </ul>
-                <div class="row ">
-                  <div class="col-2">
-                    <p>Total páginas: {{pages}}</p>
-                  </div>
-                  <div class="col-2">
-                    <p>Página actual: {{page}}</p>
+              <nav class="mb-4 row justify-content-center">
+                <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
+                  <ul class="pagination pagination-circle pg-blue mb-0 justify-content-center">
+                    <div class="btn-group d-flex mx-2">
+                      {{#if hasPrevPage}}
+                      <button
+                        class="btn btn-secondary pagination-button btn-sm btn-navigation btn-block d-flex justify-content-between col-6 pagination"
+                        onclick='setPrev()'>Previous</button>
+                      {{/if}}
+                      {{#if hasNextPage}}
+                      <button
+                        class="btn btn-secondary pagination-button btn-sm btn-navigation btn-block d-flex justify-content-between col-6 pagination"
+                        onclick='setNext()'>Next</button>
+                      {{/if}}
+                    </div>
+                  </ul>
+                  <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12 text-center">
+                      <p>Page {{page}} of {{pages}}</p>
+                    </div>
                   </div>
                 </div>
               </nav>
@@ -278,12 +279,12 @@
     });
   });
   function setCheckedRadio(category) {
-  const radioButtons = document.getElementsByName('group100');
-  for (let i = 0; i < radioButtons.length; i++) {
-    if (radioButtons[i].value === category) {
-      radioButtons[i].checked = true;
-      break;
+    const radioButtons = document.getElementsByName('group100');
+    for (let i = 0; i < radioButtons.length; i++) {
+      if (radioButtons[i].value === category) {
+        radioButtons[i].checked = true;
+        break;
+      }
     }
   }
-}
 </script>

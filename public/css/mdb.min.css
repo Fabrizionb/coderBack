@@ -16,13 +16,7 @@
     margin-bottom: 2.8rem
 }
 
-.pswp__container,
-.pswp__img,
-.waves-effect {
-    -webkit-tap-highlight-color: transparent;
-    -moz-user-select: none;
-    -ms-user-select: none
-}
+
 
 .mdb-color.lighten-5 {
     background-color: #d0d6e2 !important
@@ -2299,11 +2293,7 @@ a.text-light:hover {
     transition: none !important
 }
 
-.waves-button,
-.waves-circle {
-    transform: translateZ(0);
-    -webkit-mask-image: -webkit-radial-gradient(circle, #fff 100%, #000 100%)
-}
+
 
 .waves-button,
 .waves-button-input,
@@ -2359,11 +2349,6 @@ a.text-light:hover {
     border-radius: 50%
 }
 
-.waves-float {
-    -webkit-mask-image: none;
-    box-shadow: 0 1px 1.5px 1px rgba(0, 0, 0, .12);
-    transition: all .3s
-}
 
 .waves-float:active {
     box-shadow: 0 8px 20px 1px rgba(0, 0, 0, .3)
@@ -19859,3 +19844,57 @@ margin-bottom: 10vh!important;
     .navbar-c {
         background-color: #3f51b5;
     }
+.pagination-button {
+    background-color: #1565c0!important;
+}
+
+.btn-primary{
+    background-color: #3f51b5b3!important;
+}
+.btn-primary:hover{
+    background-color: #3f51b5!important;
+}
+.blue-text {
+    color: #3f51b5b3!important;
+}
+.blue-text:hover {
+    color: #3f51b5!important;
+}
+.btn-danger{
+    background-color:#df2a3ab3!important;
+}
+
+.btn-danger:hover{
+    background-color:#df2a3a!important;
+}
+
+#navbarDropdownMenuLink-4:hover {
+    font-weight: bold;
+}
+
+
+.navbar-nav {
+    justify-content: center!important;
+}
+
+
+.container li {
+    margin: 0 25px;
+    justify-content: end!important;
+}
+.container li a {
+    font-size: 2em;
+    transition: 0.5s;
+    color: #000;
+}
+.container:hover li a {
+    color: #000;
+}
+.container:hover li a:not(:hover) {
+    color: #000;
+    opacity: 0.3;
+}
+
+.logoApiStore {
+height: 80px;
+}
