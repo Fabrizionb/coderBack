@@ -19868,8 +19868,9 @@ margin-bottom: 10vh!important;
     background-color:#df2a3a!important;
 }
 
-#navbarDropdownMenuLink-4:hover {
+#navbarDropdownMenuLink:hover {
     font-weight: bold;
+    color: red
 }
 
 
@@ -19883,7 +19884,7 @@ margin-bottom: 10vh!important;
     justify-content: end!important;
 }
 .container li a {
-    font-size: 2em;
+    font-size: 1.5em;
     transition: 0.5s;
     color: #000;
 }

@@ -200,9 +200,16 @@
     window.location.search = query.toString();
   }
   function setNext() {
-    const nextPage = Number(query.get('page')) + 1;
-    query.set('page', nextPage);
-    window.location.search = query.toString();
+    const existPage = Number(query.get('page'))
+    if (existPage) {
+      const nextPage = Number(query.get('page')) + 1;
+      query.set('page', nextPage);
+      window.location.search = query.toString();
+    } else {
+      query.set('page', 2);
+      window.location.search = query.toString();
+    }
+
   }
   function setLimit(limit) {
     query.set('limit', limit);

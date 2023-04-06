@@ -10,29 +10,37 @@
     </a>
     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent-4">
       <ul class="navbar-nav ml-auto ">
+
         <li class="nav-item cart-item mr-3">
           <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light" href="" data-toggle="modal"
             data-target="#cart-modal-ex">
-            <i class="fas fa-shopping-cart blue-text" aria-hidden="true"></i>
+            <img src="/img/shopping-cart.png">
             <span class="clearfix d-none d-sm-inline-block">Cart</span>
           </a>
         </li>
-        <li class="nav-item ml-3 mr-3">
-          <a class="nav-link waves-effect waves-light dark-grey-text font-weight-bold" href="/">
-            <i class="fas fa-cog blue-text"></i> Products
+
+ <li class="nav-item cart-item mr-3">
+          <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light" href="/" data-toggle="modal"
+            data-target="#cart-modal-ex">
+            <img src="/img/store.png">
+            <span class="clearfix d-none d-sm-inline-block">Products</span>
           </a>
         </li>
-        <li class="nav-item ml-3 mr-3">
-          <a class="nav-link dropdown-toggle waves-effect waves-light dark-grey-text font-weight-bold" href="/chat"
-            id="navbarDropdownMenuLink-4" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user blue-text"></i> Chat
+
+ <li class="nav-item cart-item mr-3">
+          <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light" href="/chat" data-toggle="modal"
+            data-target="#cart-modal-ex">
+            <img src="/img/bubble-chat.png">
+            <span class="clearfix d-none d-sm-inline-block">Chat</span>
           </a>
         </li>
+
       </ul>
     </div>
   </div>
 </nav>
     <!-- Navbar -->
+    <script src="https://kit.fontawesome.com/b926aedcdc.js" crossorigin="anonymous"></script>
     <script>
       function updateCartButton() {
         const cartId = localStorage.getItem('cartId');
