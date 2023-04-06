@@ -19842,4 +19842,20 @@ margin-bottom: 10vh!important;
   }
   .card {
     height: 100%;
-  }
+    padding: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+     }
+   .card .card-img-top {
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+       
+    }
+
+    main, html {
+        background-color: #3f51b5;
+    }
+
+    .navbar-c {
+        background-color: #3f51b5;
+    }
