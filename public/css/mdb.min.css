@@ -19899,3 +19899,18 @@ margin-bottom: 10vh!important;
 .logoApiStore {
 height: 80px;
 }
+
+.btn-navigation {
+    min-width: 80px; /* establece un ancho mínimo de 80 píxeles */
+    background-color: #3f51b5!important;
+  }
+
+  body > header > header > main > div.container.card > div > div > div.col-lg-10 > div > div > a {
+    background-color: #3f51b5!important;
+  }
+  .acordionText {
+    color: #3f51b5!important;
+  }
+  .acordionText:hover {
+    font-weight: bold;
+  }
