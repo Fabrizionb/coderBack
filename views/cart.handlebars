@@ -126,7 +126,6 @@
     try {
       const response = await fetch(`/api/cart/${cid}`, { method: 'DELETE' })
       const data = await response.json()
-      console.log(data.message)
       window.location.href = "/"
       //  actualizar la página o mostrar un mensaje
     } catch (error) {

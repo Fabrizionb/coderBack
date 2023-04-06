@@ -34,18 +34,28 @@
                   </div>
                   <div class="form-group">
                     <input class="form-check-input" name="group100" type="radio" id="radio101"
-                      onclick="setCategory('Remeras')">
+                      onclick="setCategory('T-shirts')">
                     <label for="radio101" class="form-check-label dark-grey-text">T-shirts</label>
                   </div>
                   <div class="form-group">
                     <input class="form-check-input" name="group100" type="radio" id="radio102"
-                      onclick="setCategory('Camperas')">
+                      onclick="setCategory('Jackets')">
                     <label for="radio102" class="form-check-label dark-grey-text">Jackets</label>
                   </div>
                   <div class="form-group">
                     <input class="form-check-input" name="group100" type="radio" id="radio103"
-                      onclick="setCategory('Pantalones')">
+                      onclick="setCategory('Pants')">
                     <label for="radio103" class="form-check-label dark-grey-text">Pants</label>
+                  </div>
+                   <div class="form-group">
+                    <input class="form-check-input" name="group100" type="radio" id="radio104"
+                      onclick="setCategory('Dresses')">
+                    <label for="radio104" class="form-check-label dark-grey-text">Dresses</label>
+                  </div>
+                   <div class="form-group">
+                    <input class="form-check-input" name="group100" type="radio" id="radio105"
+                      onclick="setCategory('Sweaters')">
+                    <label for="radio105" class="form-check-label dark-grey-text">Sweaters</label>
                   </div>
                   <!-- Radio group -->
               </div>
@@ -90,7 +100,7 @@
           <!-- Products Grid -->
           <section class="section pt-4">
             <!-- Grid row -->
-            <div class="row">
+            <div class="row card-deck">
               {{#each products}}
               <!-- Grid column -->
               <div class="col-lg-4 col-md-12 mb-4">
@@ -114,10 +124,6 @@
                     {{else}}
                     <span class="status not-available badge badge-danger mb-2">Status: Unavailable</span>
                     {{/if}}
-                    <p class="fw-bold">Description:<span class="fw-light"> {{this.description}}</span></p>
-                    <p class="fw-bold">Category:<span class="fw-light"> {{this.category}}</span></p>
-                    <p class="fw-bold">Stock:<span class="fw-light"> {{this.stock}}</span></p>
-                    <p class="fw-bold">Product code:<span class="fw-light"> {{this.code}}</span></p>
                     <!-- Card footer -->
                     <div class="card-footer pb-0">
                       <div class="row mb-0">
@@ -271,4 +277,13 @@
       await addProductToCart(cartId, productId);
     });
   });
+  function setCheckedRadio(category) {
+  const radioButtons = document.getElementsByName('group100');
+  for (let i = 0; i < radioButtons.length; i++) {
+    if (radioButtons[i].value === category) {
+      radioButtons[i].checked = true;
+      break;
+    }
+  }
+}
 </script>

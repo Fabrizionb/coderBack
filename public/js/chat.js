@@ -3,15 +3,15 @@ let user
 const chatBox = document.querySelector('#chatBox')
 
 Swal.fire({
-  title: 'Identificate',
-  text: 'Ingresa tu Email',
+  title: 'Identify yourself',
+  text: 'Enter your Email',
   input: 'text',
   icon: 'question',
   inputValidator: (value) => {
     if (!value) {
-      return 'Por favor, ingresa una dirección de correo electrónico'
+      return 'Please enter an email.'
     } else if (!/\S+@\S+\.\S+/.test(value)) {
-      return 'Por favor, ingresa una dirección de correo electrónico válida'
+      return 'Please enter a valid email address'
     }
   },
   allowOutsideClick: false
@@ -33,7 +33,7 @@ socket.on('messageLogs', (data) => {
 
 socket.on('user_connected', (data) => {
   Swal.fire({
-    title: `${data} se acaba de conectar`,
+    title: `${data} is online`,
     toast: true,
     position: 'top-right'
   })

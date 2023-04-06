@@ -19840,3 +19840,6 @@ margin-bottom: 10vh!important;
     background-color: black;
     color: white;
   }
+  .card {
+    height: 100%;
+  }

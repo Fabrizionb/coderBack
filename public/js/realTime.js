@@ -92,8 +92,6 @@ async function sendModify(event) {
   }
 
   const bodyData = product;
-  console.log(bodyData)
-
   const response = await fetch(`/api/products/${_id}`, {
     method: "PUT",
     body: JSON.stringify(bodyData.product),
