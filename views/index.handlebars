@@ -154,40 +154,43 @@
             </div>
             <!-- Grid row -->
             <!-- Grid row -->
-            <div class="row justify-content-center mb-4">
+            <div class="container col-4 mb-4">
               <!-- Pagination -->
-              <nav class="mb-4 row justify-content-center">
-                <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
-                  <ul class="pagination pagination-circle pg-blue mb-0 justify-content-center">
-                    <div class="btn-group d-flex mx-2">
-                      {{#if hasPrevPage}}
-                      <button
-                        class="btn btn-secondary pagination-button btn-sm btn-navigation btn-block d-flex justify-content-between col-6 pagination"
-                        onclick='setPrev()'>Previous</button>
-                      {{/if}}
-                      {{#if hasNextPage}}
-                      <button
-                        class="btn btn-secondary pagination-button btn-sm btn-navigation btn-block d-flex justify-content-between col-6 pagination"
-                        onclick='setNext()'>Next</button>
-                      {{/if}}
-                    </div>
-                  </ul>
-                  <div class="row justify-content-center">
-                    <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12 text-center">
-                      <p>Page {{page}} of {{pages}}</p>
-                    </div>
-                  </div>
-                </div>
-              </nav>
-              <!-- Pagination -->
+
+              <div class="row">
+
+
+                {{#if hasPrevPage}}
+                <button class="col-4 btn-primary" onclick='setPrev()'>
+                  <span class="material-symbols-outlined">
+                    arrow_back_ios
+                  </span>
+                </button>
+                {{/if}}
+                <span class="col-4 text-center text-pagination">{{page}} of {{pages}}</span>
+                {{#if hasNextPage}}
+                <button class="col-4 btn-primary" onclick='setNext()'>
+                  <span class="material-symbols-outlined">
+                    arrow_forward_ios
+                  </span>
+                </button>
+                {{/if}}
+
+              </div>
+
+
+
             </div>
-            <!-- Grid row -->
-          </section>
-          <!-- Products Grid -->
+            </nav>
+            <!-- Pagination -->
         </div>
-        <!-- Content -->
+        <!-- Grid row -->
+        </section>
+        <!-- Products Grid -->
       </div>
+      <!-- Content -->
     </div>
+  </div>
   </div>
 </main>
 <script src="/socket.io/socket.io.js"></script>
@@ -258,17 +261,18 @@
       method: 'POST',
     });
     const data = await response.json();
-    Swal.fire({
-      title: 'Product added to cart',
-      icon: 'success',
-      showCancelButton: true,
-      confirmButtonText: `<a href="/view/cart/${cartId}" class="btn-go-to-cart">Go to cart</a>`,
-      cancelButtonText: 'Continue shopping',
-      position: 'top-right',
-      timer: 5000,
-      timerProgressBar: true,
-      toast: true
-    })
+Swal.fire({
+  title: 'Product added to cart',
+  icon: 'success',
+  showCancelButton: true,
+  confirmButtonText: 'Go to cart',
+  confirmButtonClass: 'btn-go-to-cart',
+  cancelButtonText: 'Continue shopping',
+  position: 'top-right',
+  timer: 5000,
+  timerProgressBar: true,
+  toast: true
+})
     console.log('Producto added to cart', data);
   }
 
