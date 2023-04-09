@@ -1,6 +1,4 @@
 import express from 'express'
-import productsRoute from './routes/products.route.js'
-import cartRoute from './routes/cart.route.js'
 import fileDirname from './utils/fileDirName.js'
 import cookieParser from 'cookie-parser'
 import { create } from 'express-handlebars'
@@ -10,6 +8,9 @@ import configureSocket from './socket/configure-socket.js'
 import mongoose from 'mongoose'
 import config from './data.js'
 import session from 'express-session'
+import MongoStore from 'connect-mongo'
+import routes from './routes/index.js'
+
 const { PORT, MONGO_URI, COOKIE_SECRET } = config
 const { __dirname } = fileDirname(import.meta)
 const app = express()
@@ -19,6 +20,16 @@ const httpServer = app.listen(PORT, () => console.log(`escuchando puerto ${PORT}
 configureSocket(httpServer)
 
 app.use(session({
+  store: MongoStore.create(
+    {mongoUrl: MONGO_URI,
+      mongoOptions: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      },
+      //ttl: 60 * 60 * 24 * 7
+      ttl: 15
+
+    }),
   secret: COOKIE_SECRET,
   resave: true,
   saveUninitialized: true
@@ -37,11 +48,10 @@ app.engine('handlebars', hbs.engine)
 app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars')
 
-app.use('/api/products', productsRoute)
-app.use('/api/cart', cartRoute)
+
 app.use(express.static(__dirname + '/public'))
 app.use('/', viewsRoute)
-
+app.use('/api', routes)
 // Mongoose
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
@@ -73,43 +83,6 @@ app.get('/deleteCookie', (req, res) => {
   res.clearCookie('CoderCookie').send('Se borro la cookie')
 })
 
-// Session
-app.get('/session', (req, res)=>{
-  if (req.session){
-    if (req.session.counter){
-      req.session.counter++
-      res.send({counter: req.session.counter})
-    } else {
-      req.session.counter = 1
-      res.send({counter: req.session.counter, firstTime : true})
-    }
-  } else {
-    res.send('Error: Session not initialized')
-  }
-})
-// logout
-app.get('/logout', (req, res)=>{
-  req.session.destroy( err =>{
-    if(!err) res.send({status:'Logout ok'})
-    else res.send({ status: 'Logout ERROR', body: err})
-  })
-  })
-
-  //Login
-  app.get('/login', (req, res)=>{
-    const {username, password} = req.query
-    if( username !== 'admin'|| password !== 'admin'){
-      res.status(401).send({error: "Usuario o contraseña incorrectos"})
-      return
-    }
-    req.session.user = username
-    req.session.admin = true
-    res.send({login : 'ok'})
-  })
-
-app.get('/autorizado', auth,(req,res)=>{
-  res.send({autorizado: 'ok'})
-})
 
 
 

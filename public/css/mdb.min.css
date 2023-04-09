@@ -1456,7 +1456,7 @@ input {
   border: 0px!important;
   height: 100%;
   background-color: transparent;
-  color:white;
+  color:rgb(4, 4, 4);
 }
 input::placeholder{
   color:rgb(173, 162, 162);
@@ -1478,4 +1478,17 @@ input::placeholder{
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
+}
+
+.login {
+  min-height: 400px;
+}
+
+#input {
+  color: black!important;
+}
+
+#error-message {
+  color: red;
+  margin-top: 10px;
 }

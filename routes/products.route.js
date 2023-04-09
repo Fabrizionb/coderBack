@@ -7,7 +7,7 @@ import productModel from '../Dao/models/product.model.js'
 const route = Router()
 
 route.get('/', async (req, res, next) => {
-  const baseUrl = 'http://localhost:3000';
+  const baseUrl = 'http://localhost:8080';
   const query = req.query
   const sort = {}
   // Verificar si se ha enviado un parámetro de ordenamiento
