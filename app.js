@@ -19,21 +19,23 @@ const httpServer = app.listen(PORT, () => console.log(`escuchando puerto ${PORT}
 // config socket.io
 configureSocket(httpServer)
 
-app.use(session({
-  store: MongoStore.create(
-    {mongoUrl: MONGO_URI,
-      mongoOptions: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-      },
-      //ttl: 60 * 60 * 24 * 7
-      ttl: 15
-
-    }),
-  secret: COOKIE_SECRET,
-  resave: true,
-  saveUninitialized: true
-}))
+// Config Session
+app.use(
+  session({
+    secret: COOKIE_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      secure: false, // Set to true if using HTTPS
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 // 1 day
+    },
+    store: new MongoStore({
+      mongoUrl: MONGO_URI,
+      ttl: 24 * 60 * 60 // session TTL in seconds
+    })
+  })
+)
 app.use(cookieParser(COOKIE_SECRET))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

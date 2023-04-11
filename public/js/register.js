@@ -1,22 +1,46 @@
-async function send (event) {
-  event.preventDefault()
-  const name = document.getElementById('form-name').value
-  const lastname = document.getElementById('form-last-name').value
-  const email = document.getElementById('form-email').value
-  const age = document.getElementById('form-edad').value
-  const password = document.getElementById('form-password').value
+const emailForm = document.querySelector('#email')
+const passwordForm = document.querySelector('#password')
+const nameForm = document.querySelector('#name')
+const lastnameForm = document.querySelector('#lastname')
+const registerBtn = document.querySelector('#registerBtn')
 
-  api
-    .post('/api/users', {
-      name,
-      lastname,
-      email,
-      age,
-      password
+registerBtn.addEventListener('click', (event) => {
+  event.preventDefault()
+  const email = emailForm.value
+  const password = passwordForm.value
+  const name = nameForm.value
+  const lastname = lastnameForm.value
+
+  if (email === '' || password === '' || name === '' || lastname === '') {
+    Swal.fire('Error!', 'All fields are required', 'error')
+    return
+  }
+
+  emailForm.value = ''
+  passwordForm.value = ''
+  nameForm.value = ''
+  lastnameForm.value = ''
+
+  fetch('/api/users/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email, password, name, lastname })
+  })
+    .then((response) => {
+      return response.json()
     })
-    .then(() => {
-      alert('Usuario Registrado')
-      setTimeout(() => window.location.href = '/login', 1000)
+    .then((response) => {
+      if (response.status === '203') {
+        Swal.fire('Success!', 'User created.')
+        setTimeout(() => {
+          const url = window.location.href
+          const first = url.split('/')[2]
+          window.location.href = `http://${first}/profile`
+        }, 1500)
+        return
+      }
+      Swal.fire('Error!', 'User not created.', 'error')
     })
-    .catch((error) => console.log(error)) // manejar cualquier error
-}
+})

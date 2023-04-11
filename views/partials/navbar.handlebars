@@ -1,60 +1,53 @@
-<header class="navbar-c">
-  <!-- Navbar -->
-  <header class="navbar-c">
     <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light scrolling-navbar white">
-  <div class="container">
-    <a class="navbar-brand font-weight-bold" href="/">
-    <img alt="logo api store" src="/img/logo.png" class="logoApiStore">
-    
-    </a>
-    <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent-4">
-      <ul class="navbar-nav ml-auto ">
+    <nav class="navbar  navbar-expand-lg bg-light">
+      <div class="container">
+        <a class="navbar-brand font-weight-bold" href="/">
+          <img alt="logo api store" src="/img/logo.png" class="logoApiStore">
 
-        <li class="nav-item cart-item mr-3">
-          <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light" href="" data-toggle="modal"
-            data-target="#cart-modal-ex">
-            <img src="/img/shopping-cart.png">
-            <span class="clearfix d-none d-sm-inline-block">Cart</span>
-          </a>
-        </li>
-
- <li class="nav-item cart-item mr-3">
-          <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light" href="/" data-toggle="modal"
-            data-target="#cart-modal-ex">
-            <img src="/img/store.png">
-            <span class="clearfix d-none d-sm-inline-block">Products</span>
-          </a>
-        </li>
-
- <li class="nav-item cart-item mr-3">
-          <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light" href="/chat" data-toggle="modal"
-            data-target="#cart-modal-ex">
-            <img src="/img/bubble-chat.png">
-            <span class="clearfix d-none d-sm-inline-block">Chat</span>
-          </a>
-        </li>
-
-      </ul>
-    </div>
-  </div>
-</nav>
-    <!-- Navbar -->
-    <script src="https://kit.fontawesome.com/b926aedcdc.js" crossorigin="anonymous"></script>
-    <script>
-      function updateCartButton() {
-        const cartId = localStorage.getItem('cartId');
-
-        const cartLink = document.querySelector('.cart-item .nav-link');
-        if (cartId === null) {
-          null;
-        } else {
-
-          cartLink.href = `/view/cart/${cartId}`;
-        }
-      }
-      updateCartButton();
-      window.addEventListener('storage', () => {
-        updateCartButton();
-      });
-    </script>
+        </a> <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">
+                <img src="/img/store.png">
+                Products</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/chat">
+                <img src="/img/chat.png">
+                Chat</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <img class="iconNav" src="/img/user.png">
+                User Section
+              </a>
+              <ul class="dropdown-menu">
+                <li class="nav-item cart-item mr-3">
+                  <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light" href="/login"
+                    data-toggle="modal" data-target="#cart-modal-ex">
+                    <span class="clearfix d-none d-sm-inline-block">Login</span>
+                  </a>
+                </li>
+                <li class="nav-item cart-item mr-3">
+                  <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light" href="/register"
+                    data-toggle="modal" data-target="#cart-modal-ex">
+                    <span class="clearfix d-none d-sm-inline-block">Register</span>
+                  </a>
+                </li>
+                <li class="nav-item cart-item mr-3">
+                  <a class="nav-link dark-grey-text font-weight-bold waves-effect waves-light" href="/profile"
+                    data-toggle="modal" data-target="#cart-modal-ex">
+                    <span class="clearfix d-none d-sm-inline-block">Profile</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>

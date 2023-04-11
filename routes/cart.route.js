@@ -85,7 +85,7 @@ route.post('/:cid/product/:pid', async (req, res, next) => {
 })
 
 // Eliminar un producto de un carrito
-route.delete('/:cid/products/:pid', async (req, res, next) => {
+route.delete('/:cid/product/:pid', async (req, res, next) => {
   const { cid, pid } = req.params
   try {
     const cart = await cartModel.findById(cid)

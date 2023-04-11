@@ -3,6 +3,7 @@ import { Router } from 'express'
 import { multiUploader } from '../utils/multiUploader.js'
 import productManager from '../Dao/controller/product.manager.js'
 import productModel from '../Dao/models/product.model.js'
+import mongoose from 'mongoose';
 
 const route = Router()
 
@@ -35,7 +36,7 @@ route.get('/', async (req, res, next) => {
     if (!products) {
       res.status(404).json({ error: 'Products not found' })
     } else {
-      res.status(200).json( {
+      res.status(200).json({
         status: "success",
         payload: products.docs,
         totalPages: products.totalPages,
@@ -50,7 +51,7 @@ route.get('/', async (req, res, next) => {
       )
     }
 
-    
+
   } catch (error) {
     next(error)
   }
@@ -60,8 +61,12 @@ route.get('/', async (req, res, next) => {
 
 route.get('/:pid', async (req, res, next) => {
   const { pid } = req.params
-
   try {
+    const isValidObjectId = mongoose.isValidObjectId(pid);
+    if (!isValidObjectId) {
+      res.status(400).json({ error: `Invalid Product Id` })
+      return;
+    }
     const product = await productManager.findOne({ _id: pid })
     if (!product) {
       res.status(404).json({ error: `Product with id ${pid} not found` })
@@ -69,7 +74,7 @@ route.get('/:pid', async (req, res, next) => {
     }
     res.status(200).json({ product })
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    next(error)
   }
 })
 

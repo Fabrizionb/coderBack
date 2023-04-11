@@ -1,14 +1,23 @@
+/* eslint-disable*/
 import { Router } from 'express'
 import productManager from '../Dao/controller/product.manager.js'
 import productModel from '../Dao/models/product.model.js'
 import cartModel from '../Dao/models/cart.model.js'
 import util from '../utils/view.util.js'
+import session from 'express-session'
+import auth from '../utils/auth.js'
+import isAdmin from '../utils/isAdmin.js'
+import mongoose from 'mongoose';
+
 /* eslint-disabled */
 const route = Router()
 
 // Ruta para los productos
 route.get('/', async (req, res, next) => {
   const query = req.query
+  const userCart = req.session.user && req.session.user.cartId ? req.session.user.cartId._id : null
+  const user = req.session.user ? req.session.user : null
+
   const sort = {}
   // Verificar si se ha enviado un parámetro de ordenamiento
   sort[query.sort] = query.order === 'desc' ? -1 : 1
@@ -55,7 +64,10 @@ route.get('/', async (req, res, next) => {
         hasPrevPage: products.hasPrevPage,
         hasNextPage: products.hasNextPage,
         sort: query.sort ?? '',
-        order: query.order ?? 'asc'
+        order: query.order ?? 'asc',
+        cartId: userCart,
+        user
+
       })
     }
   } catch (error) {
@@ -66,18 +78,19 @@ route.get('/', async (req, res, next) => {
 // ruta para ver cada uno de los productos
 route.get('/view/product/:pid', async (req, res, next) => {
   const { pid } = req.params
-  const data = await productManager.findOne({ _id: pid })
+  if (!mongoose.isValidObjectId(pid)) {
+    return res.status(400).render('404', { msg: `Invalid Product Id`, title: 'Product not Found' })
+  }
   try {
+    const data = await productManager.findOne({ _id: pid })
     if (!data) {
-      res.status(404).render('404', { msg: `The product with id: ${pid} you’re looking for doesn’t exist`, title: 'Product not Found' })
-      return
-    } else {
-      const product = {
-        ...data._doc,
-        _id: data._doc._id.toString()
-      }
-      res.status(200).render('product', { titulo: 'List of Products', data: product })
+      return res.status(404).render('404', { msg: `The product with id: ${pid} you’re looking for doesn’t exist`, title: 'Product not Found' })
     }
+    const product = {
+      ...data._doc,
+      _id: data._doc._id.toString()
+    }
+    return res.status(200).render('product', { titulo: 'List of Products', data: product })
   } catch (error) {
     next(error)
   }
@@ -85,22 +98,27 @@ route.get('/view/product/:pid', async (req, res, next) => {
 
 // ruta para ver el carrito
 route.get('/view/cart/:cid', async (req, res, next) => {
-  const { cid } = req.params
-  const result = await cartModel.findById(cid).populate('products.product')
   try {
+    const { cid } = req.params
+    const user = req.session.user
+    if (!user || !user.cartId || !user.cartId._id) {
+      throw new Error('User or cart not found')
+    }
+    const cart = user.cartId._id
+    const result = await cartModel.findById(cart).populate('products.product')
     if (!result) {
       res.status(404).render('404', { msg: `The cart with id: ${cid} you’re looking for doesn’t exist`, title: 'Cart not Found' })
       return
     }
-    const cart = result.toObject()
-    res.status(200).render('cart', { titulo: 'Shopping Cart', cart })
+    const cartData = result.toObject()
+    res.status(200).render('cart', { titulo: 'Shopping Cart', cart: cartData })
   } catch (error) {
     next(error)
   }
 })
 
 // Ruta para ver los productos en tiempo real
-route.get('/realtimeproducts', async (req, res, next) => {
+route.get('/realtimeproducts', isAdmin, async (req, res, next) => {
   const data = await productManager.find()
   try {
     if (!data) {
@@ -122,5 +140,41 @@ route.get('/chat', async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+})
+
+// Ruta para ver el formulario de registro
+route.get('/register', (req, res, next) => {
+  const email = req.session.user
+  if (email) {
+    return res.redirect('/profile')
+  }
+  res.render('register')
+})
+
+// Ruta para ver el formulario de login
+route.get('/login', (req, res, next) => {
+  const email = req.session.user
+  if (email) {
+    return res.redirect('/profile')
+  }
+  res.render('login')
+})
+
+// Ruta para ver el perfil
+route.get('/profile', auth, async (req, res) => {
+  const user = req.session.user
+  const cartId = req.session.user.cartId._id
+  const cart = await cartModel.findOne({ _id: cartId })
+  const productsInCart = cart.products
+  const cartLength = countProductsQuantity(productsInCart)
+  function countProductsQuantity (productsInCart) {
+    let totalQuantity = 0
+    for (let i = 0; i < productsInCart.length; i++) {
+      totalQuantity += productsInCart[i].quantity
+    }
+    return totalQuantity
+  }
+
+  res.render('profile', { user, cartLength })
 })
 export default route

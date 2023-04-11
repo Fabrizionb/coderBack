@@ -1,198 +1,205 @@
 <main>
-  <div class="card-header mt-3">
-    {{!-- {{> title titulo = "Listado de Productos"}} --}}
-  </div>
-  <div class="container card">
-    <div class="container  pt-3">
-      <div class="row pt-4">
-        <!-- Sidebar -->
-        <div class="col-lg-2">
-          <div class="">
-            <!-- Grid row -->
-            <div class="row">
-              <div class="col-md-6 col-lg-12 mb-5">
-                <!-- Panel -->
-                <h5 class="font-weight-bold dark-grey-text"><strong>Order By</strong></h3>
-                  <div class="divider"></div>
-                  <p class="blue-text"><a onclick='resetFilters()'>Reset Filters</a></p>
-                  <p class="dark-grey-text"><a onclick='setDisp(true)'>Available</a></p>
-                  <p class="dark-grey-text"><a onclick='setDisp(false)'>Unavailable</a></p>
-                  <p class="dark-grey-text"><a onclick='setOrder("price", "desc")'>Price: high to high</a></p>
-                  <p class="dark-grey-text"><a onclick='setOrder("price", "asc")'>Price: low to low</a></p>
-                  <p class="dark-grey-text"><a onclick='setOrder("title", "asc")'>Name: A to Z</a></p>
-                  <p class="dark-grey-text"><a onclick='setOrder("title", "desc")'>Name: Z to A</a></p>
-              </div>
-              <!-- Filter by category -->
-              <div class="col-md-6 col-lg-12 mb-5">
-                <h5 class="font-weight-bold dark-grey-text"><strong>Category</strong></h3>
-                  <div class="divider"></div>
-                  <!-- Radio group -->
-                  <div class="form-group">
-                    <input class="form-check-input" name="group100" type="radio" id="radio100"
-                      onclick="setCategory('')">
-                    <label for="radio100" class="form-check-label dark-grey-text">All</label>
-                  </div>
-                  <div class="form-group">
-                    <input class="form-check-input" name="group100" type="radio" id="radio101"
-                      onclick="setCategory('T-shirts')">
-                    <label for="radio101" class="form-check-label dark-grey-text">T-shirts</label>
-                  </div>
-                  <div class="form-group">
-                    <input class="form-check-input" name="group100" type="radio" id="radio102"
-                      onclick="setCategory('Jackets')">
-                    <label for="radio102" class="form-check-label dark-grey-text">Jackets</label>
-                  </div>
-                  <div class="form-group">
-                    <input class="form-check-input" name="group100" type="radio" id="radio103"
-                      onclick="setCategory('Pants')">
-                    <label for="radio103" class="form-check-label dark-grey-text">Pants</label>
-                  </div>
-                  <div class="form-group">
-                    <input class="form-check-input" name="group100" type="radio" id="radio104"
-                      onclick="setCategory('Dresses')">
-                    <label for="radio104" class="form-check-label dark-grey-text">Dresses</label>
-                  </div>
-                  <div class="form-group">
-                    <input class="form-check-input" name="group100" type="radio" id="radio105"
-                      onclick="setCategory('Sweaters')">
-                    <label for="radio105" class="form-check-label dark-grey-text">Sweaters</label>
-                  </div>
-                  <!-- Radio group -->
-              </div>
-              <!-- Filter by category -->
-            </div>
-            <!-- Grid row -->
-
-            <!-- Grid row -->
-            <div class="row">
-            </div>
-            <!-- Grid row -->
-          </div>
-        </div>
-        <!-- Sidebar -->
-        <!-- Content -->
-        <div class="col-lg-10">
-          <!-- Filter Area -->
-          <div class="row">
-            <div class="col-md-8 text-right">
-              <!-- View Switcher -->
-              <p>Results per Page</p>
-              <a class="btn blue darken-3 btn-sm" onclick="setLimit(4)">
-                <i class="fas fa-th mr-2" aria-hidden="true"></i>
-                <strong>4</strong>
-              </a>
-              <a class="btn blue darken-3 btn-sm" onclick="setLimit(8)">
-                <i class="fas fa-th mr-2" aria-hidden="true"></i>
-                <strong>8</strong>
-              </a>
-              <a class="btn blue darken-3 btn-sm" onclick="setLimit(12)">
-                <i class="fas fa-th mr-2" aria-hidden="true"></i>
-                <strong>12</strong>
-              </a>
-              <a class="btn blue darken-3 btn-sm" onclick="setLimit(40)">
-                <i class="fas fa-th mr-2" aria-hidden="true"></i>
-                <strong>40</strong>
-              </a>
-              <!-- View Switcher -->
-            </div>
-          </div>
-          <!-- Filter Area -->
-          <!-- Products Grid -->
-          <section class="section pt-4">
-            <!-- Grid row -->
-            <div class="row card-deck">
-              {{#each products}}
-              <!-- Grid column -->
-              <div class="col-lg-3 col-md-12 mb-4">
-                <!-- Card -->
-                <div class="card card-ecommerce " data-product-id="{{this._id}}">
-                  <!-- Card image -->
-                  <div class="view overlay">
-                    <img class="card-img-top mx-auto d-block p-0" src="/img/{{thumbnails.[0]}}" class="img-fluid"
-                      alt="image of {{this.title}}">
-                    <a href="/view/product/{{this._id}}">
-                      <div class="mask rgba-white-slight"></div>
-                    </a>
-                  </div>
-                  <!-- Card image -->
-                  <!-- Card content -->
-                  <div class="card-body">
-                    <!-- Category & Title -->
-                    <h5 class="card-title mb-1 text-center"><strong><a href=""
-                          class="dark-grey-text">{{this.title}}</a></strong>
-                    </h5>
-                    {{#if this.status}}
-                    <span class="status available badge badge-success mb-2 w-100">Status: Available</span>
+  <div id="user-data" data-user="{{ cartId }}">
+    <div class="card-header mt-3">
+      {{!-- {{> title titulo = "Listado de Productos"}} --}}
+    </div>
+    <div class="container card">
+      <div class="container  pt-3">
+        <div class="row pt-4">
+          <!-- Sidebar -->
+          <div class="col-lg-2 finder">
+            <div class="">
+              <!-- Grid row -->
+              <div class="row">
+                <div class="col-md-6 col-lg-12 mb-5">
+                  <!-- Panel -->
+                  <h5 class="font-weight-bold dark-grey-text"><strong>Order By</strong></h3>
+                    <div class="divider"></div>
+                    <p class="blue-text"><a onclick='resetFilters()'>Reset Filters</a></p>
+                    <p class="dark-grey-text"><a onclick='setDisp(true)'>Available</a></p>
+                    <p class="dark-grey-text"><a onclick='setDisp(false)'>Unavailable</a></p>
+                    <p class="dark-grey-text"><a onclick='setOrder("price", "desc")'>Price: high to high</a></p>
+                    <p class="dark-grey-text"><a onclick='setOrder("price", "asc")'>Price: low to low</a></p>
+                    <p class="dark-grey-text"><a onclick='setOrder("title", "asc")'>Name: A to Z</a></p>
+                    <p class="dark-grey-text"><a onclick='setOrder("title", "desc")'>Name: Z to A</a></p>
+                </div>
+                <!-- Filter by category -->
+                <div class="col-md-6 col-lg-12 mb-5">
+                  <h5 class="font-weight-bold dark-grey-text"><strong>Category</strong></h3>
+                    <div class="divider"></div>
+                    <!-- Radio group -->
+                    <div class="form-group">
+                      <input class="form-check-input" name="group100" type="radio" id="radio100"
+                        onclick="setCategory('')">
+                      <label for="radio100" class="form-check-label dark-grey-text">All</label>
+                    </div>
+                    <div class="form-group">
+                      <input class="form-check-input" name="group100" type="radio" id="radio101"
+                        onclick="setCategory('T-shirts')">
+                      <label for="radio101" class="form-check-label dark-grey-text">T-shirts</label>
+                    </div>
+                    <div class="form-group">
+                      <input class="form-check-input" name="group100" type="radio" id="radio102"
+                        onclick="setCategory('Jackets')">
+                      <label for="radio102" class="form-check-label dark-grey-text">Jackets</label>
+                    </div>
+                    <div class="form-group">
+                      <input class="form-check-input" name="group100" type="radio" id="radio103"
+                        onclick="setCategory('Pants')">
+                      <label for="radio103" class="form-check-label dark-grey-text">Pants</label>
+                    </div>
+                    <div class="form-group">
+                      <input class="form-check-input" name="group100" type="radio" id="radio104"
+                        onclick="setCategory('Dresses')">
+                      <label for="radio104" class="form-check-label dark-grey-text">Dresses</label>
+                    </div>
+                    <div class="form-group">
+                      <input class="form-check-input" name="group100" type="radio" id="radio105"
+                        onclick="setCategory('Sweaters')">
+                      <label for="radio105" class="form-check-label dark-grey-text">Sweaters</label>
+                    </div>
+                    <!-- Radio group -->
+                </div>
+                <div class="divider"></div>
+                <div class="col-md-6 col-lg-12 mb-5 dataUser">
+                  <h5 class="font-weight-bold dark-grey-text"><strong>User Data</strong></h3>
+                    {{#if user}}
+                    <p>Welcome {{user.name}}</p>
+                    <p>{{user.email}}</p>
+                     <button type="submit" class="btn btn-primary" id="logout">Logout</button>
                     {{else}}
-                    <span class="status not-available badge badge-danger mb-2 w-100">Status: Unavailable</span>
+                    <p>Please log in to view user data.</p>
                     {{/if}}
-                    <!-- Card footer -->
-                    <div class="card-footer pb-0">
-                      <div class="row mb-0 text-center">
-                        <span class="float-left"><strong>€ {{this.price}}</strong></span>
-                        <span class="float-right">
-                          {{#if this.status}}
-                          <button class="cart-btn" data-toggle="tooltip" data-placement="top" title="Add to Cart">
-                            <i class="fas fa-shopping-cart ml-3 status available"></i>
-                          </button>
-                          {{else}}
-                          <button class="cart-btn disabled" data-toggle="tooltip" data-placement="top"
-                            title="Product not available">
-                            <i class="fas fa-shopping-cart ml-3 status not-available"></i>
-                          </button>
-                          {{/if}}
-                        </span>
+                </div>
+                <!-- Filter by category -->
+              </div>
+              <!-- Grid row -->
+
+              <!-- Grid row -->
+              <div class="row">
+              </div>
+              <!-- Grid row -->
+            </div>
+          </div>
+          <!-- Sidebar -->
+          <!-- Content -->
+          <div class="col-lg-10">
+            <!-- Filter Area -->
+            <div class="row">
+              <div class="col-md-8 text-right">
+                <!-- View Switcher -->
+                <p>Results per Page</p>
+                <a class="btn blue darken-3 btn-sm" onclick="setLimit(4)">
+                  <i class="fas fa-th mr-2" aria-hidden="true"></i>
+                  <strong>4</strong>
+                </a>
+                <a class="btn blue darken-3 btn-sm" onclick="setLimit(8)">
+                  <i class="fas fa-th mr-2" aria-hidden="true"></i>
+                  <strong>8</strong>
+                </a>
+                <a class="btn blue darken-3 btn-sm" onclick="setLimit(12)">
+                  <i class="fas fa-th mr-2" aria-hidden="true"></i>
+                  <strong>12</strong>
+                </a>
+                <a class="btn blue darken-3 btn-sm" onclick="setLimit(40)">
+                  <i class="fas fa-th mr-2" aria-hidden="true"></i>
+                  <strong>40</strong>
+                </a>
+                <!-- View Switcher -->
+              </div>
+            </div>
+            <!-- Filter Area -->
+            <!-- Products Grid -->
+            <section class="section pt-4">
+              <!-- Grid row -->
+              <div class="row card-deck">
+                {{#each products}}
+                <!-- Grid column -->
+                <div class="col-lg-3 col-md-12 mb-4">
+                  <!-- Card -->
+                  <div class="card card-ecommerce " data-product-id="{{this._id}}">
+                    <!-- Card image -->
+                    <div class="view overlay">
+                      <img class="card-img-top mx-auto d-block p-0" src="/img/{{thumbnails.[0]}}" class="img-fluid"
+                        alt="image of {{this.title}}">
+                      <a href="/view/product/{{this._id}}">
+                        <div class="mask rgba-white-slight"></div>
+                      </a>
+                    </div>
+                    <!-- Card image -->
+                    <!-- Card content -->
+                    <div class="card-body">
+                      <!-- Category & Title -->
+                      <h5 class="card-title mb-1 text-center"><strong><a href=""
+                            class="dark-grey-text">{{this.title}}</a></strong>
+                      </h5>
+                      {{#if this.status}}
+                      <span class="status available badge badge-success mb-2 w-100">Status: Available</span>
+                      {{else}}
+                      <span class="status not-available badge badge-danger mb-2 w-100">Status: Unavailable</span>
+                      {{/if}}
+                      <!-- Card footer -->
+                      <div class="card-footer pb-0">
+                        <div class="row mb-0 text-center">
+                          <span class="float-left"><strong>€ {{this.price}}</strong></span>
+                          <span class="float-right">
+                            {{#if this.status}}
+                            <button class="cart-btn" data-toggle="tooltip" data-placement="top" title="Add to Cart">
+                              <i class="fas fa-shopping-cart ml-3 status available"></i>
+                            </button>
+                            {{else}}
+                            <button class="cart-btn disabled" data-toggle="tooltip" data-placement="top"
+                              title="Product not available">
+                              <i class="fas fa-shopping-cart ml-3 status not-available"></i>
+                            </button>
+                            {{/if}}
+                          </span>
+                        </div>
                       </div>
                     </div>
+                    <!-- Card content -->
                   </div>
-                  <!-- Card content -->
+                  <!-- Card -->
                 </div>
-                <!-- Card -->
+                <!-- Grid column -->
+                {{/each}}
               </div>
-              <!-- Grid column -->
-              {{/each}}
-            </div>
-            <!-- Grid row -->
-            <!-- Grid row -->
-            <div class="container col-4 mb-4">
+              <!-- Grid row -->
+              <!-- Grid row -->
+              <div class="container col-4 mb-4">
+                <!-- Pagination -->
+                <div class="row">
+                  {{#if hasPrevPage}}
+                  <button class="col-4 btn-primary" onclick='setPrev()'>
+                    <span class="material-symbols-outlined">
+                      arrow_back_ios
+                    </span>
+                  </button>
+                  {{/if}}
+                  <span class="col-4 text-center text-pagination">{{page}} of {{pages}}</span>
+                  {{#if hasNextPage}}
+                  <button class="col-4 btn-primary" onclick='setNext()'>
+                    <span class="material-symbols-outlined">
+                      arrow_forward_ios
+                    </span>
+                  </button>
+                  {{/if}}
+                </div>
+              </div>
+              </nav>
               <!-- Pagination -->
-
-              <div class="row">
-
-
-                {{#if hasPrevPage}}
-                <button class="col-4 btn-primary" onclick='setPrev()'>
-                  <span class="material-symbols-outlined">
-                    arrow_back_ios
-                  </span>
-                </button>
-                {{/if}}
-                <span class="col-4 text-center text-pagination">{{page}} of {{pages}}</span>
-                {{#if hasNextPage}}
-                <button class="col-4 btn-primary" onclick='setNext()'>
-                  <span class="material-symbols-outlined">
-                    arrow_forward_ios
-                  </span>
-                </button>
-                {{/if}}
-
-              </div>
-
-
-
-            </div>
-            </nav>
-            <!-- Pagination -->
+          </div>
+          <!-- Grid row -->
+          </section>
+          <!-- Products Grid -->
         </div>
-        <!-- Grid row -->
-        </section>
-        <!-- Products Grid -->
+        <!-- Content -->
       </div>
-      <!-- Content -->
     </div>
   </div>
   </div>
 </main>
+<script src="js/logout.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -247,46 +254,56 @@
 </script>
 <script>
 
-  async function createCart() {
-    const response = await fetch('http://localhost:8080/api/cart', {
-      method: 'POST',
-    });
-    const data = await response.json();
-    const cartId = data.carts[0]._id;
-    localStorage.setItem('cartId', cartId);
-  }
+  const cartId = document.getElementById('user-data').getAttribute('data-user')
+  console.log(cartId)
 
   async function addProductToCart(cartId, productId) {
     const response = await fetch(`http://localhost:8080/api/cart/${cartId}/product/${productId}`, {
       method: 'POST',
     });
-    const data = await response.json();
-Swal.fire({
-  title: 'Product added to cart',
-  icon: 'success',
-  showCancelButton: true,
-  confirmButtonText: 'Go to cart',
-  confirmButtonClass: 'btn-go-to-cart',
-  cancelButtonText: 'Continue shopping',
-  position: 'top-right',
-  timer: 5000,
-  timerProgressBar: true,
-  toast: true
-})
-    console.log('Producto added to cart', data);
+
+    Swal.fire({
+      title: 'Product added to cart',
+      icon: 'success',
+      showCancelButton: true,
+      confirmButtonText: 'Go to cart',
+      confirmButtonClass: 'btn-go-to-cart',
+      cancelButtonText: 'Continue shopping',
+      position: 'top-right',
+      timer: 5000,
+      timerProgressBar: true,
+      toast: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `/view/cart/${cartId}`; //redirigir al usuario al carrito
+      }
+    });
   }
 
   const cartBtns = document.querySelectorAll('.cart-btn');
-
   cartBtns.forEach(function (btn) {
     btn.addEventListener('click', async function (event) {
       const productId = event.target.closest('.card').dataset.productId;
-      let cartId = localStorage.getItem('cartId');
-      if (!cartId) {
-        await createCart();
-        cartId = localStorage.getItem('cartId');
+      if (cartId) {
+        await addProductToCart(cartId, productId);
+      } else {
+        Swal.fire({
+          title: 'You must be logged in to add products to the cart',
+          icon: 'error',
+          showCancelButton: true,
+          confirmButtonText: 'Go to login',
+          confirmButtonClass: 'btn-go-to-cart',
+          position: 'top-right',
+          timer: 5000,
+          timerProgressBar: true,
+          toast: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/login'; //redirigir al usuario al login
+          }
+        });
       }
-      await addProductToCart(cartId, productId);
+
     });
   });
   function setCheckedRadio(category) {

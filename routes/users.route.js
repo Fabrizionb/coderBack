@@ -1,89 +1,62 @@
+import session from 'express-session'
 import { Router } from 'express'
-import { userModel } from '../Dao/models/user.model.js'
-
+import userManager from '../Dao/controller/userManager.js'
 const route = Router()
 
-route.get('/', async (req, res, next) => {
-  const { skip, limit, ...query } = req.query
-
+route.post('/login', async (req, res, next) => {
   try {
-    const usuarios = await userModel.paginate(query, {
-      skip: Number(skip ?? 0),
-      limit: Number(limit ?? 10)
-    })
-    res.send({
-      usuarios: usuarios.docs,
-      total: usuarios.totalDocs,
-      totalPages: usuarios.totalPages,
-      hasNextPage: usuarios.hasNextPage,
-      hasPrevPage: usuarios.hasPrevPage
-    })
-  } catch (error) {
-    next(error)
-  }
-})
-
-route.get('/:idUsuario', async (req, res, next) => {
-  try {
-    const idUsuario = req.params.idUsuario
-
-    const usuario = await userModel.findOne({ _id: idUsuario })
-    if (!usuario) {
-      res
-        .status(404)
-        .send({ error: `Usuario con id ${idUsuario} no encontrado` })
-      return
+    const { email, password } = req.body
+    if (email === 'adminCoder@coder.com' && password === 'adminCod3r123') {
+      const superAdmin = {
+        name: 'Admin',
+        lastname: 'Admin',
+        email: 'adminCoder@coder.com',
+        password: 'adminCod3r123',
+        role: 'admin'
+      }
+      req.session.userId = superAdmin._id.toString()
+      req.session.user = superAdmin
+      return res.status(200).json(superAdmin)
     }
-    res.send({ usuario })
+
+    const user = await userManager.login(email, password)
+
+    const userId = user._id.toString()
+    const cartId = user.cartId._id.toString()
+
+    req.session.userId = userId
+    req.session.cartId = cartId
+    req.session.user = user
+
+    res.status(200).json(user)
   } catch (error) {
     next(error)
   }
 })
 
-route.post('/', async (req, res, next) => {
-  const email = req.session.user
-  if (email) {
-    return res.redirect('/perfil')
-  }
-  const usuario = req.body
-
+route.post('/register', async (req, res, next) => {
   try {
-    const { _id } = await userModel.create(usuario)
-
-    res.status(201).send({ id: _id })
-  } catch (error) {
-    next(error)
-  }
-})
-
-route.put('/:idUsuario', async (req, res, next) => {
-  const idUsuario = req.params.idUsuario
-
-  try {
-    const usuario = await userModel.find({ _id: idUsuario })
-    if (!usuario) {
-      res
-        .status(404)
-        .send({ error: `Usuario con id ${idUsuario} no encontrado` })
-      return
+    const { email, password, name, lastname } = req.body
+    const data = await userManager.register(email, password, name, lastname)
+    const { user } = data
+    const userId = user._id.toString()
+    const cartId = user.cartId.toString()
+    req.session.userId = userId
+    req.session.cartId = cartId
+    if (data) {
+      return res.status(203).json({ status: '203', message: data.message })
     }
-    const nuevosDatos = req.body
-
-    await userModel.updateOne(
-      { _id: idUsuario },
-      { ...usuario, ...nuevosDatos }
-    )
-    res.send({ ok: true })
+    res.status(200).json({ user })
   } catch (error) {
     next(error)
   }
 })
 
-route.delete('/:idUsuario', async (req, res, next) => {
+route.post('/logout', (req, res, next) => {
   try {
-    const idUsuario = req.params.idUsuario
-    await userModel.deleteOne({ _id: idUsuario })
-    res.send({ ok: true })
+    req.session.destroy()
+    res.clearCookie('connect.sid')
+    res.status(200).json({ response: 'success' })
   } catch (error) {
     next(error)
   }

@@ -1,22 +1,24 @@
-<div class='hero-image mt-3 container'>
-<div class='hero-text card login d-flex justify-content-center align-items-center'>
-<form onsubmit='login(event)' class='text-center'>
+<div class="hero-image mt-3 container">
+  <div
+    class="hero-text card login d-flex justify-content-center align-items-center"
+  >
+    <form onsubmit="login(event)" class="text-center">
       <input
-        id='form-email'
-        type='text'
-        name='form-email'
-        placeholder='email'
+        id="email"
+        type="text"
+        name="form-email"
+        placeholder="email"
       />
       <input
-        id='form-password'
-        type='password'
-        name='form-password'
-        placeholder='password'
+        id="password"
+        type="password"
+        name="form-password"
+        placeholder="password"
       />
-      <input class="btn-primary" type='submit' value='Login' />
+      <button type="submit" class="btn btn-primary" id="loginbtn">Login</button>
     </form>
-  <p id="error-message" class="error-message" style="color:red"></p>
+    <p id="error-message" class="error-message" style="color:red"></p>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src='js/login.js'></script>
+<script src="js/login.js"></script>
