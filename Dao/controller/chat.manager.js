@@ -1,9 +1,7 @@
 import MongoManager from './mongo.manager.js'
 import chatModel from '../models/chat.model.js'
-
 class Chats {
   #persistencia
-
   constructor (persistencia) {
     this.#persistencia = persistencia
   }

@@ -3,7 +3,6 @@ import productModel from '../models/product.model.js'
 
 class Products {
   #persistencia
-
   constructor (persistencia) {
     this.#persistencia = persistencia
   }
@@ -21,7 +20,6 @@ class Products {
   }
 
   async findOneAndUpdate ({ _id }, updateProduct) {
-    // Aca llega el body y el id bien
     return this.#persistencia.findOneAndUpdate({ _id }, updateProduct)
   }
 

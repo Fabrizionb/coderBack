@@ -1,14 +1,13 @@
-/* eslint-disable  */
 import { Router } from 'express'
 import { multiUploader } from '../utils/multiUploader.js'
 import productManager from '../Dao/controller/product.manager.js'
 import productModel from '../Dao/models/product.model.js'
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 const route = Router()
 
 route.get('/', async (req, res, next) => {
-  const baseUrl = 'http://localhost:8080';
+  const baseUrl = 'http://localhost:8080'
   const query = req.query
   const sort = {}
   // Verificar si se ha enviado un parámetro de ordenamiento
@@ -37,7 +36,7 @@ route.get('/', async (req, res, next) => {
       res.status(404).json({ error: 'Products not found' })
     } else {
       res.status(200).json({
-        status: "success",
+        status: 'success',
         payload: products.docs,
         totalPages: products.totalPages,
         prevPage: products.prev,
@@ -50,22 +49,19 @@ route.get('/', async (req, res, next) => {
       }
       )
     }
-
-
   } catch (error) {
     next(error)
   }
-  //http://localhost:8080/api/products?limit=1
-
+  // http://localhost:8080/api/products?limit=1
 })
 
 route.get('/:pid', async (req, res, next) => {
   const { pid } = req.params
   try {
-    const isValidObjectId = mongoose.isValidObjectId(pid);
+    const isValidObjectId = mongoose.isValidObjectId(pid)
     if (!isValidObjectId) {
-      res.status(400).json({ error: `Invalid Product Id` })
-      return;
+      res.status(400).json({ error: 'Invalid Product Id' })
+      return
     }
     const product = await productManager.findOne({ _id: pid })
     if (!product) {
@@ -95,7 +91,6 @@ route.post('/', multiUploader, async (req, res, next) => {
 })
 
 route.put('/:id', async (req, res, next) => {
-  // Aca llega el body y el id bien
   const { id } = req.params
   const updateProduct = req.body
   try {

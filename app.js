@@ -15,7 +15,7 @@ const { PORT, MONGO_URI, COOKIE_SECRET } = config
 const { __dirname } = fileDirname(import.meta)
 const app = express()
 const httpServer = app.listen(PORT, () => console.log(`escuchando puerto ${PORT}`))
-/* eslint-disable  */
+
 // config socket.io
 configureSocket(httpServer)
 
@@ -50,7 +50,6 @@ app.engine('handlebars', hbs.engine)
 app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars')
 
-
 app.use(express.static(__dirname + '/public'))
 app.use('/', viewsRoute)
 app.use('/api', routes)
@@ -61,13 +60,12 @@ mongoose.connect(MONGO_URI, {
 })
 
 // Cookies
-const auth = (req, res, next) =>{
+const auth = (req, res, next) => {
   const admin = req.session.admin
-  if (admin){
+  if (admin) {
     next()
-    return
   } else {
-    res.status(401).send({error: 'No Autorizado'})
+    res.status(401).send({ error: 'No Autorizado' })
   }
 }
 app.get('/setCookie', (req, res) => {
@@ -84,13 +82,6 @@ app.get('/getCookie', (req, res) => {
 app.get('/deleteCookie', (req, res) => {
   res.clearCookie('CoderCookie').send('Se borro la cookie')
 })
-
-
-
-
-
-
-
 
 // Midleware de errores
 app.use((err, req, res, next) => {

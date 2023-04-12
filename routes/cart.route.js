@@ -64,7 +64,6 @@ route.post('/', async (req, res, next) => {
 route.post('/:cid/product/:pid', async (req, res, next) => {
   const { cid } = req.params
   const { pid } = req.params
-
   try {
     const cart = await cartModel.findOne({ _id: cid })
     const product = cart.products.find(product => product.product.toString() === pid)
@@ -123,7 +122,7 @@ route.delete('/:cid', async (req, res, next) => {
   }
 })
 
-// Update product quantity in a cart
+// Modificar la cantidad del producto
 route.put('/:cid/product/:pid', async (req, res, next) => {
   const { cid, pid } = req.params
   const { quantity } = req.body

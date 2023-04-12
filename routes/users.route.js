@@ -1,4 +1,3 @@
-import session from 'express-session'
 import { Router } from 'express'
 import userManager from '../Dao/controller/userManager.js'
 const route = Router()

@@ -1,21 +1,21 @@
-/* eslint-disable*/
 import { Router } from 'express'
 import productManager from '../Dao/controller/product.manager.js'
 import productModel from '../Dao/models/product.model.js'
 import cartModel from '../Dao/models/cart.model.js'
 import util from '../utils/view.util.js'
-import session from 'express-session'
 import auth from '../utils/auth.js'
 import isAdmin from '../utils/isAdmin.js'
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-/* eslint-disabled */
 const route = Router()
 
 // Ruta para los productos
 route.get('/', async (req, res, next) => {
   const query = req.query
-  const userCart = req.session.user && req.session.user.cartId ? req.session.user.cartId._id : null
+  const userCart =
+    req.session.user && req.session.user.cartId
+      ? req.session.user.cartId._id
+      : null
   const user = req.session.user ? req.session.user : null
 
   const sort = {}
@@ -33,15 +33,12 @@ route.get('/', async (req, res, next) => {
     conditions.status = query.status === 'true'
   }
   try {
-    const products = await productModel.paginate(
-      conditions,
-      {
-        page: query.page ?? 1,
-        limit: query.limit ?? 10,
-        lean: true,
-        sort
-      }
-    )
+    const products = await productModel.paginate(conditions, {
+      page: query.page ?? 1,
+      limit: query.limit ?? 10,
+      lean: true,
+      sort
+    })
     if (!util.isValidPage(query.page, products.totalPages)) {
       res.status(404).render('404', {
         title: 'Invalid page number',
@@ -51,7 +48,8 @@ route.get('/', async (req, res, next) => {
     }
     if (!products) {
       res.status(404).render('404', {
-        title: 'Products not found', msg: 'Products not Found'
+        title: 'Products not found',
+        msg: 'Products not Found'
       })
     } else {
       res.status(200).render('index', {
@@ -67,7 +65,6 @@ route.get('/', async (req, res, next) => {
         order: query.order ?? 'asc',
         cartId: userCart,
         user
-
       })
     }
   } catch (error) {
@@ -79,18 +76,27 @@ route.get('/', async (req, res, next) => {
 route.get('/view/product/:pid', async (req, res, next) => {
   const { pid } = req.params
   if (!mongoose.isValidObjectId(pid)) {
-    return res.status(400).render('404', { msg: `Invalid Product Id`, title: 'Product not Found' })
+    return res
+      .status(400)
+      .render('404', { msg: 'Invalid Product Id', title: 'Product not Found' })
   }
   try {
     const data = await productManager.findOne({ _id: pid })
     if (!data) {
-      return res.status(404).render('404', { msg: `The product with id: ${pid} you’re looking for doesn’t exist`, title: 'Product not Found' })
+      return res
+        .status(404)
+        .render('404', {
+          msg: `The product with id: ${pid} you’re looking for doesn’t exist`,
+          title: 'Product not Found'
+        })
     }
     const product = {
       ...data._doc,
       _id: data._doc._id.toString()
     }
-    return res.status(200).render('product', { titulo: 'List of Products', data: product })
+    return res
+      .status(200)
+      .render('product', { titulo: 'List of Products', data: product })
   } catch (error) {
     next(error)
   }
@@ -107,7 +113,12 @@ route.get('/view/cart/:cid', async (req, res, next) => {
     const cart = user.cartId._id
     const result = await cartModel.findById(cart).populate('products.product')
     if (!result) {
-      res.status(404).render('404', { msg: `The cart with id: ${cid} you’re looking for doesn’t exist`, title: 'Cart not Found' })
+      res
+        .status(404)
+        .render('404', {
+          msg: `The cart with id: ${cid} you’re looking for doesn’t exist`,
+          title: 'Cart not Found'
+        })
       return
     }
     const cartData = result.toObject()
@@ -123,10 +134,13 @@ route.get('/realtimeproducts', isAdmin, async (req, res, next) => {
   try {
     if (!data) {
       res.status(404).render('404', {
-        title: 'Products not found', msg: 'Products not Found'
+        title: 'Products not found',
+        msg: 'Products not Found'
       })
     } else {
-      res.status(200).render('realTimeProducts', { titulo: 'Listado de Productos', data })
+      res
+        .status(200)
+        .render('realTimeProducts', { titulo: 'Listado de Productos', data })
     }
   } catch (error) {
     next(error)

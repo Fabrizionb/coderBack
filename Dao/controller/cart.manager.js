@@ -3,7 +3,6 @@ import cartModel from '../models/cart.model.js'
 
 class Carts {
   #persistencia
-
   constructor (persistencia) {
     this.#persistencia = persistencia
   }
