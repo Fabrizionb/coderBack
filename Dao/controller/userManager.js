@@ -52,26 +52,26 @@ class UserManager {
     }
   }
 
-  async login (email, password) {
-    try {
-      // find user by email
-      const user = await this.getUserByEmail(email)
+  // async login (email, password) {
+  //   try {
+  //     // find user by email
+  //     const user = await this.getUserByEmail(email)
 
-      if (!user) {
-        throw new Error('Email or password is incorrect')
-      }
+  //     if (!user) {
+  //       throw new Error('Email or password is incorrect')
+  //     }
 
-      // Check password
-      if (user.password !== password) {
-        throw new Error('Email or password is incorrect')
-      }
+  //     // Check password
+  //     if (user.password !== password) {
+  //       throw new Error('Email or password is incorrect')
+  //     }
 
-      return user
-    } catch (e) {
-      console.log(e)
-      throw e
-    }
-  }
+  //     return user
+  //   } catch (e) {
+  //     console.log(e)
+  //     throw e
+  //   }
+  // }
 }
 
 const userManager = new UserManager()

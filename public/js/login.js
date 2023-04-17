@@ -2,9 +2,9 @@ const loginForm = document.querySelector('form')
 const emailInput = document.querySelector('#email')
 const passwordInput = document.querySelector('#password')
 
-loginForm.addEventListener('submit', (event) => {
+loginForm.addEventListener('submit', async (event) => {
   event.preventDefault()
-  console.log('trigger')
+
   const email = emailInput.value
   const password = passwordInput.value
 
@@ -13,13 +13,22 @@ loginForm.addEventListener('submit', (event) => {
     return
   }
 
-  fetch('/api/users/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, password })
-  }).then(() => {
-    window.location.href = '/'
-  })
+  try {
+    const response = await fetch('/api/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    })
+
+    const data = await response.json()
+    if (response.status === 200) {
+      window.location.href = '/'
+    } else {
+      Swal.fire('Error!', data.message, 'error')
+    }
+  } catch (error) {
+    console.error(error)
+  }
 })

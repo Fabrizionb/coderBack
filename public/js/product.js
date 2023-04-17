@@ -1,5 +1,5 @@
 const accordionHeaders = document.querySelectorAll('.card-header')
-accordionHeaders.forEach(header => {
+accordionHeaders.forEach((header) => {
   header.addEventListener('click', () => {
     const targetBody = header.nextElementSibling
     targetBody.classList.toggle('collapse')
@@ -16,9 +16,12 @@ async function createCart () {
 }
 
 async function addProductToCart (cartId, productId) {
-  const response = await fetch(`http://localhost:8080/api/cart/${cartId}/product/${productId}`, {
-    method: 'POST'
-  })
+  const response = await fetch(
+    `http://localhost:8080/api/cart/${cartId}/product/${productId}`,
+    {
+      method: 'POST'
+    }
+  )
   const data = await response.json()
   Swal.fire({
     title: 'Product added to cart',

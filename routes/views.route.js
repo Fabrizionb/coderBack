@@ -174,6 +174,11 @@ route.get('/login', (req, res, next) => {
   res.render('login')
 })
 
+// Ruta para recuperar la password
+route.get('/forgot-password', (req, res, next) => {
+  res.render('forgot-password')
+})
+
 // Ruta para ver el perfil
 route.get('/profile', auth, async (req, res) => {
   const user = req.session.user

@@ -1,34 +1,14 @@
-<div class='hero-image container mt-3 card container'>
-  <div class='hero-text'>
-
-    <form onsubmit='send(event)'>
+<div class="hero-image mt-3 container w-25">
+  <h1 class="text-center">Register</h1>
+  <div class="hero-text card login d-flex justify-content-center align-items-center">
+    <form onsubmit='send(event)' class="">
       <input id='name' type='text' name='form-name' placeholder='Name' />
-      <input
-        id='lastname'
-        type='text'
-        name='form-last-name'
-        placeholder='Lastname'
-      />
-      <input
-        id='email'
-        type='text'
-        name='form-email'
-        placeholder='Email'
-      />
-      <input
-        id='password'
-        type='password'
-        name='form-password'
-        placeholder='Password'
-      />
- 
-        <button
-              type='submit'
-              class='btn btn-primary'
-              id='registerBtn'
-            >Register</button>
+      <input id='lastname' type='text' name='form-last-name' placeholder='Lastname' />
+      <input id='email' type='text' name='form-email' placeholder='Email' />
+      <input id='password' type='password' name='form-password' placeholder='Password' />
+      <button type='submit' class='btn btn-primary mx-auto' id='registerBtn'>Register</button>
     </form>
-
+    <a href="/login">Already a member? Go to login</a>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

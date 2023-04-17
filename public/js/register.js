@@ -1,3 +1,4 @@
+/* eslint-disable */
 const emailForm = document.querySelector('#email')
 const passwordForm = document.querySelector('#password')
 const nameForm = document.querySelector('#name')
@@ -21,7 +22,7 @@ registerBtn.addEventListener('click', (event) => {
   nameForm.value = ''
   lastnameForm.value = ''
 
-  fetch('/api/users/register', {
+  fetch('/api/user/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

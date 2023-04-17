@@ -1,23 +1,13 @@
-<div class="hero-image mt-3 container">
-  <div
-    class="hero-text card login d-flex justify-content-center align-items-center"
-  >
-    <form onsubmit="login(event)" class="text-center">
-      <input
-        id="email"
-        type="text"
-        name="form-email"
-        placeholder="email"
-      />
-      <input
-        id="password"
-        type="password"
-        name="form-password"
-        placeholder="password"
-      />
+<div class="hero-image mt-3 container w-25">
+  <h1 class="text-center">Login</h1>
+  <div class="hero-text card login d-flex justify-content-center align-items-center">
+    <form class="text-center">
+      <input id="email" type="text" name="form-email" placeholder="email" />
+      <input id="password" type="password" name="form-password" placeholder="password" />
       <button type="submit" class="btn btn-primary" id="loginbtn">Login</button>
     </form>
-    <p id="error-message" class="error-message" style="color:red"></p>
+    <a href="/forgot-password">Recover Password</a>
+     <a href="/register">Not a member? Register.</a>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

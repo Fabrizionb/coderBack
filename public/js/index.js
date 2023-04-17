@@ -1,3 +1,4 @@
+/* eslint-disable*/
 const query = new URLSearchParams(window.location.search)
 function setPrev () {
   const previusPage = Number(query.get('page')) - 1
@@ -45,9 +46,7 @@ function resetFilters () {
   query.delete('page')
   window.location.search = query.toString()
 }
-
 const cartId = document.getElementById('user-data').getAttribute('data-user')
-
 async function addProductToCart (cartId, productId) {
   const response = await fetch(`http://localhost:8080/api/cart/${cartId}/product/${productId}`, {
     method: 'POST'
@@ -70,7 +69,6 @@ async function addProductToCart (cartId, productId) {
     }
   })
 }
-
 const cartBtns = document.querySelectorAll('.cart-btn')
 cartBtns.forEach(function (btn) {
   btn.addEventListener('click', async function (event) {
@@ -96,27 +94,6 @@ cartBtns.forEach(function (btn) {
     }
   })
 })
-function setCheckedRadio (category) {
-  const radioButtons = document.getElementsByName('group100')
-  for (let i = 0; i < radioButtons.length; i++) {
-    if (radioButtons[i].value === category) {
-      radioButtons[i].checked = true
-      break
-    }
-  }
-}
 
-const logout = document.querySelector('#logout')
 
-logout.addEventListener('click', () => {
-  fetch('/api/users/logout', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }).then(() => {
-    const url = window.location.href
-    const first = url.split('/')[2]
-    window.location.href = `http://${first}/profile`
-  })
-})
+
