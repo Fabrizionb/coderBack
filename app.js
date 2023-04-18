@@ -10,6 +10,8 @@ import config from './data.js'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import routes from './routes/index.js'
+import { configurePassport } from './config/passport.config.js'
+import passport from 'passport'
 
 const { PORT, MONGO_URI, COOKIE_SECRET } = config
 const { __dirname } = fileDirname(import.meta)
@@ -58,7 +60,10 @@ mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-
+// Passport
+configurePassport()
+app.use(passport.initialize())
+app.use(passport.session)
 // Cookies
 const auth = (req, res, next) => {
   const admin = req.session.admin

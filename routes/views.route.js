@@ -6,6 +6,7 @@ import util from '../utils/view.util.js'
 import auth from '../utils/auth.js'
 import isAdmin from '../utils/isAdmin.js'
 import mongoose from 'mongoose'
+import userModel from '../Dao/models/user.model.js'
 
 const route = Router()
 
@@ -63,7 +64,7 @@ route.get('/', async (req, res, next) => {
         hasNextPage: products.hasNextPage,
         sort: query.sort ?? '',
         order: query.order ?? 'asc',
-        cartId: userCart,
+        cartId: req.session.passport.user.cartId,
         user
       })
     }
@@ -103,15 +104,17 @@ route.get('/view/product/:pid', async (req, res, next) => {
 })
 
 // ruta para ver el carrito
-route.get('/view/cart/:cid', async (req, res, next) => {
+route.get('/view/cart/:cid', auth, async (req, res, next) => {
   try {
     const { cid } = req.params
-    const user = req.session.user
-    if (!user || !user.cartId || !user.cartId._id) {
+    const user = req.session.passport.user
+    console.log(user)
+    if (!user || !user.userId || !user.cartId) {
       throw new Error('User or cart not found')
     }
-    const cart = user.cartId._id
-    const result = await cartModel.findById(cart).populate('products.product')
+    // const cart = user.cartId._id
+    const result = await cartModel.findById(cid).populate('products.product')
+
     if (!result) {
       res
         .status(404)
@@ -181,8 +184,9 @@ route.get('/forgot-password', (req, res, next) => {
 
 // Ruta para ver el perfil
 route.get('/profile', auth, async (req, res) => {
-  const user = req.session.user
-  const cartId = req.session.user.cartId._id
+  const userId = req.session.passport.user.userId
+  const cartId = req.session.passport.user.cartId
+  const user = await userModel.findOne({ _id: userId }).populate('cartId')
   const cart = await cartModel.findOne({ _id: cartId })
   const productsInCart = cart.products
   const cartLength = countProductsQuantity(productsInCart)
@@ -193,7 +197,7 @@ route.get('/profile', auth, async (req, res) => {
     }
     return totalQuantity
   }
-
-  res.render('profile', { user, cartLength })
+  const userObject = user.toObject() // Convertimos el objeto user a un objeto plano
+  res.render('profile', { user: userObject, cartLength })
 })
 export default route

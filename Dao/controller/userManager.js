@@ -21,36 +21,36 @@ class UserManager {
     }
   }
 
-  async register (email, password, name, lastname) {
-    try {
-      // user exists?
-      const existingUser = await userModel.findOne({ email })
-      if (existingUser) {
-        return { message: 'Email already in use' }
-      }
-      // new cart
-      const createdCart = await fetch('http://localhost:8080/api/cart', {
-        method: 'POST'
-      })
+  // async register (email, password, name, lastname) {
+  //   try {
+  //     // user exists?
+  //     const existingUser = await userModel.findOne({ email })
+  //     if (existingUser) {
+  //       return { message: 'Email already in use' }
+  //     }
+  //     // new cart
+  //     const createdCart = await fetch('http://localhost:8080/api/cart', {
+  //       method: 'POST'
+  //     })
 
-      const cartData = await createdCart.json()
-      const cartId = cartData.carts[0]._id
+  //     const cartData = await createdCart.json()
+  //     const cartId = cartData.carts[0]._id
 
-      // new user
-      const newUser = await userModel.create({
-        email,
-        password,
-        cartId,
-        name,
-        lastname
-      })
+  //     // new user
+  //     const newUser = await userModel.create({
+  //       email,
+  //       password,
+  //       cartId,
+  //       name,
+  //       lastname
+  //     })
 
-      return { user: newUser.toObject() }
-    } catch (e) {
-      console.log(e)
-      throw e
-    }
-  }
+  //     return { user: newUser.toObject() }
+  //   } catch (e) {
+  //     console.log(e)
+  //     throw e
+  //   }
+  // }
 
   // async login (email, password) {
   //   try {

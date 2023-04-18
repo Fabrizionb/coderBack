@@ -1,5 +1,5 @@
 function auth (req, res, next) {
-  const user = req.session.user
+  const user = req.session.passport.user
   // console.log('user desde auth', user)
   if (!user) {
     res.redirect('/login')
