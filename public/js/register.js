@@ -33,8 +33,6 @@ registerBtn.addEventListener('click', (event) => {
       return response.json()
     })
     .then((response) => {
-      console.log("response",response)
-      console.log("response.status",response.status)
       if (response.message === 'User Created') {
         Swal.fire('Success!', 'User created.')
         setTimeout(() => {

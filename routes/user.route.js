@@ -15,7 +15,6 @@ route.post(
   }),
   async (req, res, next) => {
     try {
-      //console.log("req.session", req.session.passport.user)
       const user = req.session.passport.user;
       const userId = user.userId.toString();
       const cartId = user.cartId.toString();

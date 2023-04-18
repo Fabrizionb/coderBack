@@ -36,10 +36,7 @@ export default class MongoManager {
   async findOneAndUpdate ({ _id }, updateProduct) {
     try {
       // Aca llega el body y el id bien
-      console.log('updateProduct desde el mongo', updateProduct)
-      console.log('id desde el mongo', { _id })
       const result = await this.model.findOneAndUpdate({ _id }, updateProduct)
-
       return result
     } catch (e) {
       console.log(e)

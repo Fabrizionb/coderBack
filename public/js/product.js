@@ -34,7 +34,6 @@ async function addProductToCart (cartId, productId) {
     timerProgressBar: true,
     toast: true
   })
-  console.log('Producto added to cart', data)
 }
 
 document.addEventListener('DOMContentLoaded', function () {

@@ -108,7 +108,6 @@ route.get('/view/cart/:cid', auth, async (req, res, next) => {
   try {
     const { cid } = req.params
     const user = req.session.passport.user
-    console.log(user)
     if (!user || !user.userId || !user.cartId) {
       throw new Error('User or cart not found')
     }
