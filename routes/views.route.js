@@ -3,7 +3,7 @@ import productManager from '../Dao/controller/product.manager.js'
 import productModel from '../Dao/models/product.model.js'
 import cartModel from '../Dao/models/cart.model.js'
 import util from '../utils/view.util.js'
-import auth from '../utils/auth.js'
+// import auth from '../utils/auth.js'
 import isAdmin from '../utils/isAdmin.js'
 import mongoose from 'mongoose'
 import userModel from '../Dao/models/user.model.js'
@@ -14,11 +14,20 @@ const route = Router()
 route.get('/', async (req, res, next) => {
   const query = req.query
   const userCart =
-    req.session.user && req.session.user.cartId
-      ? req.session.user.cartId._id
+    req.session.passport &&
+    req.session.passport.user &&
+    req.session.passport.user.cartId
+      ? req.session.passport.user.cartId
       : null
-  const user = req.session.user ? req.session.user : null
-
+  const user =
+    req.session.passport &&
+    req.session.passport.user &&
+    req.session.passport.user.userId
+      ? req.session.passport.user.userId
+      : null
+  if (!user) {
+    res.redirect('/login')
+  }
   const sort = {}
   // Verificar si se ha enviado un parámetro de ordenamiento
   sort[query.sort] = query.order === 'desc' ? -1 : 1
@@ -64,7 +73,7 @@ route.get('/', async (req, res, next) => {
         hasNextPage: products.hasNextPage,
         sort: query.sort ?? '',
         order: query.order ?? 'asc',
-        cartId: req.session.passport.user.cartId,
+        cartId: userCart,
         user
       })
     }
@@ -84,12 +93,10 @@ route.get('/view/product/:pid', async (req, res, next) => {
   try {
     const data = await productManager.findOne({ _id: pid })
     if (!data) {
-      return res
-        .status(404)
-        .render('404', {
-          msg: `The product with id: ${pid} you’re looking for doesn’t exist`,
-          title: 'Product not Found'
-        })
+      return res.status(404).render('404', {
+        msg: `The product with id: ${pid} you’re looking for doesn’t exist`,
+        title: 'Product not Found'
+      })
     }
     const product = {
       ...data._doc,
@@ -104,7 +111,7 @@ route.get('/view/product/:pid', async (req, res, next) => {
 })
 
 // ruta para ver el carrito
-route.get('/view/cart/:cid', auth, async (req, res, next) => {
+route.get('/view/cart/:cid', async (req, res, next) => {
   try {
     const { cid } = req.params
     const user = req.session.passport.user
@@ -115,12 +122,10 @@ route.get('/view/cart/:cid', auth, async (req, res, next) => {
     const result = await cartModel.findById(cid).populate('products.product')
 
     if (!result) {
-      res
-        .status(404)
-        .render('404', {
-          msg: `The cart with id: ${cid} you’re looking for doesn’t exist`,
-          title: 'Cart not Found'
-        })
+      res.status(404).render('404', {
+        msg: `The cart with id: ${cid} you’re looking for doesn’t exist`,
+        title: 'Cart not Found'
+      })
       return
     }
     const cartData = result.toObject()
@@ -160,43 +165,62 @@ route.get('/chat', async (req, res, next) => {
 
 // Ruta para ver el formulario de registro
 route.get('/register', (req, res, next) => {
-  const email = req.session.user
-  if (email) {
-    return res.redirect('/profile')
+  try {
+    const email = req.session.user
+    if (email) {
+      return res.redirect('/profile')
+    }
+    res.render('register')
+  } catch (error) {
+    next(error)
   }
-  res.render('register')
 })
 
 // Ruta para ver el formulario de login
 route.get('/login', (req, res, next) => {
-  const email = req.session.user
-  if (email) {
-    return res.redirect('/profile')
+  try {
+    const email = req.session.user
+    if (email) {
+      return res.redirect('/profile')
+    }
+    res.render('login')
+  } catch (error) {
+    next(error)
   }
-  res.render('login')
 })
 
 // Ruta para recuperar la password
 route.get('/forgot-password', (req, res, next) => {
-  res.render('forgot-password')
+  try {
+    res.render('forgot-password')
+  } catch (error) {
+    next(error)
+  }
 })
 
 // Ruta para ver el perfil
-route.get('/profile', auth, async (req, res) => {
+route.get('/profile', async (req, res, next) => {
   const userId = req.session.passport.user.userId
   const cartId = req.session.passport.user.cartId
-  const user = await userModel.findOne({ _id: userId }).populate('cartId')
-  const cart = await cartModel.findOne({ _id: cartId })
-  const productsInCart = cart.products
-  const cartLength = countProductsQuantity(productsInCart)
-  function countProductsQuantity (productsInCart) {
-    let totalQuantity = 0
-    for (let i = 0; i < productsInCart.length; i++) {
-      totalQuantity += productsInCart[i].quantity
+  try {
+    const user = await userModel.findOne({ _id: userId }).populate('cartId')
+    const cart = await cartModel.findOne({ _id: cartId })
+    if (!user) {
+      res.redirect('/login')
     }
-    return totalQuantity
+    const productsInCart = cart.products
+    const cartLength = countProductsQuantity(productsInCart)
+    function countProductsQuantity (productsInCart) {
+      let totalQuantity = 0
+      for (let i = 0; i < productsInCart.length; i++) {
+        totalQuantity += productsInCart[i].quantity
+      }
+      return totalQuantity
+    }
+    const userObject = user.toObject() // Convertimos el objeto user a un objeto plano
+    res.render('profile', { user: userObject, cartLength })
+  } catch (error) {
+    next(error)
   }
-  const userObject = user.toObject() // Convertimos el objeto user a un objeto plano
-  res.render('profile', { user: userObject, cartLength })
 })
 export default route

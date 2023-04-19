@@ -6,8 +6,6 @@ logout.addEventListener('click', () => {
       'Content-Type': 'application/json'
     }
   }).then(() => {
-    const url = window.location.href
-    const first = url.split('/')[2]
-    window.location.href = `http://${first}/profile`
+    window.location.href = '/login'
   })
 })

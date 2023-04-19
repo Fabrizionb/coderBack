@@ -65,14 +65,14 @@ configurePassport()
 app.use(passport.initialize())
 app.use(passport.session)
 // Cookies
-const auth = (req, res, next) => {
-  const admin = req.session.admin
-  if (admin) {
-    next()
-  } else {
-    res.status(401).send({ error: 'No Autorizado' })
-  }
-}
+// const auth = (req, res, next) => {
+//   const admin = req.session.admin
+//   if (admin) {
+//     next()
+//   } else {
+//     res.status(401).send({ error: 'No Autorizado' })
+//   }
+// }
 app.get('/setCookie', (req, res) => {
   res.cookie('CoderCookie', 'Esta es una cookie poderosa', { maxAge: 100000, signed: true }).send('Cookie')
 })

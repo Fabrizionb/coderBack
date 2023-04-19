@@ -64,6 +64,7 @@ route.post("/logout", (req, res, next) => {
   }
 });
 
+
 route.get("/failureregister", async (req, res, next) => {
   console.log("failureregister");
   res.send({ error: "Error on register" });
