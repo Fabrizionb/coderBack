@@ -200,6 +200,9 @@ route.get('/forgot-password', (req, res, next) => {
 
 // Ruta para ver el perfil
 route.get('/profile', async (req, res, next) => {
+  if (!req.session.passport || !req.session.passport.user) {
+    return res.redirect('/login')
+  }
   const userId = req.session.passport.user.userId
   const cartId = req.session.passport.user.cartId
   try {

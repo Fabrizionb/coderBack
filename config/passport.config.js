@@ -3,9 +3,13 @@ import passport from "passport";
 import local from "passport-local";
 import userModel from "../Dao/models/user.model.js";
 import { createHash, isValidPassword } from "../public/js/crypto.js";
+import github from "passport-github2";
+import config from "../data.js";
 
 const LocalStrategy = local.Strategy;
+const GithubStrategy = github.Strategy;
 
+const { github_client_id, github_client_secret, github_callback_url } = config;
 export function configurePassport() {
   passport.use(
     "register",
@@ -65,6 +69,48 @@ export function configurePassport() {
           return done(null, user);
         } catch (error) {
           done(error);
+        }
+      }
+    )
+  );
+
+  passport.use(
+    "github",
+    new GithubStrategy(
+      {
+        clientID: config.github_client_id,
+        clientSecret: config.github_client_secret,
+        callbackURL: config.github_callback_url,
+      },
+      async (accesToken, refreshToken, profile, done) => {
+        try {
+          console.log({ login: "github", profile });
+          let email = profile._json.email;
+          if (!email) {
+            email = `${profile._json.id}@github.com`;
+          }
+          const user = await userModel.findOne({ email });
+          if (!user || user === undefined) {
+            // new cart
+            const createdCart = await fetch("http://localhost:8080/api/cart", {
+              method: "POST",
+            });
+            const cartData = await createdCart.json();
+            const cartId = cartData.carts[0]._id;
+            const password = profile._json.id;
+            const newUser = await userModel.create({
+              email,
+              name: profile._json.name,
+              lastname: "-",
+              password: "-",
+              cartId,
+            });
+            console.log("new user created", newUser);
+            return done(null, newUser);
+          }
+          return done(null, user);
+        } catch (error) {
+          done(error, false);
         }
       }
     )

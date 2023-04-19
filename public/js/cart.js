@@ -1,3 +1,4 @@
+/* eslint-disable*/
 async function emptyCart (cid) {
   try {
     const response = await fetch(`/api/cart/${cid}`, { method: 'DELETE' })

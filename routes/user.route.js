@@ -64,7 +64,6 @@ route.post("/logout", (req, res, next) => {
   }
 });
 
-
 route.get("/failureregister", async (req, res, next) => {
   console.log("failureregister");
   res.send({ error: "Error on register" });
@@ -73,5 +72,24 @@ route.get("/failurelogin", async (req, res, next) => {
   console.log("failurelogin");
   res.send({ error: "User or password incorrect" });
 });
+
+route.get(
+  '/github',
+  passport.authenticate('github', { scope: ['user:email'] }),
+  (req, res) => {}
+);
+
+route.get(
+  '/github-callback',
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  (req, res) => {
+    
+    req.session.passport.user = {
+      userId: req.user._id,
+      cartId: req.user.cartId
+    };
+    res.redirect('/');
+  }
+);
 
 export default route;
