@@ -1,59 +1,97 @@
-// const v = 4
-// import(`./express.v${v}.js`)
-// import fs from 'fs'
-import('./app.js')
+import express from 'express'
+import fileDirname from './utils/fileDirName.js'
+import cookieParser from 'cookie-parser'
+import { create } from 'express-handlebars'
+import helpers from './lib/helpers.handlebars.js'
+import viewsRoute from './routes/views.route.js'
+import configureSocket from './socket/configure-socket.js'
+import mongoose from 'mongoose'
+import config from './data.js'
+import session from 'express-session'
+import MongoStore from 'connect-mongo'
+import routes from './routes/index.js'
+import { configurePassport } from './config/passport.config.js'
+import passport from 'passport'
 
-// const categories = [{ name: 'T-shirts', titlePrefix: 'T-shirt', descPrefix: 'This is a T-shirt' }, { name: 'Pants', titlePrefix: 'Pants', descPrefix: 'This is a pair of pants' }, { name: 'Sweaters', titlePrefix: 'Sweater', descPrefix: 'This is a sweater' }, { name: 'Dresses', titlePrefix: 'Dress', descPrefix: 'This is a dress' }, { name: 'Jackets', titlePrefix: 'Jacket', descPrefix: 'This is a jacket' }]
+const { PORT, MONGO_URI, COOKIE_SECRET } = config
+const { __dirname } = fileDirname(import.meta)
+const app = express()
+const httpServer = app.listen(PORT, () => console.log(`escuchando puerto ${PORT}`))
 
-// function generateCode (num) {
-//   return 'abc' + ('000' + num).slice(-3)
-// }
+// config socket.io
+configureSocket(httpServer)
 
-// function generateProduct (num) {
-//   const category = categories[Math.floor(Math.random() * categories.length)]
-//   const title = category.titlePrefix + ' ' + generateCode(num).slice(3) // Se quita el prefijo "abc"
-//   const description = category.descPrefix + ' ' + generateCode(num).slice(3) // Se quita el prefijo "abc"
-//   const price = Math.floor(Math.random() * 476) + 25 // Entre 25 y 500
-//   const code = generateCode(num)
-//   const stock = Math.floor(Math.random() * 101) // Entre 0 y 100
-//   const status = (stock > 0)
-//   const thumbnails = ['product-img1.jpg', 'product-img2.jpg', 'product-img3.jpg']
+// Config Session
+app.use(
+  session({
+    secret: COOKIE_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      secure: false, // Set to true if using HTTPS
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 // 1 day
+    },
+    store: new MongoStore({
+      mongoUrl: MONGO_URI,
+      ttl: 24 * 60 * 60 // session TTL in seconds
+    })
+  })
+)
+app.use(cookieParser(COOKIE_SECRET))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
-//   return {
-//     title,
-//     description,
-//     price,
-//     code,
-//     category: category.name,
-//     stock,
-//     status,
-//     thumbnails
+// Config Handlebars
+const hbs = create({
+  partialsDir: ['views/partials'],
+  helpers
+})
+
+app.engine('handlebars', hbs.engine)
+app.set('views', __dirname + '/views')
+app.set('view engine', 'handlebars')
+
+app.use(express.static(__dirname + '/public'))
+app.use('/', viewsRoute)
+app.use('/api', routes)
+// Mongoose
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+// Passport
+configurePassport()
+app.use(passport.initialize())
+app.use(passport.session)
+// Cookies
+// const auth = (req, res, next) => {
+//   const admin = req.session.admin
+//   if (admin) {
+//     next()
+//   } else {
+//     res.status(401).send({ error: 'No Autorizado' })
 //   }
 // }
+app.get('/setCookie', (req, res) => {
+  res.cookie('CoderCookie', 'Esta es una cookie poderosa', { maxAge: 100000, signed: true }).send('Cookie')
+})
 
-// const products = []
-// for (let i = 1; i <= 200; i++) {
-//   products.push(generateProduct(i))
-// }
+app.get('/getCookie', (req, res) => {
+  const cookies = req.cookies
+  const signedCookies = req.signedCookies
+  console.log(cookies)
+  res.send({ cookies, signedCookies })
+})
 
-// // Mezclamos los índices aleatoriamente
-// const indices = Array.from({ length: 200 }, (_, i) => i)
-// for (let i = indices.length - 1; i > 0; i--) {
-//   const j = Math.floor(Math.random() * (i + 1));
-//   [indices[i], indices[j]] = [indices[j], indices[i]]
-// }
+app.get('/deleteCookie', (req, res) => {
+  res.clearCookie('CoderCookie').send('Se borro la cookie')
+})
 
-// // Cambiamos los primeros 50 índices en la lista mezclada a productos con status false
-// for (let i = 0; i < 50; i++) {
-//   const index = indices[i]
-//   products[index].status = false
-//   products[index].stock = 0
-// }
-
-// fs.writeFile('products.json', JSON.stringify(products), (err) => {
-//   if (err) {
-//     console.error(err)
-//     return
-//   }
-//   console.log('Products file created.')
-// })
+// Midleware de errores
+app.use((err, req, res, next) => {
+  if (err.message) {
+    return res.status(400)
+  }
+  res.status(500).send({ err })
+})
