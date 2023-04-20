@@ -2,7 +2,7 @@
 
 import { Router } from "express";
 import userManager from "../Dao/controller/userManager.js";
-import { createHash, isValidPassword } from "../public/js/crypto.js";
+import { createHash, isValidPassword } from "../utils/crypto.js";
 import userModel from "../Dao/models/user.model.js";
 import passport from "passport";
 
