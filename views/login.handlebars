@@ -1,6 +1,6 @@
 <div class="hero-image mt-3 container w-25">
   <h1 class="text-center">Login</h1>
-  <div class="hero-text card login d-flex justify-content-center align-items-center">
+  <div class="hero-text card login d-flex justify-content-center align-items-center p-5">
     <form class="text-center">
       <input id="email" type="text" name="form-email" placeholder="email" />
       <input id="password" type="password" name="form-password" placeholder="password" />
@@ -9,9 +9,30 @@
     <a href="/forgot-password">Recuperar contraseña</a>
     <a href="/register">¿No eres miembro? Regístrate.</a>
     <div class="separator mt-3 mb-3"></div>
-    <div class="row ">
-        <a href='api/user/github'>Iniciar sesión con Github</a>
+    <div class="row  col-12">
+      <div class="col-6">
+        <p class="text-center">Iniciar sesión con Github</p>
+      </div>
+      <div class="col-6">
+        <p  class="text-center">Iniciar sesión con Google</p>
+      </div>
     </div>
+<div class="row  col-12">
+  <div class="col-6">
+    <a href='api/user/github'>
+      <button class="mx-auto loginButton" style="background-color: white; border: none;">
+        <img src="https://img.icons8.com/fluent/48/000000/github.png"/>
+      </button>
+    </a>
+  </div>
+  <div class="col-6">
+    <a href='api/user/google'>
+      <button class="mx-auto loginButton" style="background-color: white; border: none;">
+        <img src="https://img.icons8.com/fluent/48/000000/google-logo.png"/>
+      </button>
+    </a>
+  </div>
+</div> 
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="js/login.js"></script>

@@ -1482,6 +1482,8 @@ input::placeholder{
 
 .login {
   min-height: 400px;
+  min-width: 400px;
+  
 }
 
 #input {
@@ -1507,4 +1509,19 @@ body {
 
 .finder{
  padding: 15px;
+ border: 1px solid black;
+}
+
+button.mx-auto {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.loginButton img {
+  transition: transform 0.3s ease-in-out;
+}
+
+.loginButton:hover img {
+  transform: scale(1.5);
 }

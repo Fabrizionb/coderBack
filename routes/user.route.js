@@ -92,4 +92,26 @@ route.get(
   }
 );
 
+
+
+    route.get(
+      '/google',
+      passport.authenticate('google', { scope:
+        ['email', 'profile'] }),
+      (req, res) => {}
+    );
+
+    route.get('/google-callback',
+    passport.authenticate('google', {
+        failureRedirect: '/failed',
+    }),
+    function (req, res) {
+      req.session.passport.user = {
+        userId: req.user._id,
+        cartId: req.user.cartId
+      };
+        res.redirect('/')
+
+    }
+);
 export default route;
