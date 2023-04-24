@@ -86,7 +86,7 @@ export function configurePassport() {
       },
       async (accesToken, refreshToken, profile, done) => {
         try {
-          console.log({ login: "github", profile });
+          //console.log({ login: "github", profile });
           let email = profile._json.email;
           if (!email) {
             email = `${profile._json.id}@github.com`;
@@ -107,7 +107,7 @@ export function configurePassport() {
               password: "-",
               cartId,
             });
-            console.log("new user created", newUser);
+            //console.log("new user created", newUser);
             return done(null, newUser);
           }
           return done(null, user);
@@ -125,7 +125,7 @@ export function configurePassport() {
   },
   async function(accessToken, refreshToken, profile, done) {
     try {
-      console.log({ login: "google", profile });
+      //console.log({ login: "google", profile });
       let email = profile._json.email;
       if (!email) {
         email = `${profile._json.id}@google.com`;
@@ -146,7 +146,7 @@ export function configurePassport() {
           password: "-",
           cartId,
         });
-        console.log("new user created", newUser);
+        //console.log("new user created", newUser);
         return done(null, newUser);
       }
       return done(null, user);

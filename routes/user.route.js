@@ -68,50 +68,47 @@ route.get("/failureregister", async (req, res, next) => {
   console.log("failureregister");
   res.send({ error: "Error on register" });
 });
+
 route.get("/failurelogin", async (req, res, next) => {
   console.log("failurelogin");
   res.send({ error: "User or password incorrect" });
 });
 
 route.get(
-  '/github',
-  passport.authenticate('github', { scope: ['user:email'] }),
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] }),
   (req, res) => {}
 );
 
 route.get(
-  '/github-callback',
-  passport.authenticate('github', { failureRedirect: '/login' }),
+  "/github-callback",
+  passport.authenticate("github", { failureRedirect: "/login" }),
   (req, res) => {
-    
     req.session.passport.user = {
       userId: req.user._id,
-      cartId: req.user.cartId
+      cartId: req.user.cartId,
     };
-    res.redirect('/');
+    res.redirect("/");
   }
 );
 
+route.get(
+  "/google",
+  passport.authenticate("google", { scope: ["email", "profile"] }),
+  (req, res) => {}
+);
 
-
-    route.get(
-      '/google',
-      passport.authenticate('google', { scope:
-        ['email', 'profile'] }),
-      (req, res) => {}
-    );
-
-    route.get('/google-callback',
-    passport.authenticate('google', {
-        failureRedirect: '/failed',
-    }),
-    function (req, res) {
-      req.session.passport.user = {
-        userId: req.user._id,
-        cartId: req.user.cartId
-      };
-        res.redirect('/')
-
-    }
+route.get(
+  "/google-callback",
+  passport.authenticate("google", {
+    failureRedirect: "/failed",
+  }),
+  function (req, res) {
+    req.session.passport.user = {
+      userId: req.user._id,
+      cartId: req.user.cartId,
+    };
+    res.redirect("/");
+  }
 );
 export default route;
