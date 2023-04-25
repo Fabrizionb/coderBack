@@ -64,29 +64,6 @@ mongoose.connect(MONGO_URI, {
 configurePassport()
 app.use(passport.initialize())
 app.use(passport.session)
-// Cookies
-// const auth = (req, res, next) => {
-//   const admin = req.session.admin
-//   if (admin) {
-//     next()
-//   } else {
-//     res.status(401).send({ error: 'No Autorizado' })
-//   }
-// }
-app.get('/setCookie', (req, res) => {
-  res.cookie('CoderCookie', 'Esta es una cookie poderosa', { maxAge: 100000, signed: true }).send('Cookie')
-})
-
-app.get('/getCookie', (req, res) => {
-  const cookies = req.cookies
-  const signedCookies = req.signedCookies
-  console.log(cookies)
-  res.send({ cookies, signedCookies })
-})
-
-app.get('/deleteCookie', (req, res) => {
-  res.clearCookie('CoderCookie').send('Se borro la cookie')
-})
 
 // Midleware de errores
 app.use((err, req, res, next) => {

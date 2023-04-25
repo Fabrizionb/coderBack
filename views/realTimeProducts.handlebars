@@ -1,7 +1,7 @@
 <div class="content">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-7 sticky-top" style="height: 600px; overflow-y: scroll;">
+      <div class="col-7 sticky-top mt-5" style="height: 1200px; overflow-y: scroll;">
         <div class="col-12">
           <div class="card p-4">
             <div class="card-header">
@@ -41,7 +41,7 @@
                       <td class=" text-center align-middle">{{this.stock}}</td>
                       <td class="text-center align-middle">
                   {{#each this.thumbnails}}
-                  <a href="/img/{{this}}" target="_blank"><img src="/img/{{this}}" alt="Thumbnail of product"></a>
+                  <a href="/img/{{this}}" target="_blank"><img class="img-thumbnail" style="width: 120px; height: 120px;" src="/img/{{this}}" alt="Thumbnail of product"></a>
                   {{/each}}
                 </td>
                  <td class=" text-center align-middle"><span
@@ -61,7 +61,7 @@
       </div>
       <div class="col-4 formsC">
         <div class="row">
-          <div class="containerF cargadorProductos">
+          <div class="containerF cargadorProductos mt-5">
             <div>
               {{> title titulo = "Cargador de Productos"}}
             </div>

@@ -33,7 +33,7 @@ registerBtn.addEventListener('click', (event) => {
       return response.json()
     })
     .then((response) => {
-      if (response.message === 'User Created') {
+      if (response.message === "User Created") {
         Swal.fire('Success!', 'User created.')
         setTimeout(() => {
           const url = window.location.href

@@ -4,9 +4,10 @@ import productModel from '../Dao/models/product.model.js'
 import cartModel from '../Dao/models/cart.model.js'
 import util from '../utils/view.util.js'
 // import auth from '../utils/auth.js'
-import isAdmin from '../utils/isAdmin.js'
+// import isAdmin from '../utils/isAdmin.js'
 import mongoose from 'mongoose'
 import userModel from '../Dao/models/user.model.js'
+import { authorization } from '../utils/auth.js'
 
 const route = Router()
 
@@ -135,23 +136,24 @@ route.get('/view/cart/:cid', async (req, res, next) => {
 })
 
 // Ruta para ver los productos en tiempo real
-route.get('/realtimeproducts', isAdmin, async (req, res, next) => {
-  const data = await productManager.find()
-  try {
-    if (!data) {
-      res.status(404).render('404', {
-        title: 'Products not found',
-        msg: 'Products not Found'
-      })
-    } else {
-      res
-        .status(200)
-        .render('realTimeProducts', { titulo: 'Listado de Productos', data })
+route.get('/realtimeproducts', authorization('admin'),
+  async (req, res, next) => {
+    const data = await productManager.find()
+    try {
+      if (!data) {
+        res.status(404).render('404', {
+          title: 'Products not found',
+          msg: 'Products not Found'
+        })
+      } else {
+        res
+          .status(200)
+          .render('realTimeProducts', { titulo: 'Listado de Productos', data })
+      }
+    } catch (error) {
+      next(error)
     }
-  } catch (error) {
-    next(error)
-  }
-})
+  })
 
 // Ruta para ver el chat en tiempo real
 route.get('/chat', async (req, res, next) => {
