@@ -13,36 +13,15 @@ const route = Router()
 
 // Ruta para los productos
 route.get('/', async (req, res, next) => {
-  const query = req.query
-  const userCart =
-    req.session.passport &&
-    req.session.passport.user &&
-    req.session.passport.user.cartId
-      ? req.session.passport.user.cartId
-      : null
-  const user =
-    req.session.passport &&
-    req.session.passport.user &&
-    req.session.passport.user.userId
-      ? req.session.passport.user.userId
-      : null
+  const { query } = req
+  const userCart = util.getSessionValue(req, 'cartId')
+  const user = util.getSessionValue(req, 'userId')
   if (!user) {
     res.redirect('/login')
+    return
   }
-  const sort = {}
-  // Verificar si se ha enviado un parámetro de ordenamiento
-  sort[query.sort] = query.order === 'desc' ? -1 : 1
-  if (query.sort === 'price' && query[query.sort]) {
-    sort[query.sort] = sort[query.sort] * parseInt(query[query.sort])
-  }
-  // Crear el objeto de la consulta
-  const conditions = {}
-  if (query.category) {
-    conditions.category = query.category
-  }
-  if (query.status) {
-    conditions.status = query.status === 'true'
-  }
+  const sort = util.createSortObject(query)
+  const conditions = util.createConditionsObject(query)
   try {
     const products = await productModel.paginate(conditions, {
       page: query.page ?? 1,

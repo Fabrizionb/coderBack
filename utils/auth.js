@@ -18,7 +18,6 @@ export const passportCall = (strategy) => {
 export const authorization = (rol) => {
   return async (req, res, next) => {
     const cookie = req?.cookies?.AUTH || null
-    console.log('cookie auth', cookie)
     if (!cookie) {
       return res.status(401).send({ error: 'User is not logged in' })
     }
