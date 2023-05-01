@@ -6,7 +6,7 @@ import cookieRoute from './cookie.route.js'
 const route = Router()
 
 route.use('/product', productsRoute)
-route.use('/cart', cartRoute)
+route.use(cartRoute.path, cartRoute.router)
 route.use('/user', usersRoute)
 route.use('/cookie', cookieRoute)
 

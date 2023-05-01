@@ -1,6 +1,6 @@
 import passport from 'passport'
 import jwt from 'jsonwebtoken'
-import config from '../data.js'
+import config from '../../data.js'
 
 export const passportCall = (strategy) => {
   return async (req, res, next) => {

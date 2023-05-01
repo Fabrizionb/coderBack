@@ -5,17 +5,17 @@ import userManager from "../Dao/controller/userManager.js";
 import { createHash, isValidPassword } from "../utils/crypto.js";
 import userModel from "../Dao/models/user.model.js";
 import passport from "passport";
-import config from "../data.js";
-import jwt from "passport-jwt"
-import { passportCall, authorization  } from '../utils/auth.js'
+import config from "../../data.js";
+import jwt from "passport-jwt";
+import { passportCall, authorization } from "../utils/auth.js";
 const route = Router();
 
-route.post("/login", passport.authenticate("login",
-  {
+route.post("/login",
+  passport.authenticate("login", {
     failureRedirect: "/api/user/failurerelogin",
   }),
   (req, res) => {
-    res.status(200).send({ message: "User Logged" })
+    res.status(200).send({ message: "User Logged" });
   }
 );
 
@@ -38,29 +38,35 @@ route.post("/restore-password", async (req, res, next) => {
   }
 });
 
-route.post("/register", passport.authenticate("register",
-  {
+route.post("/register",
+  passport.authenticate("register", {
     failureRedirect: "/api/user/failureregister",
   }),
   async (req, res) => res.status(201).send({ message: "User Logged" })
 );
 
-route.get(
-  '/data',
-   //passport.authenticate('jwt', { session: false }),
-   passportCall('jwt'),
-   authorization('admin'),
+route.get("/data",
+  //passport.authenticate('jwt', { session: false }),
+  passportCall("jwt"),
+  authorization("admin"),
   // authorization('ADMIN'),
   (req, res) => {
     res.send(req.user);
   }
 );
 
+route.get("/current",
+  passport.authenticate("current", { session: false }),
+  (req, res) => {
+    const { _id, email, name, lastname, cartId, role } = req.user;
+    res.json({ user: { _id, email, name, lastname, cartId, role } });
+  }
+);
+
 function generateToken(user) {
-  const token = jwt.sign({ user }, config.JWT_SECRET , { expiresIn: '24h' });
+  const token = jwt.sign({ user }, config.JWT_SECRET, { expiresIn: "24h" });
   return token;
 }
-
 route.post("/logout", (req, res, next) => {
   try {
     req.session.destroy();
@@ -78,11 +84,11 @@ route.get("/failurelogin", async (req, res, next) => {
   console.log("failurelogin");
   res.send({ error: "User or password incorrect" });
 });
-route.get(  "/github",
+route.get("/github",
   passport.authenticate("github", { scope: ["user:email"] }),
   (req, res) => {}
 );
-route.get(  "/github-callback",
+route.get("/github-callback",
   passport.authenticate("github", { failureRedirect: "/login" }),
   (req, res) => {
     req.session.passport.user = {
@@ -92,11 +98,11 @@ route.get(  "/github-callback",
     res.redirect("/");
   }
 );
-route.get(  "/google",
+route.get("/google",
   passport.authenticate("google", { scope: ["email", "profile"] }),
   (req, res) => {}
 );
-route.get(  "/google-callback",
+route.get("/google-callback",
   passport.authenticate("google", {
     failureRedirect: "/failed",
   }),

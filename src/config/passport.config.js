@@ -4,15 +4,15 @@ import local from "passport-local";
 import userModel from "../Dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils/crypto.js";
 import github from "passport-github2";
-import config from "../data.js";
+import config from "../../data.js";
 import google from "passport-google-oauth20";
-import jwtLib  from "jsonwebtoken"
-import jwt from "passport-jwt"
- 
+import jwtLib from "jsonwebtoken";
+import jwt from "passport-jwt";
+
 const LocalStrategy = local.Strategy;
 const GithubStrategy = github.Strategy;
 const GoogleStrategy = google.Strategy;
-const JWTStrategy = jwt.Strategy
+const JWTStrategy = jwt.Strategy;
 
 export function configurePassport() {
   passport.use("register",
@@ -21,21 +21,18 @@ export function configurePassport() {
         passReqToCallback: true,
         usernameField: "email",
       },
-  
+
       async (req, username, password, done) => {
         const { name, lastname } = req.body;
         try {
-          //console.log("estrategia passport register")
           const userExist = await userModel.findOne({ email: username });
           if (userExist) {
-            //console.log("estrategia passport register, userExist")
             return done(null, false, { message: "User already exists" });
           }
           // new cart
           const createdCart = await fetch("http://localhost:8080/api/cart", {
             method: "POST",
           });
-          //console.log("se creo el carrito", createdCart )
           const cartData = await createdCart.json();
           const cartId = cartData.carts[0]._id;
           const hashedPassword = createHash(password);
@@ -47,23 +44,23 @@ export function configurePassport() {
             name,
             lastname,
           });
-          //console.log("se creo el newUser", newUser )
           // Genera el token JWT y setea la cookie en la respuesta
           const userObj = {
             userId: newUser._id.toString(),
             cartId: newUser.cartId.toString(),
             role: newUser.role,
           };
-          //console.log("se creo el userObj", userObj )
-          const token = jwtLib.sign(userObj, config.JWT_SECRET, { expiresIn: '24h' });
-          req.res.cookie('AUTH', token, {
+          const token = jwtLib.sign(userObj, config.JWT_SECRET, {
+            expiresIn: "24h",
+          });
+          req.res.cookie("AUTH", token, {
             maxAge: 60 * 60 * 1000 * 24,
             httpOnly: true,
           });
-  
+
           return done(null, newUser);
         } catch (error) {
-          done(error, false, {message:"Could not create user"});
+          done(error, false, { message: "Could not create user" });
         }
       }
     )
@@ -86,29 +83,30 @@ export function configurePassport() {
             console.log("Password incorrect");
             return done(null, false, { message: "Password incorrect" });
           }
-  
+
           // Genera el token JWT y setea la cookie en la respuesta
           const userObj = {
             userId: user._id.toString(),
             cartId: user.cartId.toString(),
             role: user.role,
           };
-          const token = jwtLib.sign(userObj, config.JWT_SECRET, { expiresIn: '24h' });
-          req.res.cookie('AUTH', token, {
+          const token = jwtLib.sign(userObj, config.JWT_SECRET, {
+            expiresIn: "24h",
+          });
+          req.res.cookie("AUTH", token, {
             maxAge: 60 * 60 * 1000 * 24,
             httpOnly: true,
           });
-  
+
           return done(null, user);
         } catch (error) {
-          done(error, false, {message:"Could not login user"});
+          done(error, false, { message: "Could not login user" });
         }
       }
     )
   );
 
-  passport.use(
-    "jwt",
+  passport.use("jwt",
     new JWTStrategy(
       {
         jwtFromRequest: jwt.ExtractJwt.fromExtractors([
@@ -127,9 +125,27 @@ export function configurePassport() {
     )
   );
 
-  function cookieExtractor(req) {
-    return req?.cookies?.['AUTH'] || null;
-  }
+  passport.use("current",
+    new JWTStrategy(
+      {
+        jwtFromRequest: jwt.ExtractJwt.fromExtractors([
+          cookieExtractor]),
+        secretOrKey: config.JWT_SECRET,
+      },
+      async (payload, done) => {
+        try {
+          const user = await userModel.findById(payload.userId);
+          if (user) {
+            done(null, user);
+          } else {
+            done(null, false, { message: "Token is not valid" });
+          }
+        } catch (err) {
+          done(err, false);
+        }
+      }
+    )
+  );
 
   passport.use("github",
     new GithubStrategy(
@@ -162,8 +178,10 @@ export function configurePassport() {
               cartId,
             });
             //console.log("new user created", newUser);
+            setAuthCookie(req, newUser);
             return done(null, newUser);
           }
+          setAuthCookie(req, user);
           return done(null, user);
         } catch (error) {
           done(error, false);
@@ -203,8 +221,10 @@ export function configurePassport() {
               cartId,
             });
             //console.log("new user created", newUser);
+            setAuthCookie(req, newUser);
             return done(null, newUser);
           }
+          setAuthCookie(req, user);
           return done(null, user);
         } catch (error) {
           done(error, false);
@@ -213,6 +233,21 @@ export function configurePassport() {
     )
   );
 
+  function setAuthCookie(req, user) {
+    const userObj = {
+      userId: user._id.toString(),
+      cartId: user.cartId.toString(),
+      role: user.role,
+    };
+    const token = jwtLib.sign(userObj, config.JWT_SECRET, { expiresIn: "24h" });
+    req.res.cookie("AUTH", token, {
+      maxAge: 60 * 60 * 1000 * 24,
+      httpOnly: true,
+    });
+  }
+  function cookieExtractor(req) {
+    return req?.cookies?.["AUTH"] || null;
+  }
   passport.serializeUser((user, done) =>
     done(null, { userId: user._id, cartId: user.cartId })
   );
