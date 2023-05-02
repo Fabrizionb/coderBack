@@ -1,3 +1,6 @@
+import jwtLib from 'jsonwebtoken'
+import config from '../../data.js'
+
 function isValidPage (page, totalPages) {
   if (page === undefined) {
     return true
@@ -41,9 +44,27 @@ const createConditionsObject = (query) => {
   return conditions
 }
 
+function setAuthCookie (user, res) {
+  const userObj = {
+    userId: user._id.toString(),
+    cartId: user.cartId.toString(),
+    role: user.role
+  }
+  const token = jwtLib.sign(userObj, config.JWT_SECRET, { expiresIn: '24h' })
+  res.cookie('AUTH', token, {
+    maxAge: 60 * 60 * 1000 * 24,
+    httpOnly: true
+  })
+}
+function cookieExtractor (req) {
+  return req?.cookies?.AUTH || null
+}
+
 export default {
   isValidPage,
   getSessionValue,
   createSortObject,
-  createConditionsObject
+  createConditionsObject,
+  setAuthCookie,
+  cookieExtractor
 }

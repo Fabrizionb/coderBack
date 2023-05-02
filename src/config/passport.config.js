@@ -8,6 +8,7 @@ import config from "../../data.js";
 import google from "passport-google-oauth20";
 import jwtLib from "jsonwebtoken";
 import jwt from "passport-jwt";
+import util from '../utils/view.util.js'
 
 const LocalStrategy = local.Strategy;
 const GithubStrategy = github.Strategy;
@@ -106,30 +107,30 @@ export function configurePassport() {
     )
   );
 
-  passport.use("jwt",
-    new JWTStrategy(
-      {
-        jwtFromRequest: jwt.ExtractJwt.fromExtractors([
-          cookieExtractor,
-          jwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
-        ]),
-        secretOrKey: config.JWT_SECRET,
-      },
-      (payload, done) => {
-        try {
-          done(null, payload);
-        } catch (err) {
-          done(err, false);
-        }
-      }
-    )
-  );
+  // passport.use("jwt",
+  //   new JWTStrategy(
+  //     {
+  //       jwtFromRequest: jwt.ExtractJwt.fromExtractors([
+  //         util.cookieExtractor,
+  //         jwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
+  //       ]),
+  //       secretOrKey: config.JWT_SECRET,
+  //     },
+  //     (payload, done) => {
+  //       try {
+  //         done(null, payload);
+  //       } catch (err) {
+  //         done(err, false);
+  //       }
+  //     }
+  //   )
+  // );
 
   passport.use("current",
     new JWTStrategy(
       {
         jwtFromRequest: jwt.ExtractJwt.fromExtractors([
-          cookieExtractor]),
+          util.cookieExtractor]),
         secretOrKey: config.JWT_SECRET,
       },
       async (payload, done) => {
@@ -199,32 +200,32 @@ export function configurePassport() {
       },
       async function (accessToken, refreshToken, profile, done) {
         try {
-          //console.log({ login: "google", profile });
+          console.log({ login: "google", profile });
           let email = profile._json.email;
-          if (!email) {
-            email = `${profile._json.id}@google.com`;
-          }
+          // if (!email) {
+          //   email = `${profile._json.id}@google.com`;
+          // }
           const user = await userModel.findOne({ email });
-          if (!user || user === undefined) {
-            // new cart
-            const createdCart = await fetch("http://localhost:8080/api/cart", {
-              method: "POST",
-            });
-            const cartData = await createdCart.json();
-            const cartId = cartData.carts[0]._id;
-            const password = profile._json.id;
-            const newUser = await userModel.create({
-              email,
-              name: profile._json.name,
-              lastname: "-",
-              password: "-",
-              cartId,
-            });
-            //console.log("new user created", newUser);
-            setAuthCookie(req, newUser);
-            return done(null, newUser);
-          }
-          setAuthCookie(req, user);
+          console.log("encontro user", user)
+          // if (!user || user === undefined) {
+          //   // new cart
+          //   const createdCart = await fetch("http://localhost:8080/api/cart", {
+          //     method: "POST",
+          //   });
+          //   const cartData = await createdCart.json();
+          //   const cartId = cartData.carts[0]._id;
+          //   const password = profile._json.id;
+          //   const newUser = await userModel.create({
+          //     email,
+          //     name: profile._json.name,
+          //     lastname: "-",
+          //     password: "-",
+          //     cartId,
+          //   });
+          //   //console.log("new user created", newUser);
+          //   return done(null, newUser);
+          // }
+          console.log("retorno user", user)
           return done(null, user);
         } catch (error) {
           done(error, false);
@@ -233,21 +234,6 @@ export function configurePassport() {
     )
   );
 
-  function setAuthCookie(req, user) {
-    const userObj = {
-      userId: user._id.toString(),
-      cartId: user.cartId.toString(),
-      role: user.role,
-    };
-    const token = jwtLib.sign(userObj, config.JWT_SECRET, { expiresIn: "24h" });
-    req.res.cookie("AUTH", token, {
-      maxAge: 60 * 60 * 1000 * 24,
-      httpOnly: true,
-    });
-  }
-  function cookieExtractor(req) {
-    return req?.cookies?.["AUTH"] || null;
-  }
   passport.serializeUser((user, done) =>
     done(null, { userId: user._id, cartId: user.cartId })
   );

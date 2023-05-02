@@ -1,5 +1,6 @@
 const socket = io()
-let user
+let userEmail
+let userRole
 const chatBox = document.querySelector('#chatBox')
 
 Swal.fire({
@@ -16,13 +17,20 @@ Swal.fire({
   },
   allowOutsideClick: false
 }).then((result) => {
-  user = result.value
-  socket.emit('new_user', user)
+  userEmail = result.value
+  userRole = document.getElementById('userRole').value
+  socket.emit('new_user', userEmail)
 })
 
 socket.on('messageLogs', (data) => {
   const log = document.querySelector('#messageLogs')
-  const messages = data
+  let filteredData = data
+
+  if (userRole !== 'admin') {
+    filteredData = data.filter(message => message.user === userEmail || message.user === 'admin')
+  }
+
+  const messages = filteredData
     .map(
       (message) =>
         `<p class="user">${message.user} dice: <span class="message">${message.message}</span></p>`
@@ -42,7 +50,7 @@ socket.on('user_connected', (data) => {
 chatBox.addEventListener('keyup', (evt) => {
   if (evt.key === 'Enter') {
     if (chatBox.value.trim().length > 0) {
-      socket.emit('message', { user, message: chatBox.value })
+      socket.emit('message', { user: userEmail, message: chatBox.value })
       chatBox.value = ''
     }
   }

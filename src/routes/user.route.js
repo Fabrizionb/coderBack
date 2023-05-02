@@ -8,6 +8,7 @@ import passport from "passport";
 import config from "../../data.js";
 import jwt from "passport-jwt";
 import { passportCall, authorization } from "../utils/auth.js";
+
 const route = Router();
 
 route.post("/login",
@@ -56,13 +57,16 @@ route.get("/data",
 );
 
 route.get("/current",
-  passport.authenticate("current", { session: false }),
+  passport.authenticate("current", { session: false, failureRedirect: '/unauthorized' }),
   (req, res) => {
     const { _id, email, name, lastname, cartId, role } = req.user;
     res.json({ user: { _id, email, name, lastname, cartId, role } });
   }
 );
-
+// Nueva ruta para manejar el acceso no autorizado
+route.get("/unauthorized", (req, res) => {
+  res.render('unauthorized', { title: "Unauthorized", msg: "You are Unauthorized, please log in." });
+});
 function generateToken(user) {
   const token = jwt.sign({ user }, config.JWT_SECRET, { expiresIn: "24h" });
   return token;
@@ -71,6 +75,7 @@ route.post("/logout", (req, res, next) => {
   try {
     req.session.destroy();
     res.clearCookie("connect.sid");
+    res.clearCookie("AUTH"); // clear cookie "AUTH"
     res.status(200).json({ response: "success" });
   } catch (error) {
     next(error);
@@ -95,6 +100,7 @@ route.get("/github-callback",
       userId: req.user._id,
       cartId: req.user.cartId,
     };
+    setAuthCookie(req, user);
     res.redirect("/");
   }
 );
@@ -107,10 +113,8 @@ route.get("/google-callback",
     failureRedirect: "/failed",
   }),
   function (req, res) {
-    req.session.passport.user = {
-      userId: req.user._id,
-      cartId: req.user.cartId,
-    };
+    // Use req.user instead of user
+    setAuthCookie(req.user, res);
     res.redirect("/");
   }
 );

@@ -6,6 +6,7 @@ logout.addEventListener('click', () => {
       'Content-Type': 'application/json'
     }
   }).then(() => {
+    document.cookie = 'AUTH=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;' // Eliminar la cookie "AUTH" en el cliente
     window.location.href = '/login'
   })
 })
