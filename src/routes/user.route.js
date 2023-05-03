@@ -46,15 +46,15 @@ route.post("/register",
   async (req, res) => res.status(201).send({ message: "User Logged" })
 );
 
-route.get("/data",
-  //passport.authenticate('jwt', { session: false }),
-  passportCall("jwt"),
-  authorization("admin"),
-  // authorization('ADMIN'),
-  (req, res) => {
-    res.send(req.user);
-  }
-);
+// route.get("/data",
+//   //passport.authenticate('jwt', { session: false }),
+//   passportCall("jwt"),
+//   authorization("admin"),
+//   // authorization('ADMIN'),
+//   (req, res) => {
+//     res.send(req.user);
+//   }
+// );
 
 route.get("/current",
   passport.authenticate("current", { session: false, failureRedirect: '/unauthorized' }),

@@ -130,7 +130,8 @@ export function configurePassport() {
     new JWTStrategy(
       {
         jwtFromRequest: jwt.ExtractJwt.fromExtractors([
-          util.cookieExtractor]),
+          util.cookieExtractor,jwt.ExtractJwt.fromAuthHeaderAsBearerToken()
+        ]),
         secretOrKey: config.JWT_SECRET,
       },
       async (payload, done) => {

@@ -1,4 +1,4 @@
-// import auth from '../utils/auth.js'
+import { authorization, passportCall } from '../utils/auth.js'
 /* eslint-disable */
 import { Router } from "express";
 import productModel from "../Dao/models/product.model.js";
@@ -6,7 +6,7 @@ import cartModel from "../Dao/models/cart.model.js";
 import util from "../utils/view.util.js";
 import mongoose from "mongoose";
 import userModel from "../Dao/models/user.model.js";
-import { authorization } from "../utils/auth.js";
+
 import passport from "passport";
 import jwtLib from "jsonwebtoken";
 import config from "../../data.js";
@@ -15,10 +15,12 @@ const route = Router();
 
 // Ruta para los productos
 route.get("/",
-  passport.authenticate("current", {
-    session: false,
-    failureRedirect: "api/user/unauthorized",
-  }),
+  // passport.authenticate("current", {
+  //   session: false,
+  //   failureRedirect: "api/user/unauthorized",
+  // }),
+  authorization(['user', 'admin']),
+  passportCall("current"),
   async (req, res, next) => {
     const { query } = req;
     const cookie = util.cookieExtractor(req);
@@ -29,7 +31,6 @@ route.get("/",
     let decoded;
     try {
       decoded = jwtLib.verify(cookie, config.JWT_SECRET);
-      //console.log(decoded);
     } catch (err) {
       console.error(err);
       res.redirect("/login");
@@ -83,10 +84,12 @@ route.get("/",
 
 // ruta para ver cada uno de los productos
 route.get("/view/product/:pid",
-  passport.authenticate("current", {
-    session: false,
-    failureRedirect: "api/user/unauthorized",
-  }),
+  // passport.authenticate("current", {
+  //   session: false,
+  //   failureRedirect: "api/user/unauthorized",
+  // }),
+  authorization(['user', 'admin']),
+  passportCall("current"),
   async (req, res, next) => {
     const { pid } = req.params;
     if (!mongoose.isValidObjectId(pid)) {
@@ -118,10 +121,12 @@ route.get("/view/product/:pid",
 
 // ruta para ver el carrito
 route.get("/view/cart/:cid",
-  passport.authenticate("current", {
-    session: false,
-    failureRedirect: "api/user/unauthorized",
-  }),
+  // passport.authenticate("current", {
+  //   session: false,
+  //   failureRedirect: "api/user/unauthorized",
+  // }),
+  authorization(['user', 'admin']),
+  passportCall("current"),
   async (req, res, next) => {
     try {
       const { cid } = req.params;
@@ -172,10 +177,11 @@ route.get("/view/cart/:cid",
 
 // Ruta para ver los productos en tiempo real
 route.get("/realtimeproducts",
-  authorization("admin"),
+authorization( 'admin'),
+  passportCall("current"),
   async (req, res, next) => {
     const data = await productModel.find();
-    
+
     try {
       if (!data) {
         res.status(404).render("404", {
@@ -183,10 +189,13 @@ route.get("/realtimeproducts",
           msg: "Products not Found",
         });
       } else {
-        const plainData = data.map(doc => doc.toObject());
+        const plainData = data.map((doc) => doc.toObject());
         res
           .status(200)
-          .render("realTimeProducts", { titulo: "Listado de Productos", data: plainData });
+          .render("realTimeProducts", {
+            titulo: "Listado de Productos",
+            data: plainData,
+          });
       }
     } catch (error) {
       next(error);
@@ -196,10 +205,12 @@ route.get("/realtimeproducts",
 
 // Ruta para ver el chat en tiempo real
 route.get("/chat",
-passport.authenticate("current", {
-  session: false,
-  failureRedirect: "api/user/unauthorized",
-}),
+  // passport.authenticate("current", {
+  //   session: false,
+  //   failureRedirect: "api/user/unauthorized",
+  // }),
+  authorization(['user', 'admin']),
+  passportCall("current"),
   async (req, res, next) => {
     try {
       const cookie = util.cookieExtractor(req);
@@ -214,7 +225,9 @@ passport.authenticate("current", {
       const user = await userModel.findById(decoded.userId);
       const userObj = user.toObject();
 
-      res.status(200).render("chat", { title: "Live Chat", role: userObj.role });
+      res
+        .status(200)
+        .render("chat", { title: "Live Chat", role: userObj.role });
     } catch (error) {
       next(error);
     }
@@ -268,10 +281,12 @@ route.get("/forgot-password", (req, res, next) => {
 
 // Ruta para ver el perfil
 route.get("/profile",
-  passport.authenticate("current", {
-    session: false,
-    failureRedirect: "api/user/unauthorized",
-  }),
+  // passport.authenticate("current", {
+  //   session: false,
+  //   failureRedirect: "api/user/unauthorized",
+  // }),
+  authorization(['user', 'admin']),
+  passportCall("current"),
   async (req, res, next) => {
     const userId = req.user._id;
     const cartId = req.user.cartId;

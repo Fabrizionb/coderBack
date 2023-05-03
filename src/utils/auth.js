@@ -7,7 +7,8 @@ export const passportCall = (strategy) => {
     passport.authenticate(strategy, (error, user, info) => {
       if (error) return next(error)
       if (!user) {
-        return res.status(401).send({ error: info.message ?? info.toString() })
+        // return res.status(401).send({ error: info.message ?? info.toString() })
+        return res.status(401).redirect('/api/user/unauthorized')
       }
       req.user = user
       next()
@@ -15,11 +16,11 @@ export const passportCall = (strategy) => {
   }
 }
 
-export const authorization = (rol) => {
+export const authorization = (roles) => {
   return async (req, res, next) => {
     const cookie = req?.cookies?.AUTH || null
     if (!cookie) {
-      return res.status(401).send({ error: 'User is not logged in' })
+      return res.status(401).redirect('/api/user/unauthorized')
     }
 
     try {
@@ -30,14 +31,12 @@ export const authorization = (rol) => {
       req.user = { userId, cartId, role }
 
       // Verificar si el usuario ya está autenticado
-      if (!rol && req.user) {
+      if (!roles && req.user) {
         return res.status(200).send({ message: 'User already authenticated' })
       }
 
-      if (req.user.role !== rol) {
-        return res
-          .status(403)
-          .send({ error: `User does not have the role ${rol}` })
+      if (!roles.includes(req.user.role)) {
+        return res.status(403).redirect('/api/user/unauthorized')
       }
       next()
     } catch (error) {
