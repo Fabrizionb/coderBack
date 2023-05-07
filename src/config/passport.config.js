@@ -152,9 +152,9 @@ export function configurePassport() {
   passport.use("github",
     new GithubStrategy(
       {
-        clientID: config.github_client_id,
-        clientSecret: config.github_client_secret,
-        callbackURL: config.github_callback_url,
+        clientID: config.GITHUB_CLIENT_ID,
+        clientSecret: config.GITHUB_CLIENT_SECRET,
+        callbackURL: config.GITHUB_CALLBACK_URL,
       },
       async (accesToken, refreshToken, profile, done) => {
         try {
@@ -197,36 +197,36 @@ export function configurePassport() {
       {
         clientID: config.GOOGLE_CLIENT_ID,
         clientSecret: config.GOOGLE_CLIENT_SECRET,
-        callbackURL: config.google_callback_url,
+        callbackURL: config.GOOGLE_CALLBACK_URL,
       },
       async function (accessToken, refreshToken, profile, done) {
         try {
-          console.log({ login: "google", profile });
+          //console.log({ login: "google", profile });
           let email = profile._json.email;
-          // if (!email) {
-          //   email = `${profile._json.id}@google.com`;
-          // }
+          if (!email) {
+            email = `${profile._json.id}@google.com`;
+          }
           const user = await userModel.findOne({ email });
           console.log("encontro user", user)
-          // if (!user || user === undefined) {
-          //   // new cart
-          //   const createdCart = await fetch("http://localhost:8080/api/cart", {
-          //     method: "POST",
-          //   });
-          //   const cartData = await createdCart.json();
-          //   const cartId = cartData.carts[0]._id;
-          //   const password = profile._json.id;
-          //   const newUser = await userModel.create({
-          //     email,
-          //     name: profile._json.name,
-          //     lastname: "-",
-          //     password: "-",
-          //     cartId,
-          //   });
-          //   //console.log("new user created", newUser);
-          //   return done(null, newUser);
-          // }
-          console.log("retorno user", user)
+          if (!user || user === undefined) {
+            // new cart
+            const createdCart = await fetch("http://localhost:8080/api/cart", {
+              method: "POST",
+            });
+            const cartData = await createdCart.json();
+            const cartId = cartData.carts[0]._id;
+            const password = profile._json.id;
+            const newUser = await userModel.create({
+              email,
+              name: profile._json.name,
+              lastname: "-",
+              password: "-",
+              cartId,
+            });
+            //console.log("new user created", newUser);
+            return done(null, newUser);
+          }
+          //console.log("retorno user", user)
           return done(null, user);
         } catch (error) {
           done(error, false);
