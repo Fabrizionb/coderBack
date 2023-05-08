@@ -16,12 +16,7 @@ registerBtn.addEventListener('click', (event) => {
     Swal.fire('Error!', 'All fields are required', 'error')
     return
   }
-
-  emailForm.value = ''
-  passwordForm.value = ''
-  nameForm.value = ''
-  lastnameForm.value = ''
-
+  console.log("register.js handler")
   fetch('/api/user/register', {
     method: 'POST',
     headers: {
@@ -29,19 +24,31 @@ registerBtn.addEventListener('click', (event) => {
     },
     body: JSON.stringify({ email, password, name, lastname })
   })
-    .then((response) => {
-      return response.json()
-    })
-    .then((response) => {
-      if (response.message === "User Created") {
-        Swal.fire('Success!', 'User created.')
-        setTimeout(() => {
-          const url = window.location.href
-          const first = url.split('/')[2]
-          window.location.href = `http://${first}/profile`
-        }, 1500)
-        return
+        .then((response) => {
+      if (response.status === 201) {
+        return response.json();
+      } else {
+        throw new Error('Error on register');
       }
-      Swal.fire('Error!', 'User not created.', 'error')
     })
+    .then((response) => {
+      Swal.fire('Success!', 'User created.')
+      setTimeout(() => {
+        const url = window.location.href
+        const first = url.split('/')[2]
+        window.location.href = `http://${first}/profile`
+      }, 1500)
+    })
+    .catch((error) => {
+      if (error.message === 'Error on register') {
+        Swal.fire('Error!', 'User not created.', 'error')
+      } else {
+        Swal.fire('Error!', 'An unexpected error occurred.', 'error')
+      }
+    })
+
+  emailForm.value = ''
+  passwordForm.value = ''
+  nameForm.value = ''
+  lastnameForm.value = ''
 })

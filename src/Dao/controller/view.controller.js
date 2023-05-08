@@ -1,12 +1,22 @@
-import cartModel from '../models/cart.model.js'
-import productModel from '../models/product.model.js'
-import userModel from '../models/user.model.js'
+import UserService from '../../services/user.service.mjs'
+import CartService from '../../services/cart.service.mjs'
+import ProductService from '../../services/product.service.mjs'
+
 import util from '../../utils/view.util.js'
 import jwtLib from 'jsonwebtoken'
 import config from '../../../data.js'
 import mongoose from 'mongoose'
 
 class ViewController {
+  #CartService
+  #ProductService
+  #UserService
+  constructor (CartService, ProductService, UserService) {
+    this.#CartService = CartService
+    this.#ProductService = ProductService
+    this.#UserService = UserService
+  }
+
   async viewStore (req, res, next) {
     const { query } = req
     const cookie = util.cookieExtractor(req)
@@ -23,12 +33,12 @@ class ViewController {
       return
     }
     const userCart = decoded.cartId
-    const user = await userModel.findById(decoded.userId)
+    const user = await this.#UserService.findById(decoded.userId)
     const userObj = user.toObject() // Convertimos el objeto user a un objeto plano
     const sort = util.createSortObject(query)
     const conditions = util.createConditionsObject(query)
     try {
-      const products = await productModel.paginate(conditions, {
+      const products = await this.#ProductService.find(conditions, {
         page: query.page ?? 1,
         limit: query.limit ?? 10,
         lean: true,
@@ -76,7 +86,7 @@ class ViewController {
       })
     }
     try {
-      const data = await productModel.findOne({ _id: pid })
+      const data = await this.#ProductService.findById({ _id: pid })
       if (!data) {
         return res.status(404).render('404', {
           msg: `The product with id: ${pid} you’re looking for doesn’t exist`,
@@ -125,7 +135,7 @@ class ViewController {
         })
         return
       }
-      const result = await cartModel.findById(cid).populate('products.product')
+      const result = await this.#CartService.findById(cid)
       if (!result) {
         res.status(404).render('404', {
           msg: `The cart with id: ${cid} you’re looking for doesn’t exist`,
@@ -143,7 +153,7 @@ class ViewController {
   }
 
   async viewRealTime (req, res, next) {
-    const data = await productModel.find()
+    const data = await this.#ProductService.getAll()
 
     try {
       if (!data) {
@@ -176,7 +186,7 @@ class ViewController {
         res.redirect('/login')
         return
       }
-      const user = await userModel.findById(decoded.userId)
+      const user = await this.#UserService.findById(decoded.userId)
       const userObj = user.toObject()
 
       res
@@ -234,8 +244,8 @@ class ViewController {
     const cartId = req.user.cartId
 
     try {
-      const user = await userModel.findOne({ _id: userId }).populate('cartId')
-      const cart = await cartModel.findOne({ _id: cartId })
+      const user = await this.#UserService.findById({ _id: userId })
+      const cart = await this.#CartService.findById({ _id: cartId })
       if (!user) {
         res.redirect('/login')
       }
@@ -258,5 +268,5 @@ class ViewController {
   }
 }
 
-const controller = new ViewController()
+const controller = new ViewController(new CartService(), new ProductService(), new UserService())
 export default controller

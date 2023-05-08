@@ -1,9 +1,14 @@
-import cartModel from '../models/cart.model.js'
+import CartService from '../../services/cart.service.mjs'
 
 class CartController {
+  #service
+  constructor (service) {
+    this.#service = service
+  }
+
   async findAll (req, res, next) {
     try {
-      const carts = await cartModel.find()
+      const carts = await this.#service.find()
       if (!carts) {
         res.status(404).json({ error: 'Carts not found' })
       } else {
@@ -18,7 +23,7 @@ class CartController {
   async findOne (req, res, next) {
     const { id } = req.params
     try {
-      const cart = await cartModel.findOne({ _id: id })
+      const cart = await this.#service.findOne({ _id: id })
       if (!cart) {
         res.status(404).json({ error: `Cart with id ${id} not found` })
         return
@@ -32,7 +37,7 @@ class CartController {
 
   async create (req, res, next) {
     try {
-      const carts = await cartModel.create([{}])
+      const carts = await this.#service.create([{}])
       res.status(200).json({ carts })
     } catch (error) {
       next(error)
@@ -43,19 +48,27 @@ class CartController {
     const { cid } = req.params
     const { pid } = req.params
     try {
-      const cart = await cartModel.findOne({ _id: cid })
+      const cart = await this.#service.findById({ _id: cid })
       const product = cart.products.find(
         (product) => product.product.toString() === pid
       )
 
       if (!product) {
         const newProduct = { quantity: 1, product: pid }
-        cart.products.push(newProduct)
-        await cartModel.updateOne({ _id: cid }, cart)
+        console.log('nuevo producto')
+        await this.#service.findOneAndUpdate(
+          { _id: cid },
+          { $push: { products: newProduct } },
+          { new: true }
+        )
         res.status(201).json(newProduct)
       } else {
-        product.quantity += 1
-        await cartModel.updateOne({ _id: cid }, cart)
+        console.log('producto actualizado')
+        await this.#service.findOneAndUpdate(
+          { _id: cid, 'products.product': pid },
+          { $inc: { 'products.$.quantity': 1 } },
+          { new: true }
+        )
         res.status(201).json(product)
       }
     } catch (error) {
@@ -66,13 +79,15 @@ class CartController {
   async deleteAll (req, res, next) {
     const { cid } = req.params
     try {
-      const cart = await cartModel.findById({ _id: cid })
-      if (!cart) {
+      const result = await this.#service.findOneAndUpdate(
+        { _id: cid },
+        { $set: { products: [] } },
+        { new: true }
+      )
+      if (!result) {
         res.status(404).json({ error: `Cart with id ${cid} not found` })
         return
       }
-      cart.products = []
-      await cart.save()
       res
         .status(200)
         .json({ message: `Products deleted from cart with id ${cid}` })
@@ -84,22 +99,15 @@ class CartController {
   async deleteOne (req, res, next) {
     const { cid, pid } = req.params
     try {
-      const cart = await cartModel.findById(cid)
-      if (!cart) {
+      const result = await this.#service.findOneAndUpdate(
+        { _id: cid },
+        { $pull: { products: { product: pid } } },
+        { new: true }
+      )
+      if (!result) {
         res.status(404).json({ error: `Cart with id ${cid} not found` })
         return
       }
-      const productIndex = cart.products.findIndex(
-        (p) => p.product.toString() === pid
-      )
-      if (productIndex === -1) {
-        res
-          .status(404)
-          .json({ error: `Product with id ${pid} not found in cart` })
-        return
-      }
-      cart.products.splice(productIndex, 1)
-      await cart.save()
       res.status(200).json({
         message: `Product with id ${pid} deleted from cart with id ${cid}`
       })
@@ -112,22 +120,15 @@ class CartController {
     const { cid, pid } = req.params
     const { quantity } = req.body
     try {
-      const cart = await cartModel.findById(cid)
-      if (!cart) {
+      const result = await this.#service.findOneAndUpdate(
+        { _id: cid, 'products.product': pid },
+        { $set: { 'products.$.quantity': quantity } },
+        { new: true }
+      )
+      if (!result) {
         res.status(404).json({ error: `Cart with id ${cid} not found` })
         return
       }
-      const productIndex = cart.products.findIndex(
-        (p) => p.product.toString() === pid
-      )
-      if (productIndex === -1) {
-        res
-          .status(404)
-          .json({ error: `Product with id ${pid} not found in cart` })
-        return
-      }
-      cart.products[productIndex].quantity = quantity
-      await cart.save()
       res.status(200).json({
         message: `Product with id ${pid} updated to quantity ${quantity} in cart with id ${cid}`
       })
@@ -137,5 +138,5 @@ class CartController {
   }
 }
 
-const controller = new CartController()
+const controller = new CartController(new CartService())
 export default controller

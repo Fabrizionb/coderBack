@@ -10,6 +10,8 @@ import jwtLib from "jsonwebtoken";
 import jwt from "passport-jwt";
 import util from '../utils/view.util.js'
 
+import UserService from '../services/user.service.mjs'
+
 const LocalStrategy = local.Strategy;
 const GithubStrategy = github.Strategy;
 const GoogleStrategy = google.Strategy;
@@ -17,55 +19,55 @@ const JWTStrategy = jwt.Strategy;
 
 export function configurePassport() {
   passport.use("register",
-    new LocalStrategy(
-      {
-        passReqToCallback: true,
-        usernameField: "email",
-      },
+  new LocalStrategy(
+    {
+      passReqToCallback: true,
+      usernameField: "email",
+    },
 
-      async (req, username, password, done) => {
-        const { name, lastname } = req.body;
-        try {
-          const userExist = await userModel.findOne({ email: username });
-          if (userExist) {
-            return done(null, false, { message: "User already exists" });
-          }
-          // new cart
-          const createdCart = await fetch("http://localhost:8080/api/cart", {
-            method: "POST",
-          });
-          const cartData = await createdCart.json();
-          const cartId = cartData.carts[0]._id;
-          const hashedPassword = createHash(password);
-          // new user
-          const newUser = await userModel.create({
-            email: username,
-            password: hashedPassword,
-            cartId,
-            name,
-            lastname,
-          });
-          // Genera el token JWT y setea la cookie en la respuesta
-          const userObj = {
-            userId: newUser._id.toString(),
-            cartId: newUser.cartId.toString(),
-            role: newUser.role,
-          };
-          const token = jwtLib.sign(userObj, config.JWT_SECRET, {
-            expiresIn: "24h",
-          });
-          req.res.cookie("AUTH", token, {
-            maxAge: 60 * 60 * 1000 * 24,
-            httpOnly: true,
-          });
-
-          return done(null, newUser);
-        } catch (error) {
-          done(error, false, { message: "Could not create user" });
+    async (req, username, password, done) => {
+      const { name, lastname } = req.body;
+      try {
+        const userExist = await userModel.findOne({ email: username });
+        if (userExist) {
+          return done(null, false, { message: "User already exists" });
         }
+        // new cart
+        const createdCart = await fetch("http://localhost:8080/api/cart", {
+          method: "POST",
+        });
+        const cartData = await createdCart.json();
+        const cartId = cartData.carts[0]._id;
+        const hashedPassword = createHash(password);
+        // new user
+        const newUser = await userModel.create({
+          email: username,
+          password: hashedPassword,
+          cartId,
+          name,
+          lastname,
+        });
+        // Genera el token JWT y setea la cookie en la respuesta
+        const userObj = {
+          userId: newUser._id.toString(),
+          cartId: newUser.cartId.toString(),
+          role: newUser.role,
+        };
+        const token = jwtLib.sign(userObj, config.JWT_SECRET, {
+          expiresIn: "24h",
+        });
+        req.res.cookie("AUTH", token, {
+          maxAge: 60 * 60 * 1000 * 24,
+          httpOnly: true,
+        });
+
+        return done(null, newUser);
+      } catch (error) {
+        done(error, false, { message: "Could not create user" });
       }
-    )
-  );
+    }
+  )
+);
 
   passport.use("login",
     new LocalStrategy(
@@ -106,25 +108,6 @@ export function configurePassport() {
       }
     )
   );
-
-  // passport.use("jwt",
-  //   new JWTStrategy(
-  //     {
-  //       jwtFromRequest: jwt.ExtractJwt.fromExtractors([
-  //         util.cookieExtractor,
-  //         jwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
-  //       ]),
-  //       secretOrKey: config.JWT_SECRET,
-  //     },
-  //     (payload, done) => {
-  //       try {
-  //         done(null, payload);
-  //       } catch (err) {
-  //         done(err, false);
-  //       }
-  //     }
-  //   )
-  // );
 
   passport.use("current",
     new JWTStrategy(

@@ -1,7 +1,12 @@
-import productModel from '../models/product.model.js'
 import mongoose from 'mongoose'
+import ProductService from '../../services/product.service.mjs'
+/* eslint-disable */
 
 class ProductController {
+  #service
+  constructor (service) {
+    this.#service = service
+  }
   async findAll (req, res, next) {
     const baseUrl = 'http://localhost:8080'
     const query = req.query
@@ -19,7 +24,7 @@ class ProductController {
       conditions.status = query.status === 'true'
     }
     try {
-      const products = await productModel.paginate(
+      const products = await this.#service.find(
         conditions,
         {
           page: query.page ?? 1,
@@ -49,7 +54,6 @@ class ProductController {
       next(error)
     }
   }
-
   async findOne (req, res, next) {
     const { pid } = req.params
     try {
@@ -58,7 +62,7 @@ class ProductController {
         res.status(400).json({ error: 'Invalid Product Id' })
         return
       }
-      const product = await productModel.findOne({ _id: pid })
+      const product = await this.#service.findById({ _id: pid })
       if (!product) {
         res.status(404).json({ error: `Product with id ${pid} not found` })
         return
@@ -68,7 +72,6 @@ class ProductController {
       next(error)
     }
   }
-
   async create (req, res, next) {
     const product = req.body
     try {
@@ -78,36 +81,33 @@ class ProductController {
       }
       const thumbnails = req.files.map(file => file.filename)
       const newProduct = { ...product, status: true, thumbnails }
-      const createdProduct = await productModel.create(newProduct)
+      const createdProduct = await this.#service.create(newProduct)
       res.status(201).json({ id: createdProduct._id })
     } catch (error) {
       next(error)
     }
   }
-
   async update (req, res, next) {
     const { id } = req.params
     const updateProduct = req.body
     try {
-      const productById = await productModel.find({ _id: id })
+      const productById = await this.#service.findById({ _id: pid })
       if (!productById) res.status(404).json({ error: 'Product not found' })
-      const result = await productModel.findOneAndUpdate({ _id: id }, updateProduct)
+      const result = await this.#service.update({ _id: id }, updateProduct)
       res.status(200).json(result)
     } catch (error) {
       next(error)
     }
   }
-
   async delete (req, res, next) {
     const { pid } = req.params
     try {
-      await productModel.deleteOne({ _id: pid })
+      await this.#service.delete({ _id: pid })
       res.status(200).json({ message: 'Product deleted successfully' })
     } catch (error) {
       next(error)
     }
   }
 }
-
-const controller = new ProductController()
+const controller = new ProductController(new ProductService())
 export default controller
