@@ -1,4 +1,4 @@
-const loginForm = document.querySelector('form')
+const loginForm = document.querySelector('#login-form')
 const emailInput = document.querySelector('#email')
 const passwordInput = document.querySelector('#password')
 
@@ -13,8 +13,8 @@ loginForm.addEventListener('submit', async (event) => {
   }
 
   try {
-    const response = await fetch('/api/user/login', {
-      method: 'POST',
+    const response = await fetch(loginForm.action, {
+      method: loginForm.method,
       headers: {
         'Content-Type': 'application/json'
       },

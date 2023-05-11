@@ -72,7 +72,7 @@ async function addProductToCart (cartId, productId) {
 const cartBtns = document.querySelectorAll('.cart-btn')
 cartBtns.forEach(function (btn) {
   btn.addEventListener('click', async function (event) {
-    const productId = event.target.closest('.card').dataset.productId
+    const productId = event.target.closest('.product').dataset.productId
     if (cartId) {
       await addProductToCart(cartId, productId)
     } else {

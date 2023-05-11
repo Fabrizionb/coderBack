@@ -1,14 +1,48 @@
-<div class="hero-image mt-3 container w-25">
-  <h1 class="text-center">Register</h1>
-  <div class="hero-text card login d-flex justify-content-center align-items-center">
-    <form onsubmit='send(event)' class="">
-      <input id='name' type='text' name='form-name' placeholder='Name' />
-      <input id='lastname' type='text' name='form-last-name' placeholder='Lastname' />
-      <input id='email' type='text' name='form-email' placeholder='Email' />
-      <input id='password' type='password' name='form-password' placeholder='Password' />
-      <button type='submit' class='btn btn-primary mx-auto' id='registerBtn'>Register</button>
-    </form>
-    <a href="/login">Already a member? Go to login</a>
+<div id="content">
+  <div class="container mt-2">
+    <div class="row">
+      <div class="col-lg-12">
+        <!-- breadcrumb-->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li aria-current="page" class="breadcrumb-item active">New account</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="col-lg-6 mx-auto d-flex justify-content-center">
+        <div class="box">
+          <p class="lead">Not registered yet?</p>
+          <p>By registering with us, you'll gain access to a world of fashion, exclusive discounts, and much more. The
+            registration process will only take a minute!</p>
+          <hr>
+          <form onsubmit='send(event)'>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input id="name" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="lastname">Lastname</label>
+              <input id="lastname" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="email" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input id="password" type="password" class="form-control">
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary mt-2" id="registerBtn"><i class="fa fa-user-md"></i> Register</button>
+            </div>
+          </form>
+          <div class="text-center mt-2">
+            <a href="/login">Already a member? Go to login</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -40,7 +40,7 @@ class ViewController {
     try {
       const products = await this.#ProductService.find(conditions, {
         page: query.page ?? 1,
-        limit: query.limit ?? 10,
+        limit: query.limit ?? 9,
         lean: true,
         sort
       })
@@ -70,6 +70,7 @@ class ViewController {
           order: query.order ?? 'asc',
           cartId: userCart,
           user: userObj
+
         })
       }
     } catch (error) {
@@ -85,7 +86,15 @@ class ViewController {
         title: 'Product not Found'
       })
     }
+    const cookie = util.cookieExtractor(req)
+    if (!cookie) {
+      res.redirect('/login')
+      return
+    }
+    let decoded
     try {
+      decoded = jwtLib.verify(cookie, config.JWT_SECRET)
+      const userCart = decoded.cartId
       const data = await this.#ProductService.findById({ _id: pid })
       if (!data) {
         return res.status(404).render('404', {
@@ -99,7 +108,7 @@ class ViewController {
       }
       return res
         .status(200)
-        .render('product', { titulo: 'List of Products', data: product })
+        .render('product', { titulo: 'View Product', data: product, userCart })
     } catch (error) {
       next(error)
     }

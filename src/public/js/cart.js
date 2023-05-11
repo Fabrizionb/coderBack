@@ -21,42 +21,54 @@ async function deleteProduct (cid, pid) {
     })
     .catch(error => console.error(error))
 }
-async function updateProductQuantity (element, change) {
-  const cartId = element.getAttribute('data-cart-id')
-  const productId = element.getAttribute('data-product-id')
-  const productStock = parseInt(element.getAttribute('data-product-stock'))
-  const quantityElement = element.closest('td').querySelector('.qty')
-  let quantity = parseInt(quantityElement.textContent)
-  quantity += change
+async function updateProductQuantity(element, event) {
+  const cartId = element.getAttribute('data-cart-id');
+  const productId = element.getAttribute('data-product-id');
+  const productStock = parseInt(element.getAttribute('data-product-stock'));
+  let quantity = parseInt(event.target.value);
+
   if (quantity < 1 || quantity > productStock) {
-    return
+    return;
   }
+
   try {
     const response = await fetch(`/api/cart/${cartId}/product/${productId}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ quantity })
-    })
+      body: JSON.stringify({ quantity }),
+    });
+
     if (response.ok) {
-      // Actualizar la cantidad
-      quantityElement.textContent = quantity
-      // 1. Actualizar el total del producto
-      const productPrice = parseFloat(element.closest('tr').querySelector('td:nth-child(5)').textContent.trim().slice(1))
-      const productTotalElement = element.closest('tr').querySelector('td:nth-child(7) strong')
-      productTotalElement.textContent = `$${(quantity * productPrice).toFixed(2)}`
-      // 2. Recalcular el total del carrito y actualizarlo
-      const allProductTotalElements = document.querySelectorAll('td:nth-child(7) strong')
-      let cartTotal = 0
-      for (const elem of allProductTotalElements) {
-        cartTotal += parseFloat(elem.textContent.trim().slice(1))
-      }
-      document.querySelector('td:nth-child(2) h4 strong').textContent = `$${cartTotal.toFixed(2)}`
+      const productPrice = parseFloat(
+        element.closest('tr').querySelector('td:nth-child(4)').textContent.trim().slice(1),
+      );
+      const productTotalElement = element.closest('tr').querySelector('.product-subtotal');
+      productTotalElement.textContent = `$${(quantity * productPrice).toFixed(2)}`;
+      
+      calculateCartTotal();
     } else {
-      throw new Error('Failed to update product quantity')
+      throw new Error('Failed to update product quantity');
     }
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
+}
+
+function calculateCartTotal() {
+  const allProductTotalElements = document.querySelectorAll('.product-subtotal');
+  let cartTotal = 0;
+  for (const elem of allProductTotalElements) {
+    cartTotal += parseFloat(elem.textContent.trim().slice(1));
+  }
+  const cartTotalText = `$${cartTotal.toFixed(2)}`;
+  document.querySelector('.cart-total').textContent = cartTotalText;
+
+  // Update the "Order Summary" section
+  const orderSubtotalElement = document.querySelector('#order-summary table tr:first-child th:nth-child(2)');
+  const orderTotalElement = document.querySelector('#order-summary table tr:last-child th:nth-child(2)');
+  
+  orderSubtotalElement.textContent = cartTotalText;
+  orderTotalElement.textContent = cartTotalText;
 }

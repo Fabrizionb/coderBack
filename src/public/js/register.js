@@ -5,7 +5,7 @@ const nameForm = document.querySelector('#name')
 const lastnameForm = document.querySelector('#lastname')
 const registerBtn = document.querySelector('#registerBtn')
 
-registerBtn.addEventListener('click', (event) => {
+function send(event) {
   event.preventDefault()
   const email = emailForm.value
   const password = passwordForm.value
@@ -24,7 +24,7 @@ registerBtn.addEventListener('click', (event) => {
     },
     body: JSON.stringify({ email, password, name, lastname })
   })
-        .then((response) => {
+    .then((response) => {
       if (response.status === 201) {
         return response.json();
       } else {
@@ -51,4 +51,4 @@ registerBtn.addEventListener('click', (event) => {
   passwordForm.value = ''
   nameForm.value = ''
   lastnameForm.value = ''
-})
+}

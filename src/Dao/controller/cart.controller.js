@@ -48,33 +48,51 @@ class CartController {
     const { cid } = req.params
     const { pid } = req.params
     try {
-      const cart = await this.#service.findById({ _id: cid })
+      let cart = await this.#service.findById({ _id: cid })
       const product = cart.products.find(
-        (product) => product.product.toString() === pid
+        (product) => product.product._id.toString() === pid
       )
 
       if (!product) {
         const newProduct = { quantity: 1, product: pid }
-        console.log('nuevo producto')
-        await this.#service.findOneAndUpdate(
-          { _id: cid },
-          { $push: { products: newProduct } },
-          { new: true }
-        )
+        console.log('nuevo producto agregado')
+        cart.products.push(newProduct)
+        cart = await cart.save() // save after modifying
         res.status(201).json(newProduct)
       } else {
         console.log('producto actualizado')
-        await this.#service.findOneAndUpdate(
-          { _id: cid, 'products.product': pid },
-          { $inc: { 'products.$.quantity': 1 } },
-          { new: true }
-        )
+        product.quantity += 1
+        cart = await cart.save() // save after modifying
         res.status(201).json(product)
       }
     } catch (error) {
       next(error)
     }
   }
+
+  // async addProduct (req, res, next) {
+  //   const { cid } = req.params
+  //   const { pid } = req.params
+  //   try {
+  //     const cart = await cartModel.findOne({ _id: cid })
+  //     const product = cart.products.find(
+  //       (product) => product.product.toString() === pid
+  //     )
+
+  //     if (!product) {
+  //       const newProduct = { quantity: 1, product: pid }
+  //       cart.products.push(newProduct)
+  //       await cartModel.updateOne({ _id: cid }, cart)
+  //       res.status(201).json(newProduct)
+  //     } else {
+  //       product.quantity += 1
+  //       await cartModel.updateOne({ _id: cid }, cart)
+  //       res.status(201).json(product)
+  //     }
+  //   } catch (error) {
+  //     next(error)
+  //   }
+  // }
 
   async deleteAll (req, res, next) {
     const { cid } = req.params

@@ -1,195 +1,129 @@
-<main>
-  <div id="user-data" data-user="{{ cartId }}">
-    <div class="card-header mt-3">
-      {{!-- {{> title titulo = "Listado de Productos"}} --}}
-    </div>
-    <div class="container card">
-      <div class="container  pt-3">
-        <div class="row pt-4">
-          <!-- Sidebar -->
-          <div class="col-lg-2 finder">
-            <div class="">
-              <!-- Grid row -->
-              <div class="row">
-                <div class="col-md-6 col-lg-12 mb-5">
-                  <!-- Panel -->
-                  <h5 class="font-weight-bold dark-grey-text"><strong>Order By</strong></h3>
-                    <div class="divider"></div>
-                    <p class="blue-text"><a onclick='resetFilters()'>Reset Filters</a></p>
-                    <p class="dark-grey-text"><a onclick='setDisp(true)'>Available</a></p>
-                    <p class="dark-grey-text"><a onclick='setDisp(false)'>Unavailable</a></p>
-                    <p class="dark-grey-text"><a onclick='setOrder("price", "desc")'>Price: high to high</a></p>
-                    <p class="dark-grey-text"><a onclick='setOrder("price", "asc")'>Price: low to low</a></p>
-                    <p class="dark-grey-text"><a onclick='setOrder("title", "asc")'>Name: A to Z</a></p>
-                    <p class="dark-grey-text"><a onclick='setOrder("title", "desc")'>Name: Z to A</a></p>
-                </div>
-                <!-- Filter by category -->
-                <div class="col-md-6 col-lg-12 mb-5">
-                  <h5 class="font-weight-bold dark-grey-text"><strong>Category</strong></h3>
-                    <div class="divider"></div>
-                    <!-- Radio group -->
-                    <div class="form-group">
-                      <input class="form-check-input" name="group100" type="radio" id="radio100"
-                        onclick="setCategory('')">
-                      <label for="radio100" class="form-check-label dark-grey-text">All</label>
-                    </div>
-                    <div class="form-group">
-                      <input class="form-check-input" name="group100" type="radio" id="radio101"
-                        onclick="setCategory('T-shirts')">
-                      <label for="radio101" class="form-check-label dark-grey-text">T-shirts</label>
-                    </div>
-                    <div class="form-group">
-                      <input class="form-check-input" name="group100" type="radio" id="radio102"
-                        onclick="setCategory('Jackets')">
-                      <label for="radio102" class="form-check-label dark-grey-text">Jackets</label>
-                    </div>
-                    <div class="form-group">
-                      <input class="form-check-input" name="group100" type="radio" id="radio103"
-                        onclick="setCategory('Pants')">
-                      <label for="radio103" class="form-check-label dark-grey-text">Pants</label>
-                    </div>
-                    <div class="form-group">
-                      <input class="form-check-input" name="group100" type="radio" id="radio104"
-                        onclick="setCategory('Dresses')">
-                      <label for="radio104" class="form-check-label dark-grey-text">Dresses</label>
-                    </div>
-                    <div class="form-group">
-                      <input class="form-check-input" name="group100" type="radio" id="radio105"
-                        onclick="setCategory('Sweaters')">
-                      <label for="radio105" class="form-check-label dark-grey-text">Sweaters</label>
-                    </div>
-                    <!-- Radio group -->
-                </div>
-
-                <!-- Filter by category -->
-              </div>
-              <!-- Grid row -->
-
-              <!-- Grid row -->
-              <div class="row">
-              </div>
-              <!-- Grid row -->
-            </div>
-          </div>
-          <!-- Sidebar -->
-          <!-- Content -->
-          <div class="col-lg-10">
-            <!-- Filter Area -->
-            <div class="row">
-              <div class="col-md-8 text-right">
-                <!-- View Switcher -->
-                <p>Results per Page</p>
-                <a class="btn blue darken-3 btn-sm" onclick="setLimit(4)">
-                  <i class="fas fa-th mr-2" aria-hidden="true"></i>
-                  <strong>4</strong>
-                </a>
-                <a class="btn blue darken-3 btn-sm" onclick="setLimit(8)">
-                  <i class="fas fa-th mr-2" aria-hidden="true"></i>
-                  <strong>8</strong>
-                </a>
-                <a class="btn blue darken-3 btn-sm" onclick="setLimit(12)">
-                  <i class="fas fa-th mr-2" aria-hidden="true"></i>
-                  <strong>12</strong>
-                </a>
-                <a class="btn blue darken-3 btn-sm" onclick="setLimit(40)">
-                  <i class="fas fa-th mr-2" aria-hidden="true"></i>
-                  <strong>40</strong>
-                </a>
-                <!-- View Switcher -->
-              </div>
-            </div>
-            <!-- Filter Area -->
-            <!-- Products Grid -->
-            <section class="section pt-4">
-              <!-- Grid row -->
-              <div class="row card-deck">
-                {{#each products}}
-                <!-- Grid column -->
-                <div class="col-lg-3 col-md-12 mb-4">
-                  <!-- Card -->
-                  <div class="card card-ecommerce " data-product-id="{{this._id}}">
-                    <!-- Card image -->
-                    <div class="view overlay">
-                      <img class="card-img-top mx-auto d-block p-0" src="/img/{{thumbnails.[0]}}" class="img-fluid"
-                        alt="image of {{this.title}}">
-                      <a href="/view/product/{{this._id}}">
-                        <div class="mask rgba-white-slight"></div>
-                      </a>
-                    </div>
-                    <!-- Card image -->
-                    <!-- Card content -->
-                    <div class="card-body">
-                      <!-- Category & Title -->
-                      <h5 class="card-title mb-1 text-center"><strong><a href=""
-                            class="dark-grey-text">{{this.title}}</a></strong>
-                      </h5>
-                      {{#if this.status}}
-                      <span class="status available badge badge-success mb-2 w-100">Status: Available</span>
-                      {{else}}
-                      <span class="status not-available badge badge-danger mb-2 w-100">Status: Unavailable</span>
-                      {{/if}}
-                      <!-- Card footer -->
-                      <div class="card-footer pb-0">
-                        <div class="row mb-0 text-center">
-                          <span class="float-left"><strong>€ {{this.price}}</strong></span>
-                          <span class="float-right">
-                            {{#if this.status}}
-                            <button class="cart-btn" data-toggle="tooltip" data-placement="top" title="Add to Cart">
-                              <i class="fas fa-shopping-cart ml-3 status available"></i>
-                            </button>
-                            {{else}}
-                            <button class="cart-btn disabled" data-toggle="tooltip" data-placement="top"
-                              title="Product not available">
-                              <i class="fas fa-shopping-cart ml-3 status not-available"></i>
-                            </button>
-                            {{/if}}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Card content -->
-                  </div>
-                  <!-- Card -->
-                </div>
-                <!-- Grid column -->
-                {{/each}}
-              </div>
-              <!-- Grid row -->
-              <!-- Grid row -->
-              <div class="container col-4 mb-4">
-                <!-- Pagination -->
-                <div class="row">
-                  {{#if hasPrevPage}}
-                  <button class="col-4 btn-primary" onclick='setPrev()'>
-                    <span class="material-symbols-outlined">
-                      arrow_back_ios
-                    </span>
-                  </button>
-                  {{/if}}
-                  <span class="col-4 text-center text-pagination">{{page}} of {{pages}}</span>
-                  {{#if hasNextPage}}
-                  <button class="col-4 btn-primary" onclick='setNext()'>
-                    <span class="material-symbols-outlined">
-                      arrow_forward_ios
-                    </span>
-                  </button>
-                  {{/if}}
-                </div>
-              </div>
-              </nav>
-              <!-- Pagination -->
-          </div>
-          <!-- Grid row -->
-          </section>
-          <!-- Products Grid -->
-        </div>
-        <!-- Content -->
+<div id="content">
+  <div class="container mt-2" id="user-data" data-user="{{ cartId }}">
+    <div class="row">
+      <div class="col-lg-12">
+        <!-- breadcrumb-->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li aria-current="page" class="breadcrumb-item active">Store</li>
+          </ol>
+        </nav>
       </div>
+      <div class="col-lg-3">
+        <!-- MENUS AND FILTERS -->
+        <div class="card sidebar-menu mb-4">
+          <div class="card-header">
+            <h3 class="h4 card-title">Filters</h3>
+          </div>
+          <div class="card-body">
+            <ul class="nav nav-pills flex-column category-menu">
+              <li>
+                <p class="nav-link active">Order by</p>
+                <ul class="list-unstyled mb-3">
+                  <li><a onclick='resetFilters()' class="nav-link">Reset</a></li>
+                  <li><a onclick='setDisp(true)' class="nav-link">Available</a></li>
+                  <li><a onclick='setDisp(false)' class="nav-link">Unavailable</a></li>
+                  <li><a onclick='setOrder("price", "desc")' class="nav-link">Price: high to high</a></li>
+                  <li><a onclick='setOrder("price", "asc")' class="nav-link">Price: low to low</a></li>
+                  <li><a onclick='setOrder("title", "asc")' class="nav-link">Name: A to Z</a></li>
+                  <li><a onclick='setOrder("title", "desc")' class="nav-link">Name: Z to A</a></li>
+                </ul>
+              </li>
+              <li>
+                <p class="nav-link active">Categories</p>
+                <ul class="list-unstyled">
+                  <li><a onclick="setCategory('')" class="nav-link">All</a></li>
+                  <li><a onclick="setCategory('T-shirts')" class="nav-link">T-shirts</a></li>
+                  <li><a onclick="setCategory('Jackets')" class="nav-link">Jackets</a></li>
+                  <li><a onclick="setCategory('Pants')" class="nav-link">Pants</a></li>
+                  <li><a onclick="setCategory('Dresses')" class="nav-link">Dresses</a></li>
+                  <li><a onclick="setCategory('Sweaters')" class="nav-link">Sweaters</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!--  MENUS AND FILTERS END -->
+      </div>
+      <div class="col-lg-9">
+        <div class="box info-bar">
+          <div class="row">
+            <div class="col-md-12 col-lg-4 products-showing">Showing <strong>{{page}}</strong> of
+              <strong>{{pages}}</strong> Pages</div>
+            <div class="col-md-12 col-lg-7 products-number-sort">
+              <form class="form-inline d-block d-lg-flex justify-content-between flex-column flex-md-row">
+                <div class="products-number"><strong>Show</strong>
+                  <p onclick="setLimit(12)" class="btn btn-sm btn-primary">12</p>
+                  <p onclick="setLimit(24)" class="btn btn-outline-secondary btn-sm">24</p>
+                  <p onclick="setLimit(999)" class="btn btn-outline-secondary btn-sm">All</p><strong> Products</strong>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="row products">
+          {{#each products}}
+          <div class="col-lg-4 col-md-6">
+            <div class="product" data-product-id="{{this._id}}">
+              <div class="flip-container">
+                <div class="flipper">
+                  <div class="front"><img src="/img/{{thumbnails.[0]}}" alt="image of {{this.title}}" class="img-fluid">
+                  </div>
+                  <div class="back"><img src="/img/{{thumbnails.[1]}}" alt="image of {{this.title}}" class="img-fluid">
+                  </div>
+                </div>
+              </div><a href="/view/product/{{this._id}}" class="invisible"><img src="/img/{{thumbnails.[0]}}"
+                  alt="image of {{this.title}}" class="img-fluid"></a>
+              {{#if this.status}}
+              <span class="status available badge badge-success mb-2 w-100">In Stock</span>
+              {{else}}
+              <span class="status not-available badge badge-danger mb-2 w-100">Out of Stock</span>
+              {{/if}}
+              <div class="text">
+                <h3><a href="/view/product/{{this._id}}">{{this.title}}</a></h3>
+                <p class="price">
+                  <del></del>${{this.price}}
+                </p>
+                <p class="buttons"><a href="/view/product/{{this._id}}" class="btn btn-outline-secondary">View
+                    detail</a>
+                  <button class="btn btn-primary cart-btn" {{#unless this.status}}disabled{{/unless}}
+                    data-toggle="tooltip" data-placement="top" title="Add to Cart">
+                    <i class="fa fa-shopping-cart"></i>Add to cart
+                  </button>
+              </div>
+              <!-- text-->
+            </div>
+            <!-- /.product  -->
+          </div>
+          {{/each}}
+          <!-- /.products-->
+        </div>
+        <div class="pages d-flex justify-content-center">
+          <ul class="pagination">
+            {{#if hasPrevPage}}
+            <li class="page-item">
+              <p onclick='setPrev()' aria-label="Previous" class="page-link"><span aria-hidden="true">«</span><span
+                  class="sr-only">Previous</span></p>
+            </li>
+            {{/if}}
+            <li class="page-item active">
+              <p href="#" class="page-link">{{page}} of {{pages}}</p>
+            </li>
+            {{#if hasNextPage}}
+            <li class="page-item">
+              <p onclick='setNext()' aria-label="Next" class="page-link"><span aria-hidden="true">»</span><span
+                  class="sr-only">Next</span></p>
+            </li>
+            {{/if}}
+          </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- /.col-lg-9-->
     </div>
   </div>
-  </div>
-</main>
+</div>
 <script src="js/index.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-

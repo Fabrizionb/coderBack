@@ -39,16 +39,15 @@ async function addProductToCart (cartId, productId) {
 
 document.addEventListener('DOMContentLoaded', function () {
   const addToCartBtn = document.getElementById('add-to-cart-btn')
-  const productId = '{{data._id}}'
-  const productStatus = '{{data.status}}' === 'true'
+
   addToCartBtn.addEventListener('click', async function () {
-    if (productStatus) {
-      let cartId = localStorage.getItem('cartId')
-      if (!cartId) {
-        await createCart()
-        cartId = localStorage.getItem('cartId')
-      }
-      await addProductToCart(cartId, productId)
+    const productId = document.querySelector('.pid').innerText
+    const cartId = document.querySelector('.cid').innerText
+
+    if (!cartId || !productId) {
+      console.error('Error: falta el carrito o el id del producto')
+      return
     }
+    await addProductToCart(cartId, productId)
   })
 })

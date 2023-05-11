@@ -1,125 +1,138 @@
-<div class="content">
-  <div class="container-fluid">
+<div id="content">
+  <div class="container mt-2" id="user-data" data-user="{{ cartId }}">
     <div class="row">
-      <div class="col-7 sticky-top mt-5" style="height: 800px; overflow-y: scroll;">
-        <div class="col-12">
-          <div class="card p-4">
-            <div class="card-header">
-              {{> title titulo = "Listado de Productos"}}
-            </div>
-            <div class="card-body">
+      <div class="col-lg-12">
+        <!-- breadcrumb-->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li aria-current="page" class="breadcrumb-item active">Store</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="col-lg-3">
+        <!--  CRUD FORMS START -->
+        <div class="card sidebar-menu mb-4">
+          <div class="card-header">
+            <h3 class="h4 card-title">CRUD</h3>
+          </div>
+          <div class="card-body">
+            <div class="col-4 formsC">
               <div class="row">
-                <div class="card-body">
+                <div class="containerF cargadorProductos mt-5">
+                  <div>
+                    <h4>Create Product</h4>
+                  </div>
+                  <div class="container mt-2 register">
+                    <form onsubmit="send(event)">
+                      <input id="form-title-create" type="text" name="form-title-create" placeholder="Título" />
+                      <textarea class="w-100" id="form-description-create" name="form-description-create"
+                        placeholder="Descripción"></textarea>
+                      <input id="form-price-create" type="number" name="form-price-create" placeholder="Precio" />
+                      <input id="form-code-create" type="text" name="form-code-create"
+                        placeholder="Código de producto" />
+                      <input id="form-cat-create" type="text" name="form-cat-create" placeholder="Categoria" />
+                      <input id="form-stock-create" type="number" name="form-stock-create"
+                        placeholder="Cantidad en stock" />
+                      <input id="form-images-create" type="file" name="form-images-create" accept="image/*" multiple />
+                      <input class="btnReg " type="submit" value="Guardar Producto" />
+                    </form>
+                    <p id="producto-id-create"></p>
+                  </div>
                 </div>
               </div>
-              <div class="table-responsive">
-                <table class="my-0 table table-striped" id="ticketTable">
-                  <thead>
-                    <tr>
+              <div class="row">
+                <div class="containerF eliminadorProductos">
+                  <div>
+                    <h4>Delete Product</h4>
+                  </div>
+                  <div class="container mt-2 register">
+                    <form onsubmit="sendDelete(event)">
+                      <input id="form-id-delete" type="text" name="form-id-delete" placeholder="Ingrese un id" />
+                      <input class="btnReg " type="submit" value="Eliminar Producto" />
+                    </form>
+                    <p id="delete-id"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="containerF modificadorProductos">
+                  <div>
+                    <h4>Modify Product</h4>
+                  </div>
+                  <div class="container mt-2 register">
+                    <form onsubmit="sendModify(event)">
+                      <input id="form-id-modify" type="text" name="form-id-modify" placeholder="ID" />
+                      <input id="form-title-modify" type="text" name="form-title-modify" placeholder="Título" />
+                      <textarea class="w-100" id="form-description-modify" name="form-description-modify"
+                        placeholder="Descripción"></textarea>
+                      <input id="form-price-modify" type="number" name="form-price-modify" placeholder="Precio" />
+                      <input id="form-code-modify" type="text" name="form-code-modify"
+                        placeholder="Código de producto" />
+                      <input id="form-cat-modify" type="text" name="form-cat-modify" placeholder="Categoria" />
+                      <input id="form-stock-modify" type="number" name="form-stock-modify"
+                        placeholder="Cantidad en stock" />
+                      <input id="form-status-modify" type="boolean" name="form-status-modify" placeholder="Status" />
+                      <input class="btnReg " type="submit" value="Guardar Producto" />
+                    </form>
+                    <p id="producto-modify"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--  CRUD FORMS END -->
+      </div>
+      <div class="col-lg-9">
+        <div id="checkout" class="col-lg-9 w-100">
+          <div class="box">
+              <h1>Realtime Products Crud</h1>
+              <div class="content">
+                <div class="table-responsive ">
+                  <table class="table table-striped" id="ticketTable">
+                    <thead>
+                      <tr>
                       <th class="order-4 text-center">Id</th>
                       <th class="order-4 text-center">Titulo</th>
-                      <th class="order-4 text-center">Descripcion</th>
                       <th class="order-4 text-center">Categoria</th>
                       <th class="order-4 text-center">Precio</th>
                       <th class="order-4 text-center">Status</th>
-                      <th class="order-4 text-center">Code</th>
                       <th class="order-4 text-center">Stock</th>
-                      <th class="order-4 text-center">Thumbnails</th>
                       <th class="order-4 text-center">View Product</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tableRealTime">
-                    {{#each data}}
+                      </tr>
+                    </thead>
+                    <tbody id="tableRealTime">
+                     {{#each data}}
                     <tr id={{this._id}}>
                       <td class=" text-center align-middle">{{this._id}}</td>
                       <td class=" text-center align-middle">{{this.title}}</td>
-                      <td class=" text-center align-middle">{{this.description}}</td>
                       <td class=" text-center align-middle">{{this.category}}</td>
                       <td class=" text-center align-middle">{{this.price}}</td>
                       <td class=" text-center align-middle">{{this.status}}</td>
-                      <td class=" text-center align-middle">{{this.code}}</td>
                       <td class=" text-center align-middle">{{this.stock}}</td>
-                      <td class="text-center align-middle">
-                  {{#each this.thumbnails}}
-                  <a href="/img/{{this}}" target="_blank"><img class="img-thumbnail" style="width: 120px; height: 120px;" src="/img/{{this}}" alt="Thumbnail of product"></a>
-                  {{/each}}
-                </td>
-                 <td class=" text-center align-middle"><span
-                    style="overflow: visible; position: relative; width: 110px;">
-                    <a title="View product" class="btn btn-sm btn-clean btn-icon btn-icon-md"
-                      href="/view/product/{{this._id}}">
-                      <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/visible.png" /> </a>
-                    </span></td>
+                      <td class=" text-center align-middle"><span
+                          style="overflow: visible; position: relative; width: 110px;">
+                          <a title="View product" class="btn btn-sm btn-clean btn-icon btn-icon-md"
+                            href="/view/product/{{this._id}}">
+                            <img class="icon" src="https://img.icons8.com/ultraviolet/40/null/visible.png" /> </a>
+                        </span></td>
                     </tr>
                     {{/each}}
-                  </tbody>
-                </table>      
+                    </tbody>
+
+                  </table>
+                </div>
+                <!-- /.table-responsive-->
               </div>
-            </div>
+              <!-- /.content-->
           </div>
+          <!-- /.box-->
         </div>
       </div>
-      <div class="col-4 formsC">
-        <div class="row">
-          <div class="containerF cargadorProductos mt-5">
-            <div>
-              {{> title titulo = "Cargador de Productos"}}
-            </div>
-            <div class="container mt-2 register">
-              <form onsubmit="send(event)">
-                <input id="form-title-create" type="text" name="form-title-create" placeholder="Título" />
-                <textarea class="w-100" id="form-description-create" name="form-description-create"
-                  placeholder="Descripción"></textarea>
-                <input id="form-price-create" type="number" name="form-price-create" placeholder="Precio" />
-                <input id="form-code-create" type="text" name="form-code-create" placeholder="Código de producto" />
-                <input id="form-cat-create" type="text" name="form-cat-create" placeholder="Categoria" />
-                <input id="form-stock-create" type="number" name="form-stock-create" placeholder="Cantidad en stock" />
-                <input id="form-images-create" type="file" name="form-images-create" accept="image/*" multiple />
-                <input class="btnReg " type="submit" value="Guardar Producto" />
-              </form>
-              <p id="producto-id-create"></p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="containerF eliminadorProductos">
-            <div>
-              {{> title titulo = "Eliminador de Productos"}}
-            </div>
-            <div class="container mt-2 register">
-              <form onsubmit="sendDelete(event)">
-                <input id="form-id-delete" type="text" name="form-id-delete" placeholder="Ingrese un id" />
-                <input class="btnReg " type="submit" value="Eliminar Producto" />
-              </form>
-              <p id="delete-id"></p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="containerF modificadorProductos">
-            <div>
-              {{> title titulo = "Modificador de Productos"}}
-            </div>
-            <div class="container mt-2 register">
-              <form onsubmit="sendModify(event)">
-                <input id="form-id-modify" type="text" name="form-id-modify" placeholder="ID" />
-                <input id="form-title-modify" type="text" name="form-title-modify" placeholder="Título" />
-                <textarea class="w-100" id="form-description-modify" name="form-description-modify"
-                  placeholder="Descripción"></textarea>
-                <input id="form-price-modify" type="number" name="form-price-modify" placeholder="Precio" />
-                <input id="form-code-modify" type="text" name="form-code-modify" placeholder="Código de producto" />
-                <input id="form-cat-modify" type="text" name="form-cat-modify" placeholder="Categoria" />
-                <input id="form-stock-modify" type="number" name="form-stock-modify" placeholder="Cantidad en stock" />
-                <input id="form-status-modify" type="boolean" name="form-status-modify" placeholder="Status" />
-                <input class="btnReg " type="submit" value="Guardar Producto" />
-              </form>
-              <p id="producto-modify"></p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- /.col-lg-9-->
     </div>
   </div>
 </div>
-<script src="/socket.io/socket.io.js"></script> 
-<script src="/js/realTime.js"></script> 
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTime.js"></script>

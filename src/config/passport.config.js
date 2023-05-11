@@ -190,7 +190,6 @@ export function configurePassport() {
             email = `${profile._json.id}@google.com`;
           }
           const user = await userModel.findOne({ email });
-          console.log("encontro user", user)
           if (!user || user === undefined) {
             // new cart
             const createdCart = await fetch("http://localhost:8080/api/cart", {
