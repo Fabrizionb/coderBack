@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import ProductService from '../../services/product.service.mjs'
+import ProductService from '../services/product.service.mjs'
 /* eslint-disable */
 
 class ProductController {

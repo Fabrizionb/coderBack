@@ -1,8 +1,6 @@
 import { Router } from 'express'
 import { authorization, passportCall } from '../utils/auth.js'
-// import cartManager from '../Dao/controller/cart.manager.js'
-// import { OkResponse } from '../Dao/models/server/responses/customResponses.js'
-import controller from '../Dao/controller/cart.controller.js'
+import controller from '../controller/cart.controller.js'
 const route = Router()
 
 // Get All

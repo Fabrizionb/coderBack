@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { multiUploader } from '../utils/multiUploader.js'
 import { authorization } from '../utils/auth.js'
-import controller from '../Dao/controller/product.controller.js'
+import controller from '../controller/product.controller.js'
 const route = Router()
 
 // Get All

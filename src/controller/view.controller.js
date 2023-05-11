@@ -1,10 +1,10 @@
-import UserService from '../../services/user.service.mjs'
-import CartService from '../../services/cart.service.mjs'
-import ProductService from '../../services/product.service.mjs'
+import UserService from '../services/user.service.mjs'
+import CartService from '../services/cart.service.mjs'
+import ProductService from '../services/product.service.mjs'
 
-import util from '../../utils/view.util.js'
+import util from '../utils/view.util.js'
 import jwtLib from 'jsonwebtoken'
-import config from '../../../data.js'
+import config from '../../data.js'
 import mongoose from 'mongoose'
 
 class ViewController {

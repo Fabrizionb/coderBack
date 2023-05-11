@@ -1,7 +1,7 @@
 import { authorization, passportCall } from '../utils/auth.js'
 /* eslint-disable */
 import { Router } from "express";
-import controller from '../Dao/controller/view.controller.js';
+import controller from '../controller/view.controller.js';
 
 const route = Router();
 

@@ -1,6 +1,6 @@
-import utils from '../../utils/view.util.js'
-import { createHash } from '../../utils/crypto.js'
-import UserService from '../../services/user.service.mjs'
+import utils from '../utils/view.util.js'
+import { createHash } from '../utils/crypto.js'
+import UserService from '../services/user.service.mjs'
 class UserController {
   #service
   constructor (service) {

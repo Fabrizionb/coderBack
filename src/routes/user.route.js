@@ -2,7 +2,7 @@
 
 import { Router } from "express";
 import passport from "passport";
-import controller from "../Dao/controller/user.controller.js";
+import controller from "../controller/user.controller.js";
 const route = Router();
 
 route.get("/failurelogin", controller.failureLogin.bind(controller));
