@@ -2,18 +2,18 @@ import express from 'express'
 // import fileDirname from './src/utils/fileDirName.js'
 import cookieParser from 'cookie-parser'
 import { create } from 'express-handlebars'
-import helpers from './src/lib/helpers.handlebars.js'
-import viewsRoute from './src/routes/views.route.js'
-import configureSocket from './src/config/socket.config.js'
+import helpers from './lib/helpers.handlebars.js'
+import viewsRoute from './routes/views.route.js'
+import configureSocket from './config/socket.config.js'
 import mongoose from 'mongoose'
-import config from './data.js'
+import config from '../data.js'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
-import routes from './src/routes/index.js'
-import { configurePassport } from './src/config/passport.config.js'
+import routes from './routes/index.js'
+import { configurePassport } from './config/passport.config.js'
 import passport from 'passport'
 import path from 'path'
-import fileDirname from './src/utils/fileDirName.js'
+import fileDirname from './utils/fileDirName.js'
 
 const { __dirname } = fileDirname(import.meta)
 const app = express()
@@ -45,15 +45,16 @@ app.use(express.urlencoded({ extended: true }))
 
 // Configurar Handlebars
 const hbs = create({
-  partialsDir: [path.join(__dirname, 'src', 'views', 'partials')],
+  partialsDir: [path.join(__dirname, 'views', 'partials')],
   helpers
 })
 
 app.engine('handlebars', hbs.engine)
-app.set('views', path.join(__dirname, 'src', 'views'))
+app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'handlebars')
 
-app.use(express.static(path.join(__dirname, 'src', 'public')))
+app.use(express.static(path.join(__dirname, 'public')))
+
 app.use('/', viewsRoute)
 app.use('/api', routes)
 
