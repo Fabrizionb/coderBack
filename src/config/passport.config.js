@@ -147,7 +147,7 @@ export function configurePassport() {
             email = `${profile._json.id}@github.com`;
           }
           const user = await userModel.findOne({ email });
-          if (!user || user === undefined) {
+          if (!user) {
             // new cart
             const createdCart = await fetch("http://localhost:8080/api/cart", {
               method: "POST",
@@ -190,7 +190,7 @@ export function configurePassport() {
             email = `${profile._json.id}@google.com`;
           }
           const user = await userModel.findOne({ email });
-          if (!user || user === undefined) {
+          if (!user) {
             // new cart
             const createdCart = await fetch("http://localhost:8080/api/cart", {
               method: "POST",
