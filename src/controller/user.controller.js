@@ -1,6 +1,8 @@
 import utils from '../utils/view.util.js'
 import { createHash } from '../utils/crypto.js'
 import UserService from '../services/user.service.mjs'
+import UserDto from '../Dao/models/dto/userDto.js'
+
 class UserController {
   #service
   constructor (service) {
@@ -50,8 +52,9 @@ class UserController {
   }
 
   async current (req, res, next) {
-    const { _id, email, name, lastname, cartId, role } = req.user
-    res.json({ user: { _id, email, name, lastname, cartId, role } })
+    const user = req.user
+    const userDto = new UserDto(user)
+    res.json({ user: userDto })
   }
 
   async register (req, res, next) {

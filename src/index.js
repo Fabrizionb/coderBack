@@ -14,7 +14,7 @@ import { configurePassport } from './config/passport.config.js'
 import passport from 'passport'
 import path from 'path'
 import fileDirname from './utils/fileDirName.js'
-
+import cors from 'cors'
 const { __dirname } = fileDirname(import.meta)
 const app = express()
 const httpServer = app.listen(config.PORT, () => console.log(`Escuchando en el puerto ${config.PORT}`))
@@ -68,6 +68,8 @@ mongoose.connect(config.MONGO_URI, {
 configurePassport()
 app.use(passport.initialize())
 app.use(passport.session())
+// CORS
+app.use(cors({ origin: 'http://localhost:8080', methods: ['GET', 'POST', 'PUT'] }))
 
 // Middleware de errores
 app.use((err, req, res, next) => {

@@ -1,4 +1,5 @@
 import CartService from '../services/cart.service.mjs'
+import DaoFactory from '../Dao/factory.mjs'
 
 class CartController {
   #service
@@ -157,3 +158,9 @@ class CartController {
 
 const controller = new CartController(new CartService())
 export default controller
+
+// const dao = await DaoFactory.getDao() // Obtengo DAO
+// const service = new CartService(dao) // nuevo CartService con DAO
+// const controller = new CartController(service) // nuevo CartController con el service
+
+// export default controller
