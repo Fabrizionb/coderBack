@@ -48,23 +48,22 @@ class CartController {
     const { cid } = req.params
     const { pid } = req.params
     try {
-      let cart = await this.#service.findById({ _id: cid })
+      const cart = await this.#service.findById({ _id: cid })
       const product = cart.products.find(
         (product) => product.product._id.toString() === pid
       )
-
       if (!product) {
         const newProduct = { quantity: 1, product: pid }
         console.log('nuevo producto agregado')
         cart.products.push(newProduct)
-        cart = await cart.save() // save after modifying
         res.status(201).json(newProduct)
       } else {
         console.log('producto actualizado')
         product.quantity += 1
-        cart = await cart.save() // save after modifying
         res.status(201).json(product)
       }
+
+      await cart.save()
     } catch (error) {
       next(error)
     }

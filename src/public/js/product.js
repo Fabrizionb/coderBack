@@ -23,7 +23,7 @@ async function addProductToCart (cartId, productId) {
       method: 'POST'
     }
   )
-  const data = await response.json()
+  await response.json()
   Swal.fire({
     title: 'Product added to cart',
     icon: 'success',

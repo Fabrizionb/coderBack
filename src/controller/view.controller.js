@@ -44,21 +44,22 @@ class ViewController {
         lean: true,
         sort
       })
-      if (!util.isValidPage(query.page, products.totalPages)) {
-        res.status(404).render('404', {
-          title: 'Invalid page number',
-          msg: `Page number '${query.page}' is invalid for this query`
-        })
-        return
-      }
       if (!products) {
         res.status(404).render('404', {
           title: 'Products not found',
           msg: 'Products not Found'
         })
       } else {
+        if (!util.isValidPage(query.page, products.totalPages)) {
+          res.status(404).render('404', {
+            title: 'Invalid page number',
+            msg: `Page number '${query.page}' is invalid for this query`
+          })
+          return
+        }
+
         res.status(200).render('index', {
-          title: 'Listado de Productos',
+          title: 'List of Products',
           products: products.docs,
           pages: products.totalPages,
           page: products.page,
@@ -70,7 +71,6 @@ class ViewController {
           order: query.order ?? 'asc',
           cartId: userCart,
           user: userObj
-
         })
       }
     } catch (error) {
@@ -250,7 +250,7 @@ class ViewController {
 
   async viewProfile (req, res, next) {
     const userId = req.user._id
-    const cartId = req.user.cartId
+    const cartId = req.user ? req.user.cartId : null
 
     try {
       const user = await this.#UserService.findById({ _id: userId })
