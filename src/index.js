@@ -15,6 +15,8 @@ import passport from 'passport'
 import path from 'path'
 import fileDirname from './utils/fileDirName.js'
 import cors from 'cors'
+import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access'
+import Handlebars from 'handlebars'
 const { __dirname } = fileDirname(import.meta)
 const app = express()
 const httpServer = app.listen(config.PORT, () => console.log(`Escuchando en el puerto ${config.PORT}`))
@@ -45,6 +47,8 @@ app.use(express.urlencoded({ extended: true }))
 
 // Configurar Handlebars
 const hbs = create({
+  defaultLayout: 'main',
+  handlebars: allowInsecurePrototypeAccess(Handlebars),
   partialsDir: [path.join(__dirname, 'views', 'partials')],
   helpers
 })
@@ -52,7 +56,6 @@ const hbs = create({
 app.engine('handlebars', hbs.engine)
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'handlebars')
-
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', viewsRoute)

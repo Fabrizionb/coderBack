@@ -1,7 +1,8 @@
-import UserService from '../services/user.service.mjs'
-import CartService from '../services/cart.service.mjs'
-import ProductService from '../services/product.service.mjs'
-
+import UserService from '../Dao/services/user.service.mjs'
+import CartService from '../Dao/services/cart.service.mjs'
+import ProductService from '../Dao/services/product.service.mjs'
+import TicketService from '../Dao/services/ticket.service.mjs'
+/* eslint-disable */
 import util from '../utils/view.util.js'
 import jwtLib from 'jsonwebtoken'
 import config from '../../data.js'
@@ -11,10 +12,12 @@ class ViewController {
   #CartService
   #ProductService
   #UserService
-  constructor (CartService, ProductService, UserService) {
+  #TicketService
+  constructor (CartService, ProductService, UserService, TicketService) {
     this.#CartService = CartService
     this.#ProductService = ProductService
     this.#UserService = UserService
+    this.#TicketService = TicketService
   }
 
   async viewStore (req, res, next) {
@@ -36,7 +39,7 @@ class ViewController {
     const user = await this.#UserService.findById(decoded.userId)
     const userObj = user.toObject() // Convertimos el objeto user a un objeto plano
     const sort = util.createSortObject(query)
-    const conditions = util.createConditionsObject(query)
+    const conditions = {...util.createConditionsObject(query), status: true}
     try {
       const products = await this.#ProductService.find(conditions, {
         page: query.page ?? 1,
@@ -275,7 +278,24 @@ class ViewController {
       next(error)
     }
   }
+
+  async viewPurchase (req, res, next) {
+    try {
+      const userId = req.user._id
+      const cartId = req.user.cartId.toString()
+      const ticket = await this.#TicketService.findByCartId(cartId)
+      const cart = await this.#CartService.findById(cartId)
+
+      if (!cart) {
+        res.redirect('/login')
+      }
+      
+      res.render('purchase', { cart, ticket })
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
-const controller = new ViewController(new CartService(), new ProductService(), new UserService())
+const controller = new ViewController(new CartService(), new ProductService(), new UserService(), new TicketService())
 export default controller

@@ -33,11 +33,13 @@ authorization( 'admin'),
   controller.viewRealTime.bind(controller))
 // Ruta para ver el chat en tiempo real
 route.get("/chat",
-  authorization(['user', 'admin']),
+  authorization(['user']),
   passportCall("current"),controller.viewChat.bind(controller))
 // Ruta para ver el perfil
 route.get("/profile",
   authorization(['user', 'admin']),
   passportCall("current"),controller.viewProfile.bind(controller))
-
+  route.get("/purchase",
+  authorization(['user']),
+  passportCall("current"),controller.viewPurchase.bind(controller))
 export default route;

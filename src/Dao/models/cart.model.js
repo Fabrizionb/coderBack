@@ -18,9 +18,17 @@ const cartSchema = new Schema({
   }
 })
 
+// mtodo para calcular el total
+cartSchema.methods.calculateTotal = function () {
+  return this.products.reduce((total, item) => {
+    return total + (item.product.price * item.quantity)
+  }, 0)
+}
+
 cartSchema.pre('find', function () {
   this.populate('products.product')
 })
+
 cartSchema.plugin(mongoosePaginate)
 
 const cartModel = model(cartCollection, cartSchema)

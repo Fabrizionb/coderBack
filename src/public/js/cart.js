@@ -72,3 +72,23 @@ function calculateCartTotal() {
   orderSubtotalElement.textContent = cartTotalText;
   orderTotalElement.textContent = cartTotalText;
 }
+
+async function proceedToCheckout(cartId) {
+  event.preventDefault()
+  console.log("cartId", cartId)
+  try {
+    const response = await fetch(`/api/cart/${cartId}/purchase`, {
+      method: 'POST'
+    });
+    if (response.ok) {
+      console.log("compra exitosa")
+      console.log("response", response)
+      window.location.href = '/purchase';
+    } else {
+      console.log("Error", response)
+      throw new Error('Failed to purchase');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}

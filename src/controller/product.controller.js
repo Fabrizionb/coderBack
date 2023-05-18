@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import ProductService from '../services/product.service.mjs'
+import ProductService from '../Dao/services/product.service.mjs'
 /* eslint-disable */
 
 class ProductController {
@@ -104,6 +104,25 @@ class ProductController {
     try {
       await this.#service.delete({ _id: pid })
       res.status(200).json({ message: 'Product deleted successfully' })
+    } catch (error) {
+      next(error)
+    }
+  }
+  async updateProductStock (req, res, next) {
+    const { pid } = req.params
+    const { quantity } = req.body
+    try {
+      const isValidObjectId = mongoose.isValidObjectId(pid)
+      if (!isValidObjectId) {
+        res.status(400).json({ error: 'Invalid Product Id' })
+        return
+      }
+      const updatedProduct = await this.#service.updateProductStock(pid, quantity)
+      if (!updatedProduct) {
+        res.status(404).json({ error: `Product with id ${pid} not found` })
+        return
+      }
+      res.status(200).json({ updatedProduct })
     } catch (error) {
       next(error)
     }

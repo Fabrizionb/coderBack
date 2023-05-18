@@ -1,10 +1,10 @@
 /* eslint-disable */
-import productModel from "../Dao/models/product.model.js";
+import productModel from "../models/product.model.js";
 
 class ProductService {
   #model;
   constructor() {
-    this.#model =  productModel;
+    this.#model = productModel;
   }
   async find(conditions, options) {
     return this.#model.paginate(conditions, options);
@@ -19,11 +19,19 @@ class ProductService {
     return this.#model.create(data);
   }
   async update(id, data) {
-    return this.#model.findOneAndUpdate({_id: id}, data);
+    return this.#model.findOneAndUpdate({ _id: id }, data);
   }
   async delete(id) {
     return this.#model.deleteOne({ _id: id });
   }
+  async updateProductStock(id, quantity) {
+    return this.#model.findOneAndUpdate(
+      { _id: id },
+      { $inc: { stock: -quantity } },
+      { new: true }
+    );
+  }
+
 }
 
 export default ProductService;

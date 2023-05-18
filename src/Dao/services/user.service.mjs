@@ -1,5 +1,5 @@
 /* eslint-disable */
-import userModel from "../Dao/models/user.model.js";
+import userModel from "../models/user.model.js";
 
 class UserService {
   #model;
@@ -20,6 +20,9 @@ class UserService {
   }
   async delete(id) {
     return this.#model.deleteOne({ _id: id });
+  }
+  async findByCartId(cartId) {
+    return this.#model.findOne({ cartId }).populate('cartId');
   }
 }
 

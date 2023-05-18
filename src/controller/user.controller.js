@@ -1,7 +1,7 @@
 import utils from '../utils/view.util.js'
 import { createHash } from '../utils/crypto.js'
-import UserService from '../services/user.service.mjs'
-import UserDto from '../Dao/models/dto/userDto.js'
+import UserService from '../Dao/services/user.service.mjs'
+import UserDto from '../Dao/dto/user.dto.js'
 
 class UserController {
   #service

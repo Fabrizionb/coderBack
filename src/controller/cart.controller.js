@@ -1,15 +1,25 @@
-import CartService from '../services/cart.service.mjs'
-import DaoFactory from '../Dao/factory.mjs'
+import CartService from '../Dao/services/cart.service.mjs'
+import UserService from '../Dao/services/user.service.mjs'
+import ProductService from '../Dao/services/product.service.mjs'
+import TicketService from '../Dao/services/ticket.service.mjs'
+/* eslint-disable */
 
 class CartController {
-  #service
-  constructor (service) {
-    this.#service = service
+  #CartService
+  #UserService
+  #ProductService
+  #TicketService
+
+  constructor (CartService, UserService, ProductService, TicketService) {
+    this.#CartService = CartService
+    this.#UserService = UserService
+    this.#ProductService = ProductService
+    this.#TicketService = TicketService
   }
 
   async findAll (req, res, next) {
     try {
-      const carts = await this.#service.find()
+      const carts = await this.#CartService.find()
       if (!carts) {
         res.status(404).json({ error: 'Carts not found' })
       } else {
@@ -24,7 +34,7 @@ class CartController {
   async findOne (req, res, next) {
     const { id } = req.params
     try {
-      const cart = await this.#service.findOne({ _id: id })
+      const cart = await this.#CartService.findById({ _id: id })
       if (!cart) {
         res.status(404).json({ error: `Cart with id ${id} not found` })
         return
@@ -38,7 +48,7 @@ class CartController {
 
   async create (req, res, next) {
     try {
-      const carts = await this.#service.create([{}])
+      const carts = await this.#CartService.create([{}])
       res.status(200).json({ carts })
     } catch (error) {
       next(error)
@@ -49,7 +59,7 @@ class CartController {
     const { cid } = req.params
     const { pid } = req.params
     try {
-      const cart = await this.#service.findById({ _id: cid })
+      const cart = await this.#CartService.findById({ _id: cid })
       const product = cart.products.find(
         (product) => product.product._id.toString() === pid
       )
@@ -70,34 +80,10 @@ class CartController {
     }
   }
 
-  // async addProduct (req, res, next) {
-  //   const { cid } = req.params
-  //   const { pid } = req.params
-  //   try {
-  //     const cart = await cartModel.findOne({ _id: cid })
-  //     const product = cart.products.find(
-  //       (product) => product.product.toString() === pid
-  //     )
-
-  //     if (!product) {
-  //       const newProduct = { quantity: 1, product: pid }
-  //       cart.products.push(newProduct)
-  //       await cartModel.updateOne({ _id: cid }, cart)
-  //       res.status(201).json(newProduct)
-  //     } else {
-  //       product.quantity += 1
-  //       await cartModel.updateOne({ _id: cid }, cart)
-  //       res.status(201).json(product)
-  //     }
-  //   } catch (error) {
-  //     next(error)
-  //   }
-  // }
-
   async deleteAll (req, res, next) {
     const { cid } = req.params
     try {
-      const result = await this.#service.findOneAndUpdate(
+      const result = await this.#CartService.findOneAndUpdate(
         { _id: cid },
         { $set: { products: [] } },
         { new: true }
@@ -117,7 +103,7 @@ class CartController {
   async deleteOne (req, res, next) {
     const { cid, pid } = req.params
     try {
-      const result = await this.#service.findOneAndUpdate(
+      const result = await this.#CartService.findOneAndUpdate(
         { _id: cid },
         { $pull: { products: { product: pid } } },
         { new: true }
@@ -138,7 +124,7 @@ class CartController {
     const { cid, pid } = req.params
     const { quantity } = req.body
     try {
-      const result = await this.#service.findOneAndUpdate(
+      const result = await this.#CartService.findOneAndUpdate(
         { _id: cid, 'products.product': pid },
         { $set: { 'products.$.quantity': quantity } },
         { new: true }
@@ -154,13 +140,60 @@ class CartController {
       next(error)
     }
   }
+
+  async purchase (req, res, next) {
+    const { cid } = req.params
+    try {
+      const cart = await this.#CartService.findById({ _id: cid })
+      if (!cart) {
+        res.status(404).json({ error: `Cart with id ${cid} not found` })
+        return
+      }
+      const user = await this.#UserService.findByCartId(cid)
+      const purchaser = user.email
+
+      // Contenedores.
+      const purchasableProducts = []
+      const nonPurchasableProducts = []
+
+      // Verificar el stock de cada producto.
+      for (const item of cart.products) {
+        const idString = item.product._id.toString()
+        const product = await this.#ProductService.findById( {_id : idString})
+        if (product.stock >= item.quantity) {
+          // Si hay stock, actualizar el stock y agregar el producto a los productos comprables.
+          await this.#ProductService.updateProductStock(product._id, item.quantity)
+          purchasableProducts.push(item)
+        } else {
+          // Si no hay stock, agregar el producto a los productos no comprables.
+          nonPurchasableProducts.push(item)
+        }
+      }
+
+      // Calcular el monto total de los productos que se pueden comprar.
+      const amount = purchasableProducts.reduce((total, item) => total + (item.product.price * item.quantity), 0)
+      // Generar un ticket con los productos que se pueden comprar.
+      const ticketData = {
+        amount,
+        purchaser,
+        cartId: cid,
+        purchased_products: purchasableProducts
+      }
+      await this.#TicketService.create(ticketData)
+
+      // Actualizar el carrito para que sólo contenga los productos que no se pudieron comprar.
+      cart.products = nonPurchasableProducts
+      await cart.save()
+
+      res.status(200).json({
+        message: 'Purchase completed',
+        nonPurchasableProducts: nonPurchasableProducts.map(item => item.product._id)
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
-const controller = new CartController(new CartService())
+const controller = new CartController(new CartService(), new UserService(), new ProductService(), new TicketService())
 export default controller
-
-// const dao = await DaoFactory.getDao() // Obtengo DAO
-// const service = new CartService(dao) // nuevo CartService con DAO
-// const controller = new CartController(service) // nuevo CartController con el service
-
-// export default controller

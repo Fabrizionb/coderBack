@@ -21,6 +21,20 @@ const productSchema = new mongoose.Schema({
   status: { type: Boolean, required: true, index: true },
   thumbnails: { type: Array, required: true }
 })
+productSchema.pre('findOneAndUpdate', function (next) {
+  if (this._update.$inc && this._update.$inc.stock !== undefined) {
+    const updatedStock = this._update.$inc.stock
+
+    // Si el stock actualizado es menor o igual a 0, establecer el estado en false
+    if (updatedStock <= 0) {
+      this._update.status = false
+    } else {
+      this._update.status = true
+    }
+  }
+  next()
+})
+
 productSchema.plugin(mongoosePaginate)
 const productModel = mongoose.model(productsCollection, productSchema)
 export default productModel

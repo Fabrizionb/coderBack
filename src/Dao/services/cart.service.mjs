@@ -1,5 +1,5 @@
 /* eslint-disable */
-import cartModel from "../Dao/models/cart.model.js";
+import cartModel from "../models/cart.model.js";
 
 class CartService {
   #model;
