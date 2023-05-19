@@ -1,12 +1,23 @@
 /* eslint-disable */
 import TicketService from '../Dao/services/ticket.service.mjs'
+import DaoFactory from '../Dao/DaoFactory.mjs';
 class TicketController {
+  #CartService
+  #ProductService
+  #UserService
   #TicketService
 
-  constructor (TicketService) {
-    this.#TicketService = TicketService
+  constructor () {
+    this.initializeServices();
   }
 
+  async initializeServices() {
+    this.#CartService = await DaoFactory.getDao('cart');
+    this.#UserService = await DaoFactory.getDao('user');
+    this.#ProductService = await DaoFactory.getDao('product');
+    this.#TicketService = await DaoFactory.getDao('ticket');
+    
+  }
   async create (req, res, next) {
     try {
       const { purchaser, products, amount, cartId } = req.body
@@ -55,7 +66,17 @@ class TicketController {
       next(error)
     }
   }
+  async findTicketsByEmail (req, res, next) {
+    const email = req.params.email;
+    try {
+      const tickets = await this.#TicketService.find({ purchaser: email });
+      res.status(200).json({ tickets });
+    } catch (error) {
+      next(error);
+    }
+  }
+
 }
 
-const controller = new TicketController(new TicketService())
+const controller = new TicketController()
 export default controller

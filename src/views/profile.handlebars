@@ -1,4 +1,4 @@
-<div class="hero-image container mt-3">
+{{!-- <div class="hero-image container mt-3">
   <div class="card p-5 ">
     <h2 class="text-center">
       Welcome
@@ -38,6 +38,76 @@
 
     </div>
     <button type="submit" class="btn btn-primary" class="logout" id="logout">Logout</button>
+  </div>
+</div> --}}
+
+<div id="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <!-- breadcrumb-->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li aria-current="page" class="breadcrumb-item"><a href="#">User Section</a></li>
+          </ol>
+        </nav>
+      </div>
+      <div class="col-lg-3">
+        <!-- CUSTOMER MENU -->
+        <div class="card sidebar-menu">
+          <div class="card-header">
+            <h3 class="h4 card-title">Welcome {{user.name}}</h3>
+          </div>
+          <div class="card-body">
+            <ul class="nav nav-pills flex-column">
+              <li class="mb-2"><a href="#" class="nav-link active "><i class="fa fa-list"></i> My orders</a></li>
+              <li class="mb-2"><a href="#" class="nav-link active "><i class="fa fa-heart"></i> My wishlist</a></li>
+              <li class="mb-2"><a href="/view/cart/{{user.cartId._id}}" class="nav-link active text-left w-100"><i
+                    class="fa fa-user"></i> My cart</a></li>
+              <li class="mb-2"><a type="submit" class="nav-link active text-left w-100" id="logout"><i
+                    class="fa fa-sign-out"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- /.col-lg-3-->
+        <!--  CUSTOMER MENU END -->
+      </div>
+      <div id="customer-order" class="col-lg-9">
+        <div class="box">
+          <h1>Orders </h1>
+          </p>
+          <p class="text-muted">If you have any questions, please feel free to <a href="/chat">contact us</a>,
+            our customer service center is working for you 24/7.</p>
+          <hr>
+          <div class="table-responsive mb-4">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Code</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>View</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each tickets }}
+                <tr>
+                  <td>{{this.order}}</td>
+                  <td>{{this.code}}</td>
+                  <td>{{this.purchase_datetime}}</td>
+                  <td>{{this.amount}}</td>
+                  <td><a href="/view/purchase/{{this.code}}" class="btn btn-primary btn-sm">View</a></td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+          <!-- /.table-responsive-->
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <script src="js/logout.js"></script>

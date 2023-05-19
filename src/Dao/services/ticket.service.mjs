@@ -1,11 +1,10 @@
 /* eslint-disable */
 import ticketModel from "../models/ticket.model.js";
 
-
 class TicketService {
   #model;
   constructor() {
-    this.#model =  ticketModel;
+    this.#model = ticketModel;
   }
   async find() {
     return this.#model.find();
@@ -20,10 +19,17 @@ class TicketService {
     return this.#model.deleteOne(_id);
   }
   async findByCartId(cartId) {
-    return this.#model.findOne({ cartId })
-      .populate('cartId')
-      .populate('purchased_products.product');
-}
+    return this.#model
+      .findOne({ cartId })
+      .populate("cartId")
+      .populate("purchased_products.product");
+  }
+  async findByEmail(email) {
+    return this.#model.find({ purchaser: email });
+  }
+  async findByCode(code) {
+    return this.#model.findOne({ code: code });
+  }
 }
 
 export default TicketService;

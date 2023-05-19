@@ -6,11 +6,11 @@ class ProductService {
   constructor() {
     this.#model = productModel;
   }
-  async find(conditions, options) {
-    return this.#model.paginate(conditions, options);
-  }
   async getAll() {
     return this.#model.find();
+  }
+  async find(conditions, options) {
+    return this.#model.paginate(conditions, options);
   }
   async findById(_id) {
     return this.#model.findById(_id);

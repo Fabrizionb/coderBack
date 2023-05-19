@@ -1,11 +1,22 @@
 import mongoose from 'mongoose'
-import ProductService from '../Dao/services/product.service.mjs'
+// import ProductService from '../Dao/services/product.service.mjs'
+import DaoFactory from '../Dao/DaoFactory.mjs'
 /* eslint-disable */
 
 class ProductController {
-  #service
-  constructor (service) {
-    this.#service = service
+  #CartService
+  #ProductService
+  #UserService
+  #TicketService
+  constructor () {
+    this.initializeServices();
+  }
+  async initializeServices() {
+    this.#CartService = await DaoFactory.getDao('cart');
+    this.#UserService = await DaoFactory.getDao('user');
+    this.#ProductService = await DaoFactory.getDao('product');
+    this.#TicketService = await DaoFactory.getDao('ticket');
+    
   }
   async findAll (req, res, next) {
     const baseUrl = 'http://localhost:8080'
@@ -24,7 +35,7 @@ class ProductController {
       conditions.status = query.status === 'true'
     }
     try {
-      const products = await this.#service.find(
+      const products = await this.#ProductService.find(
         conditions,
         {
           page: query.page ?? 1,
@@ -62,7 +73,7 @@ class ProductController {
         res.status(400).json({ error: 'Invalid Product Id' })
         return
       }
-      const product = await this.#service.findById({ _id: pid })
+      const product = await this.#ProductService.findById({ _id: pid })
       if (!product) {
         res.status(404).json({ error: `Product with id ${pid} not found` })
         return
@@ -81,7 +92,7 @@ class ProductController {
       }
       const thumbnails = req.files.map(file => file.filename)
       const newProduct = { ...product, status: true, thumbnails }
-      const createdProduct = await this.#service.create(newProduct)
+      const createdProduct = await this.#ProductService.create(newProduct)
       res.status(201).json({ id: createdProduct._id })
     } catch (error) {
       next(error)
@@ -91,9 +102,9 @@ class ProductController {
     const { id } = req.params
     const updateProduct = req.body
     try {
-      const productById = await this.#service.findById({ _id: pid })
+      const productById = await this.#ProductService.findById({ _id: pid })
       if (!productById) res.status(404).json({ error: 'Product not found' })
-      const result = await this.#service.update({ _id: id }, updateProduct)
+      const result = await this.#ProductService.update({ _id: id }, updateProduct)
       res.status(200).json(result)
     } catch (error) {
       next(error)
@@ -102,7 +113,7 @@ class ProductController {
   async delete (req, res, next) {
     const { pid } = req.params
     try {
-      await this.#service.delete({ _id: pid })
+      await this.#ProductService.delete({ _id: pid })
       res.status(200).json({ message: 'Product deleted successfully' })
     } catch (error) {
       next(error)
@@ -117,7 +128,7 @@ class ProductController {
         res.status(400).json({ error: 'Invalid Product Id' })
         return
       }
-      const updatedProduct = await this.#service.updateProductStock(pid, quantity)
+      const updatedProduct = await this.#ProductService.updateProductStock(pid, quantity)
       if (!updatedProduct) {
         res.status(404).json({ error: `Product with id ${pid} not found` })
         return
@@ -128,5 +139,5 @@ class ProductController {
     }
   }
 }
-const controller = new ProductController(new ProductService())
+const controller = new ProductController()
 export default controller

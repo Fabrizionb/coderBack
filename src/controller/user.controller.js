@@ -1,12 +1,22 @@
 import utils from '../utils/view.util.js'
 import { createHash } from '../utils/crypto.js'
-import UserService from '../Dao/services/user.service.mjs'
+// import UserService from '../Dao/services/user.service.mjs'
 import UserDto from '../Dao/dto/user.dto.js'
-
+import DaoFactory from '../Dao/DaoFactory.mjs'
 class UserController {
-  #service
-  constructor (service) {
-    this.#service = service
+  #CartService
+  #ProductService
+  #UserService
+  #TicketService
+  constructor () {
+    this.initializeServices()
+  }
+
+  async initializeServices () {
+    this.#CartService = await DaoFactory.getDao('cart')
+    this.#UserService = await DaoFactory.getDao('user')
+    this.#ProductService = await DaoFactory.getDao('product')
+    this.#TicketService = await DaoFactory.getDao('ticket')
   }
 
   async google (req, res) {}
@@ -61,13 +71,13 @@ class UserController {
     try {
       const { email, password, name, lastname } = req.body
 
-      const userExists = await this.#service.findOne({ email })
+      const userExists = await this.#UserService.findOne({ email })
       if (userExists) {
         return res.status(201).send({ error: 'User Created' })
       }
 
       const hashedPassword = createHash(password)
-      const newUser = await this.#service.create({
+      const newUser = await this.#UserService.create({
         email,
         password: hashedPassword,
         name,
@@ -87,13 +97,13 @@ class UserController {
   async restorePassword (req, res, next) {
     try {
       const { email, newPassword } = req.body
-      const user = await this.#service.findOne({ email })
+      const user = await this.#UserService.findOne({ email })
       if (!user) {
         res.status(203).json({ status: '404', message: 'User not found' })
         return
       }
       const hashedPassword = createHash(newPassword)
-      await this.#service.updateOne(
+      await this.#UserService.updateOne(
         { email },
         { $set: { password: hashedPassword } }
       )
@@ -104,6 +114,6 @@ class UserController {
   }
 }
 
-const controller = new UserController(new UserService())
+const controller = new UserController()
 
 export default controller

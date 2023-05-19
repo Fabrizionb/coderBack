@@ -6,6 +6,10 @@ class UserService {
   constructor() {
     this.#model =  userModel;
   }
+  async get () {
+    const data = await fs.promises.readFile(this.filePath, 'utf-8')
+    return JSON.parse(data)
+  }
   async findOne({ email }) {
     return this.#model.findOne({ email });
   }

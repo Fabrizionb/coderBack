@@ -42,4 +42,7 @@ route.get("/profile",
   route.get("/purchase",
   authorization(['user']),
   passportCall("current"),controller.viewPurchase.bind(controller))
+  route.get("/view/purchase/:tid",
+  authorization(['user']),
+  passportCall("current"),controller.viewOrder.bind(controller))
 export default route;

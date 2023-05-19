@@ -1,7 +1,14 @@
-import CartService from '../Dao/services/cart.service.mjs'
-import UserService from '../Dao/services/user.service.mjs'
-import ProductService from '../Dao/services/product.service.mjs'
-import TicketService from '../Dao/services/ticket.service.mjs'
+// Servicios de MongoDB.
+// import CartService from '../Dao/services/cart.service.mjs'
+// import UserService from '../Dao/services/user.service.mjs'
+// import ProductService from '../Dao/services/product.service.mjs'
+// import TicketService from '../Dao/services/ticket.service.mjs'
+// Servicios de FileSystem.
+// import CartService from '../Dao/filesystem/cart.service.mjs'
+// import UserService from '../Dao/filesystem/user.service.mjs'
+// import ProductService from '../Dao/filesystem/product.service.mjs'
+// import TicketService from '../Dao/filesystem/ticket.service.mjs'
+import DaoFactory from '../Dao/DaoFactory.mjs'
 /* eslint-disable */
 
 class CartController {
@@ -10,16 +17,19 @@ class CartController {
   #ProductService
   #TicketService
 
-  constructor (CartService, UserService, ProductService, TicketService) {
-    this.#CartService = CartService
-    this.#UserService = UserService
-    this.#ProductService = ProductService
-    this.#TicketService = TicketService
+  constructor () {
+    this.initializeServices();
   }
-
+  async initializeServices() {
+    this.#CartService = await DaoFactory.getDao('cart');
+    this.#UserService = await DaoFactory.getDao('user');
+    this.#ProductService = await DaoFactory.getDao('product');
+    this.#TicketService = await DaoFactory.getDao('ticket');
+    
+  }
   async findAll (req, res, next) {
     try {
-      const carts = await this.#CartService.find()
+      const carts = await this.#CartService.get()
       if (!carts) {
         res.status(404).json({ error: 'Carts not found' })
       } else {
@@ -34,7 +44,7 @@ class CartController {
   async findOne (req, res, next) {
     const { id } = req.params
     try {
-      const cart = await this.#CartService.findById({ _id: id })
+      const cart = await this.#CartService.getById({ _id: id })
       if (!cart) {
         res.status(404).json({ error: `Cart with id ${id} not found` })
         return
@@ -59,7 +69,7 @@ class CartController {
     const { cid } = req.params
     const { pid } = req.params
     try {
-      const cart = await this.#CartService.findById({ _id: cid })
+      const cart = await this.#CartService.getById({ _id: cid })
       const product = cart.products.find(
         (product) => product.product._id.toString() === pid
       )
@@ -73,7 +83,6 @@ class CartController {
         product.quantity += 1
         res.status(201).json(product)
       }
-
       await cart.save()
     } catch (error) {
       next(error)
@@ -144,7 +153,7 @@ class CartController {
   async purchase (req, res, next) {
     const { cid } = req.params
     try {
-      const cart = await this.#CartService.findById({ _id: cid })
+      const cart = await this.#CartService.getById({ _id: cid })
       if (!cart) {
         res.status(404).json({ error: `Cart with id ${cid} not found` })
         return
@@ -195,5 +204,5 @@ class CartController {
   }
 }
 
-const controller = new CartController(new CartService(), new UserService(), new ProductService(), new TicketService())
+const controller = new CartController()
 export default controller

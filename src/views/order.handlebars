@@ -16,11 +16,11 @@
         <!-- CUSTOMER MENU -->
         <div class="card sidebar-menu">
           <div class="card-header">
-            <h3 class="h4 card-title">Welcome {{user.name}}</h3>
+            <h3 class="h4 card-title">Welcome {{userObject.name}}</h3>
           </div>
           <div class="card-body">
             <ul class="nav nav-pills flex-column">
-              <li class="mb-2"><a href="#" class="nav-link active"><i
+              <li class="mb-2"><a href="/profile" class="nav-link active"><i
                     class="fa fa-list"
                   ></i>
                   My orders</a></li>
@@ -40,33 +40,13 @@
             </ul>
           </div>
         </div>
-        <div class="card sidebar-menu mt-2">
-          {{#if cart.products.length}}
-            <div class="card-header">
-              <h3 class="h4 card-title">Summary</h3>
-            </div>
-            <div class="card-body">
-              <p>Some of your products could not be purchased at the moment due
-                to insufficient stock. However, we have kept them in your cart,
-                and we will notify you once they are back in stock.
-              </p>
-              <div class="text-center">
-                <a href="/view/cart/{{cart._id}}" class="btn btn-primary">Go to
-                  cart</a>
-              </div>
-            </div>
-          {{/if}}
-        </div>
         <!-- /.col-lg-3-->
         <!--  CUSTOMER MENU END -->
       </div>
       <div id="customer-order" class="col-lg-9">
         <div class="box">
-          <h1>Order Placed</h1>
-          <p class="lead">Order #{{ticket.code}}
-            was placed and is currently
-            <strong>Being prepared</strong>.
-          </p>
+<h1>Order # <h4><strong>{{ticket.code}}</strong></h4></h1>
+<p class="lead">The order was placed on {{ticket.date}}.</p>
           <p class="text-muted">If you have any questions, please feel free to
             <a href="/chat">contact us</a>, our customer service center is
             working for you 24/7.</p>
@@ -83,17 +63,17 @@
                 </tr>
               </thead>
               <tbody>
-                {{#each ticket.purchased_products}}
+                {{#each ticket.purchasedProducts}}
                   <tr>
-                    <td><a href="#"><img
-                          src="img/detailsquare.jpg"
+                    <td><a href="/view/product/{{this._id}}"><img
+                          src="/img/{{thumbnails.[0]}}"
                           alt="White Blouse Armani"
                         /></a></td>
-                    <td><a href="#">{{this.product.title}}</a></td>
+                    <td><a href="/view/product/{{this._id}}">{{this.title}}</a></td>
                     <td>{{this.quantity}}</td>
-                    <td>${{this.product.price}}</td>
+                    <td>${{this.price}}</td>
                     <td>$0.00</td>
-                    <td>${{multiply this.quantity this.product.price}}</td>
+                    <td>${{multiply this.quantity this.price}}</td>
                   </tr>
                 {{/each}}
 
@@ -105,7 +85,7 @@
                 </tr>
                 <tr>
                   <th colspan="5" class="text-right">Shipping and handling</th>
-                  <th>$10.00</th>
+                  <th>$0.00</th>
                 </tr>
                 <tr>
                   <th colspan="5" class="text-right">Tax</th>
