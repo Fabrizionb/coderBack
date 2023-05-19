@@ -193,7 +193,7 @@ class CartController {
       // Actualizar el carrito para que sólo contenga los productos que no se pudieron comprar.
       cart.products = nonPurchasableProducts
       await cart.save()
-
+      await this.#CartService.sendPurchaseMail(purchaser)
       res.status(200).json({
         message: 'Purchase completed',
         nonPurchasableProducts: nonPurchasableProducts.map(item => item.product._id)

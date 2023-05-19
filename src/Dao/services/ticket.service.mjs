@@ -21,7 +21,7 @@ class TicketService {
   async findByCartId(cartId) {
     return this.#model
       .findOne({ cartId })
-      .populate("cartId")
+      .sort({ purchase_datetime: -1 }) // ordenar en orden descendente
       .populate("purchased_products.product");
   }
   async findByEmail(email) {
