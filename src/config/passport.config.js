@@ -10,7 +10,7 @@ import jwt from "passport-jwt";
 import util from '../utils/view.util.js'
 
 import userModel from "../Dao/models/user.model.js";
-import UserService from '../Dao/services/user.service.mjs'
+import UserService from '../Dao/mongo/user.service.mjs'
 
 const LocalStrategy = local.Strategy;
 const GithubStrategy = github.Strategy;

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-// import ProductService from '../Dao/services/product.service.mjs'
+// import ProductService from '../Dao/mongo/product.service.mjs'
 import DaoFactory from '../Dao/DaoFactory.mjs'
 /* eslint-disable */
 

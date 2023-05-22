@@ -1,13 +1,3 @@
-// Servicios de MongoDB.
-// import CartService from '../Dao/services/cart.service.mjs'
-// import UserService from '../Dao/services/user.service.mjs'
-// import ProductService from '../Dao/services/product.service.mjs'
-// import TicketService from '../Dao/services/ticket.service.mjs'
-// Servicios de FileSystem.
-// import CartService from '../Dao/filesystem/cart.service.mjs'
-// import UserService from '../Dao/filesystem/user.service.mjs'
-// import ProductService from '../Dao/filesystem/product.service.mjs'
-// import TicketService from '../Dao/filesystem/ticket.service.mjs'
 import DaoFactory from '../Dao/DaoFactory.mjs'
 /* eslint-disable */
 

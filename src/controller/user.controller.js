@@ -1,6 +1,6 @@
 import utils from '../utils/view.util.js'
 import { createHash } from '../utils/crypto.js'
-// import UserService from '../Dao/services/user.service.mjs'
+// import UserService from '../Dao/mongo/user.service.mjs'
 import UserDto from '../Dao/dto/user.dto.js'
 import DaoFactory from '../Dao/DaoFactory.mjs'
 class UserController {

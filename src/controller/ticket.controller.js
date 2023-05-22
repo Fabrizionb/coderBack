@@ -1,5 +1,5 @@
 /* eslint-disable */
-import TicketService from '../Dao/services/ticket.service.mjs'
+import TicketService from '../Dao/mongo/ticket.service.mjs'
 import DaoFactory from '../Dao/DaoFactory.mjs';
 class TicketController {
   #CartService
