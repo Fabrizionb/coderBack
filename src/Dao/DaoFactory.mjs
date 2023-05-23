@@ -43,6 +43,21 @@ class DaoFactory {
             const {default: TicketServiceFS} = await import('./memory/ticket.service.mjs');
             return new TicketServiceFS();
         }
+        case "filesystem":
+        switch (type) {
+          case 'cart':
+            const {default: CartServiceFS} = await import('./filesystem/cart.service.mjs');
+            return new CartServiceFS();
+          case 'user':
+            const {default: UserServiceFS} = await import('./filesystem/user.service.mjs');
+            return new UserServiceFS();
+          case 'product':
+            const {default: ProductServiceFS} = await import('./filesystem/product.service.mjs');
+            return new ProductServiceFS();
+          case 'ticket':
+            const {default: TicketServiceFS} = await import('./filesystem/ticket.service.mjs');
+            return new TicketServiceFS();
+        }
       default:
         throw new Error("Wrong config");
     }
