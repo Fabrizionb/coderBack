@@ -28,81 +28,81 @@ This is an API for a clothing e-commerce project developed with Node.js and Expr
 1. Run `npm run start:dev` to start the server.
 2. Access the API via `http://localhost:8080`.
 
-* * *
 ## Endpoints
 
-## Products:
--GET /api/products: Get all products. (Authorization required: user, admin)
--GET /api/products/:pid: Get a specific product by ID. (Authorization required: user, admin)
--POST /api/products: Create a new product. (Authorization required: admin)
--PUT /api/products/:id: Update a product by ID. (Authorization required: admin)
--DELETE /api/products/:pid: Delete a product by ID. (Authorization required: admin)
+### Products
 
-## Cart:
--GET /api/cart: Get all carts. (Authorization required: user, admin)
--GET /api/cart/:id: Get a specific cart by ID. (Authorization required: user, admin)
--POST /api/cart: Create a new cart.
--DELETE /api/cart/:cid/product/:pid: Delete a product from a cart. (Authorization required: user)
--DELETE /api/cart/:cid: Delete all products from a cart. (Authorization required: user)
--POST /api/cart/:cid/product/:pid: Add a product to a cart. (Authorization required: user)
--PUT /api/cart/:cid/product/:pid: Modify the quantity of a product in a cart. (Authorization required: user)
--POST /api/cart/:cid/purchase: Purchase the items in a cart. (Authorization required: user, admin)
--GET /api/cart/ticket/:tid: Get a specific ticket by ID.
--DELETE /api/cart/ticket/:tid: Delete a specific ticket by ID.
--GET /api/cart/tickets/all: Get all tickets.
+- `GET /api/products`: Get all products. (Authorization required: user, admin)
+- `GET /api/products/:pid`: Get a specific product by ID. (Authorization required: user, admin)
+- `POST /api/products`: Create a new product. (Authorization required: admin)
+- `PUT /api/products/:id`: Update a product by ID. (Authorization required: admin)
+- `DELETE /api/products/:pid`: Delete a product by ID. (Authorization required: admin)
 
-## User:
--GET /api/user/failurelogin: Handle failure during login.
--GET /api/user/failureregister: Handle failure during registration.
--POST /api/user/logout: Logout the user.
--GET /api/user/unauthorized: Handle unauthorized access.
--POST /api/user/restore-password: Restore password.
--GET /api/user/google-callback: Google OAuth2 callback.
--GET /api/user/google: Authenticate with Google OAuth2.
--GET /api/user/github-callback: GitHub OAuth callback.
--GET /api/user/github: Authenticate with GitHub OAuth.
--GET /api/user/current: Get the current user's information. (Authentication required)
--POST /api/user/register: Register a new user.
--POST /api/user/login: Login with existing credentials.
+### Cart
 
-##  View:
--GET /register: View the registration form.
--GET /login: View the login form.
--GET /forgot-password: View the forgot password form.
--GET /: View the products. (Authorization required: user, admin)
--GET /view/product/:pid: View a specific product. (Authorization required: user, admin)
--GET /view/cart/:cid: View a specific cart. (Authorization required: user, admin)
--GET /realtimeproducts: View the products in real-time. (Authorization required: admin)
--GET /chat: View the real-time chat. (Authorization required: user)
--GET /profile: View the user profile. (Authorization required: user, admin)
--GET /purchase: View the purchase page. (Authorization required: user)
--GET /view/purchase/:tid: View a specific order. (Authorization required: user)
+- `GET /api/cart`: Get all carts. (Authorization required: user, admin)
+- `GET /api/cart/:id`: Get a specific cart by ID. (Authorization required: user, admin)
+- `POST /api/cart`: Create a new cart.
+- `DELETE /api/cart/:cid/product/:pid`: Delete a product from a cart. (Authorization required: user)
+- `DELETE /api/cart/:cid`: Delete all products from a cart. (Authorization required: user)
+- `POST /api/cart/:cid/product/:pid`: Add a product to a cart. (Authorization required: user)
+- `PUT /api/cart/:cid/product/:pid`: Modify the quantity of a product in a cart. (Authorization required: user)
+- `POST /api/cart/:cid/purchase`: Purchase the items in a cart. (Authorization required: user, admin)
+- `GET /api/cart/ticket/:tid`: Get a specific ticket by ID.
+- `DELETE /api/cart/ticket/:tid`: Delete a specific ticket by ID.
+- `GET /api/cart/tickets/all`: Get all tickets.
 
-***
+### User
+
+- `GET /api/user/failurelogin`: Handle failure during login.
+- `GET /api/user/failureregister`: Handle failure during registration.
+- `POST /api/user/logout`: Logout the user.
+- `GET /api/user/unauthorized`: Handle unauthorized access.
+- `POST /api/user/restore-password`: Restore password.
+- `GET /api/user/google-callback`: Google OAuth2 callback.
+- `GET /api/user/google`: Authenticate with Google OAuth2.
+- `GET /api/user/github-callback`: GitHub OAuth callback.
+- `GET /api/user/github`: Authenticate with GitHub OAuth.
+- `GET /api/user/current`: Get the current user's information. (Authentication required)
+- `POST /api/user/register`: Register a new user.
+- `POST /api/user/login`: Login with existing credentials.
+
+### View
+
+- `GET /register`: View the registration form.
+- `GET /login`: View the login form.
+- `GET /forgot-password`: View the forgot password form.
+- `GET /`: View the products. (Authorization required: user, admin)
+- `GET /view/product/:pid`: View a specific product. (Authorization required: user, admin)
+- `GET /view/cart/:cid`: View a specific cart. (Authorization required: user, admin)
+- `GET /realtimeproducts`: View the products in real-time. (Authorization required: admin)
+- `GET /chat`: View the real-time chat. (Authorization required: user)
+- `GET /profile`: View the user profile. (Authorization required: user, admin)
+- `GET /purchase`: View the purchase page. (Authorization required: user)
+- `GET /view/purchase/:tid`: View a specific order. (Authorization required: user)
+
 ## Environment Variables
 
 This project uses environment variables to configure certain values. Below is an example of the `.env-example` file that you can use as a template to create your `.env` file. Fill in the values for each variable according to your specific configuration:
 
-*PORT: The port number on which the server will run.
-*MONGO_URI: The MongoDB connection URI.
-*COOKIE_SECRET: The secret key used for signing cookies.
-*JWT_SECRET: The secret key used for signing JSON Web Tokens.
-*GITHUB_CLIENT_ID: The client ID for GitHub OAuth.
-*GITHUB_CLIENT_SECRET: The client secret for GitHub OAuth.
-*GITHUB_CALLBACK_URL: The callback URL for GitHub OAuth.
-*ADMIN_PASSWORD: The password for the admin user.
-*ADMIN_EMAIL: The email address for the admin user.
-*GOOGLE_CLIENT_ID: The client ID for Google OAuth.
-*GOOGLE_CLIENT_SECRET: The client secret for Google OAuth.
-*GOOGLE_CALLBACK_URL: The callback URL for Google OAuth.
-*PERSISTENCE: The persistence setting (e.g., 'session', 'cookie').
-*GOOGLE_MAILER: The email address for the Google Mailer.
+PORT=8080
+MONGO_URI=your-mongodb-connection-uri
+COOKIE_SECRET=your-cookie-secret
+JWT_SECRET=your-jwt-secret
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+GITHUB_CALLBACK_URL=your-github-callback-url
+ADMIN_PASSWORD=admin-password
+ADMIN_EMAIL=admin-email@example.com
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=your-google-callback-url
+PERSISTENCE=session
+GOOGLE_MAILER=your-google-mailer@example.com
 
 Make sure to create a `.env` file in the root of your project based on the `.env-example` template, and replace the placeholder values with your actual configuration.
 
-Ensure that you replace the placeholder values with your actual configuration for each variable in your `.env` file.
-
-Remember to keep your .env file secure and never commit it to a public repository.
+Remember to keep your `.env` file secure and never commit it to a public repository.
 
 ## Dependencies
 
@@ -144,4 +144,4 @@ If you'd like to contribute to this project, you can follow these steps:
 
 ## License
 
-This project is licensed under the ISC License. See the [LICENSE](LICENSE) file for more information.
+This project is licensed under the ISC License. See
