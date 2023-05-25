@@ -85,20 +85,20 @@ This is an API for a clothing e-commerce project developed with Node.js and Expr
 
 This project uses environment variables to configure certain values. Below is an example of the `.env-example` file that you can use as a template to create your `.env` file. Fill in the values for each variable according to your specific configuration:
 
-PORT=8080
-MONGO_URI=your-mongodb-connection-uri
-COOKIE_SECRET=your-cookie-secret
-JWT_SECRET=your-jwt-secret
-GITHUB_CLIENT_ID=your-github-client-id
-GITHUB_CLIENT_SECRET=your-github-client-secret
-GITHUB_CALLBACK_URL=your-github-callback-url
-ADMIN_PASSWORD=admin-password
-ADMIN_EMAIL=admin-email@example.com
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_CALLBACK_URL=your-google-callback-url
-PERSISTENCE=session
-GOOGLE_MAILER=your-google-mailer@example.com
+- `PORT=8080`
+- `MONGO_URI=your-mongodb-connection-uri`
+- `COOKIE_SECRET=your-cookie-secret`
+- `JWT_SECRET=your-jwt-secret`
+- `GITHUB_CLIENT_ID=your-github-client-id`
+- `GITHUB_CLIENT_SECRET=your-github-client-secret`
+- `GITHUB_CALLBACK_URL=your-github-callback-url`
+- `ADMIN_PASSWORD=admin-password`
+- `ADMIN_EMAIL=admin-email@example.com`
+- `GOOGLE_CLIENT_ID=your-google-client-id`
+- `GOOGLE_CLIENT_SECRET=your-google-client-secret`
+- `GOOGLE_CALLBACK_URL=your-google-callback-url`
+- `PERSISTENCE=session`
+- `GOOGLE_MAILER=your-google-mailer@example.com`
 
 Make sure to create a `.env` file in the root of your project based on the `.env-example` template, and replace the placeholder values with your actual configuration.
 
@@ -144,4 +144,4 @@ If you'd like to contribute to this project, you can follow these steps:
 
 ## License
 
-This project is licensed under the ISC License. See
+This project is licensed under the ISC License. See the [LICENSE](LICENSE) file for more information.
