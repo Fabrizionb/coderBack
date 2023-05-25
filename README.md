@@ -31,13 +31,14 @@ This is an API for a clothing e-commerce project developed with Node.js and Expr
 * * *
 ## Endpoints
 
-### Products:
+## Products:
 -GET /api/products: Get all products. (Authorization required: user, admin)
 -GET /api/products/:pid: Get a specific product by ID. (Authorization required: user, admin)
 -POST /api/products: Create a new product. (Authorization required: admin)
 -PUT /api/products/:id: Update a product by ID. (Authorization required: admin)
 -DELETE /api/products/:pid: Delete a product by ID. (Authorization required: admin)
-### Cart:
+
+## Cart:
 -GET /api/cart: Get all carts. (Authorization required: user, admin)
 -GET /api/cart/:id: Get a specific cart by ID. (Authorization required: user, admin)
 -POST /api/cart: Create a new cart.
@@ -49,7 +50,8 @@ This is an API for a clothing e-commerce project developed with Node.js and Expr
 -GET /api/cart/ticket/:tid: Get a specific ticket by ID.
 -DELETE /api/cart/ticket/:tid: Delete a specific ticket by ID.
 -GET /api/cart/tickets/all: Get all tickets.
-### User:
+
+## User:
 -GET /api/user/failurelogin: Handle failure during login.
 -GET /api/user/failureregister: Handle failure during registration.
 -POST /api/user/logout: Logout the user.
@@ -62,7 +64,8 @@ This is an API for a clothing e-commerce project developed with Node.js and Expr
 -GET /api/user/current: Get the current user's information. (Authentication required)
 -POST /api/user/register: Register a new user.
 -POST /api/user/login: Login with existing credentials.
-###  View:
+
+##  View:
 -GET /register: View the registration form.
 -GET /login: View the login form.
 -GET /forgot-password: View the forgot password form.
