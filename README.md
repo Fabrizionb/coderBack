@@ -97,7 +97,7 @@ This project uses environment variables to configure certain values. Below is an
 - `GOOGLE_CLIENT_ID=your-google-client-id`
 - `GOOGLE_CLIENT_SECRET=your-google-client-secret`
 - `GOOGLE_CALLBACK_URL=your-google-callback-url`
-- `PERSISTENCE=session`
+- `PERSISTENCE=mongo/memory/filesystem (toggle persistence method)`
 - `GOOGLE_MAILER=your-google-mailer@example.com`
 
 Make sure to create a `.env` file in the root of your project based on the `.env-example` template, and replace the placeholder values with your actual configuration.
