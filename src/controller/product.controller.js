@@ -47,7 +47,7 @@ class ProductController {
         }
       )
       if (!products) {
-        throw  CustomError.createError({
+        throw CustomError.createError({
           name: 'Not Found',
           cause: new Error('Products not found'),
           message: 'Products not found',
@@ -69,12 +69,16 @@ class ProductController {
         )
       }
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: 'Failed to fetch products',
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Failed to fetch products',
+          code: 500,
+        }))
+      }
     }
   }
   async findOne(req, res, next) {
@@ -82,7 +86,7 @@ class ProductController {
     try {
       const isValidObjectId = mongoose.isValidObjectId(pid)
       if (!isValidObjectId) {
-        throw  CustomError.createError({
+        throw CustomError.createError({
           name: 'Bad Request',
           cause: new Error('Invalid Product Id'),
           message: 'Invalid Product Id',
@@ -92,7 +96,7 @@ class ProductController {
       }
       const product = await this.#ProductService.findById({ _id: pid })
       if (!product) {
-        throw  CustomError.createError({
+        throw CustomError.createError({
           name: 'Not Found',
           cause: new Error(`Product with id ${pid} not found`),
           message: `Product with id ${pid} not found`,
@@ -101,74 +105,21 @@ class ProductController {
       }
       res.status(200).json({ product })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to fetch product with id ${pid}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to fetch product with id ${pid}`,
+          code: 500,
+        }))
+      }
     }
   }
-  //Primera version del create
-  // async create (req, res, next) {
-  //   console.log("entro a create")
-  //   const product = req.body
-  //   try {
-  //     if (!product) {
-  //       res.status(400).json({ error: 'Product missing' })
-  //       return
-  //     }
-  //     const thumbnails = req.files.map(file => file.filename)
-  //     const newProduct = { ...product, status: true, thumbnails }
-  //     const createdProduct = await this.#ProductService.create(newProduct)
-  //     res.status(201).json({ id: createdProduct._id })
-  //   } catch (error) {
-  //     next(error)
-  //   }
-  // }
 
-
-  //Version vieja del create
-  // async create(req, res, next) {
-  //   console.log("entro a create")
-  //   const product = req.body
-  //   try {
-  //     if (!product) {
-  //       throw CustomError.createError({
-  //         name: 'Bad Request',
-  //         cause: new Error('Product missing'),
-  //         message: 'Product missing',
-  //         code: 400,
-  //       });
-  //       return
-  //     }
-  //     //const thumbnails = req.files.map(file => file.filename)
-  //     const thumbnails = []
-  //     const newProduct = { ...product, status: true, thumbnails }
-  //     const createdProduct = await this.#ProductService.create(newProduct)
-  //     if (!createdProduct) {
-  //       throw  CustomError.createError({
-  //         name: 'Error Creating Product',
-  //         cause: new Error(`Failed to create product`),
-  //         message: `Failed to create product`,
-  //         code: 208,
-  //       })
-        
-  //     }
-  //     res.status(201).json({ id: createdProduct._id })
-  //   } catch (error) {
-  //     next(CustomError.createError({
-  //       name: 'Server Error',
-  //       cause: error,
-  //       message: `Failed to create product`,
-  //       code: 500,
-  //     }))
-  //   }
-  // }
-
-   //Version con validaciones del create
+  //Version con validaciones del create
   async create(req, res, next) {
-    console.log("entro a create")
     const product = req.body
     try {
       if (!product) {
@@ -179,13 +130,13 @@ class ProductController {
           code: 400,
         });
       }
-  
+
       // Props y tipos requeridos
       const requiredProperties = {
         title: 'string',
         price: 'number',
       };
-  
+
       // comprobar que esten todas y sean del tipo correcto
       const missingOrInvalidProperties = [];
       for (let prop in requiredProperties) {
@@ -193,7 +144,7 @@ class ProductController {
           missingOrInvalidProperties.push(`${prop} (${requiredProperties[prop]})`);
         }
       }
-  
+
       // si faltan o son invalidas, tirar error
       if (missingOrInvalidProperties.length > 0) {
         throw CustomError.createError({
@@ -203,7 +154,7 @@ class ProductController {
           code: 400,
         });
       }
-  
+
       const thumbnails = req.files ? req.files.map(file => file.filename) : []
       //const thumbnails = []
       const newProduct = { ...product, status: true, thumbnails }
@@ -218,38 +169,34 @@ class ProductController {
       }
       res.status(201).json({ id: createdProduct._id })
     } catch (error) {
-     // Check if the error is a custom error
-     if (error instanceof CustomError) {
-      // If it is, pass it directly to the next middleware
-      next(error);
-    } else {
-      // If it's not, wrap it in a custom error
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: 'Failed to create product',
-        code: 500,
-      }));
-    }
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Failed to create product',
+          code: 500,
+        }));
+      }
     }
   }
-  
+
   async update(req, res, next) {
     const { id } = req.params
     const updateProduct = req.body
     if (!updateProduct) {
-      throw  CustomError.createError({
+      throw CustomError.createError({
         name: 'Bad Request',
         cause: new Error('Product missing'),
         message: 'Product missing',
         code: 400,
       });
-      return
     }
     try {
       const productById = await this.#ProductService.findById({ _id: pid })
       if (!productById) {
-        throw  CustomError.createError({
+        throw CustomError.createError({
           name: 'Not Found',
           cause: new Error('Product not found'),
           message: 'Product not found',
@@ -267,12 +214,16 @@ class ProductController {
       }
       res.status(200).json(result)
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to update product with id ${id}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to update product with id ${id}`,
+          code: 500,
+        }))
+      }
     }
   }
   async delete(req, res, next) {
@@ -289,12 +240,16 @@ class ProductController {
       }
       res.status(200).json({ message: 'Product deleted successfully' })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to delete product with id ${pid}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to delete product with id ${pid}`,
+          code: 500,
+        }))
+      }
     }
   }
   async updateProductStock(req, res, next) {
@@ -322,12 +277,16 @@ class ProductController {
       }
       res.status(200).json({ updatedProduct })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to update stock for product with id ${pid}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to update stock for product with id ${pid}`,
+          code: 500,
+        }))
+      }
     }
   }
 }

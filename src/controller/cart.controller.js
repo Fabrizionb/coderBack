@@ -32,12 +32,16 @@ class CartController {
         res.status(200).json(carts)
       }
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: 'Failed to fetch carts',
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Failed to fetch carts',
+          code: 500,
+        }))
+      }
     }
   }
 
@@ -46,7 +50,7 @@ class CartController {
     try {
       const cart = await this.#CartService.getById({ _id: id })
       if (!cart) {
-        throw  CustomError.createError({
+        throw CustomError.createError({
           name: 'Not Found',
           cause: new Error(`Cart with id ${id} not found`),
           message: `Cart with id ${id} not found`,
@@ -57,12 +61,16 @@ class CartController {
         res.status(200).json(cart)
       }
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to fetch cart with id ${id}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to fetch cart with id ${id}`,
+          code: 500,
+        }))
+      }
     }
   }
 
@@ -70,7 +78,7 @@ class CartController {
     try {
       const newCart = await this.#CartService.create([{}])
       if (!newCart) {
-        throw  CustomError.createError({
+        throw CustomError.createError({
           name: 'Error creating cart',
           cause: new Error(`Failed to create cart`),
           message: `Failed to create cart`,
@@ -80,12 +88,16 @@ class CartController {
       }
       res.status(200).json({ carts: newCart })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: 'Failed to create cart',
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Failed to create cart',
+          code: 500,
+        }))
+      }
     }
   }
 
@@ -107,12 +119,16 @@ class CartController {
       }
       await cart.save()
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: 'Failed to add product to cart',
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Failed to add product to cart',
+          code: 500,
+        }))
+      }
     }
   }
 
@@ -136,12 +152,16 @@ class CartController {
         .status(200)
         .json({ message: `Products deleted from cart with id ${cid}` })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to delete all products from cart with id ${cid}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to delete all products from cart with id ${cid}`,
+          code: 500,
+        }))
+      }
     }
   }
 
@@ -165,12 +185,16 @@ class CartController {
         message: `Product with id ${pid} deleted from cart with id ${cid}`
       })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to delete product with id ${pid} from cart with id ${cid}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to delete product with id ${pid} from cart with id ${cid}`,
+          code: 500,
+        }))
+      }
     }
   }
 
@@ -195,12 +219,16 @@ class CartController {
         message: `Product with id ${pid} updated to quantity ${quantity} in cart with id ${cid}`
       })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to update quantity for product with id ${pid} in cart with id ${cid}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to update quantity for product with id ${pid} in cart with id ${cid}`,
+          code: 500,
+        }))
+      }
     }
   }
 
@@ -301,12 +329,16 @@ class CartController {
         nonPurchasableProducts: nonPurchasableProducts.map(item => item.product._id)
       })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to complete purchase for cart with id ${cid}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to complete purchase for cart with id ${cid}`,
+          code: 500,
+        }))
+      }
     }
   }
 }

@@ -20,14 +20,14 @@ class UserController {
     this.#TicketService = await DaoFactory.getDao('ticket')
   }
 
-  async google (req, res) {}
+  async google (req, res) { }
 
   async googleCallback (req, res) {
     utils.setAuthCookie(req.user, res)
     res.redirect('/')
   }
 
-  async github (req, res, next) {}
+  async github (req, res, next) { }
 
   async githubCallback (req, res) {
     utils.setAuthCookie(req.user, res)
@@ -58,12 +58,16 @@ class UserController {
       res.clearCookie('AUTH') // clear cookie "AUTH"
       res.status(200).json({ response: 'success' })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: 'Error on logout',
-        code: 500
-      }))
+      if (error instanceof CustomError) {
+        next(error)
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Error on logout',
+          code: 500
+        }))
+      }
     }
   }
 
@@ -112,12 +116,16 @@ class UserController {
       }
       res.status(201).send({ message: 'User Registered', user: newUser })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: 'Error on register',
-        code: 500
-      }))
+      if (error instanceof CustomError) {
+        next(error)
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Error on register',
+          code: 500
+        }))
+      }
     }
   }
 
@@ -160,12 +168,16 @@ class UserController {
       }
       res.status(200).send({ status: '200', message: 'Password changed' })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: 'Error on restore password',
-        code: 500
-      }))
+      if (error instanceof CustomError) {
+        next(error)
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Error on restore password',
+          code: 500
+        }))
+      }
     }
   }
 }

@@ -23,13 +23,13 @@ class TicketController {
   async create(req, res, next) {
     try {
       if (!req.body) {
-        throw  CustomError.createError({
+        throw CustomError.createError({
           name: 'Bad Request',
           cause: new Error('Invalid request body'),
           message: 'Invalid request body',
           code: 400,
         })
-              }
+      }
       const { purchaser, products, amount, cartId } = req.body
       const ticketData = {
         amount,
@@ -40,23 +40,27 @@ class TicketController {
 
       const ticket = await this.#TicketService.create(ticketData)
       if (!ticket) {
-        throw  CustomError.createError({
+        throw CustomError.createError({
           name: 'Error creating ticket',
           cause: new Error(`Failed to create ticket`),
           message: `Failed to create ticket`,
           code: 208,
         })
-        
+
       }
 
       res.status(200).json({ ticket })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to fetch cart with id ${id}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to fetch cart with id ${id}`,
+          code: 500,
+        }))
+      }
     }
   }
 
@@ -65,22 +69,26 @@ class TicketController {
     try {
       const ticket = await this.#TicketService.findOne({ _id: tid })
       if (!ticket) {
-        throw  CustomError.createError({
+        throw CustomError.createError({
           name: 'Not Found',
           cause: new Error(`Cart with id ${tid} not found`),
           message: `Cart with id ${tid} not found`,
           code: 104,
         })
-        
+
       }
       res.status(200).json({ ticket })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to fetch cart with id ${id}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to fetch cart with id ${id}`,
+          code: 500,
+        }))
+      }
     }
   }
 
@@ -88,22 +96,26 @@ class TicketController {
     try {
       const tickets = await this.#TicketService.find()
       if (!tickets) {
-        throw  CustomError.createError({
+        throw CustomError.createError({
           name: 'Not Found',
           cause: new Error(`Tickets not found`),
           message: `Tickets not found`,
           code: 104,
         })
-        
+
       }
       res.status(200).json({ tickets })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to fetch cart with id ${id}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to fetch cart with id ${id}`,
+          code: 500,
+        }))
+      }
     }
   }
 
@@ -121,12 +133,16 @@ class TicketController {
       }
       res.status(200).json({ message: `Ticket with id ${tid} deleted successfully` })
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to fetch cart with id ${id}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to fetch cart with id ${id}`,
+          code: 500,
+        }))
+      }
     }
   }
   async findTicketsByEmail(req, res, next) {
@@ -134,22 +150,26 @@ class TicketController {
     try {
       const tickets = await this.#TicketService.find({ purchaser: email });
       if (!tickets) {
-        throw   CustomError.createError({
+        throw CustomError.createError({
           name: 'Not Found',
           cause: new Error(`Tickets not found`),
           message: `Tickets not found`,
           code: 104,
         })
-        
+
       }
       res.status(200).json({ tickets });
     } catch (error) {
-      next(CustomError.createError({
-        name: 'Server Error',
-        cause: error,
-        message: `Failed to fetch cart with id ${id}`,
-        code: 500,
-      }))
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Failed to fetch cart with id ${id}`,
+          code: 500,
+        }))
+      }
     }
   }
 
