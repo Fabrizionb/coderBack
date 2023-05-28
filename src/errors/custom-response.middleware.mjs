@@ -1,4 +1,3 @@
-
 export default (req, res, next) => {
   res.okResponse = (data) => {
     res.status(200).send({
@@ -6,16 +5,18 @@ export default (req, res, next) => {
       payload: data
     })
   }
-  res.userErrorResponse = (message) => {
+  res.userErrorResponse = (error) => {
     res.status(400).send({
       status: 'error',
-      message
+      message: error.message,
+      code: error.code
     })
   }
-  res.serverErrorResponse = (message) => {
+  res.serverErrorResponse = (error) => {
     res.status(500).send({
       status: 'error',
-      message
+      message: error.message,
+      code: error.code
     })
   }
   next()

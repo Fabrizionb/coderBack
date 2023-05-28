@@ -19,6 +19,7 @@ import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access
 import Handlebars from 'handlebars'
 import compression from 'express-compression'
 import errorMiddleware from './errors/error.middleware.mjs'
+import customResponseMiddleware from './errors/custom-response.middleware.mjs'
 const { __dirname } = fileDirname(import.meta)
 const app = express()
 const httpServer = app.listen(config.PORT, () => console.log(`Escuchando en el puerto ${config.PORT}`))
@@ -84,4 +85,5 @@ app.use(passport.session())
 app.use(cors({ origin: 'http://localhost:8080', methods: ['GET', 'POST', 'PUT'] }))
 
 // Middleware de errores
+app.use(customResponseMiddleware)
 app.use(errorMiddleware)
