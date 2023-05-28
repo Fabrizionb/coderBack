@@ -48,6 +48,9 @@ class CartService {
     .catch(error => console.log(error))
     
   }
+  async updateCart(cart) {
+    return cart.save();
+}
 }
 
 export default CartService;

@@ -1,4 +1,5 @@
 import DaoFactory from '../Dao/DaoFactory.mjs'
+import CustomError from '../errors/custom.error.mjs'
 /* eslint-disable */
 
 class CartController {
@@ -7,7 +8,7 @@ class CartController {
   #ProductService
   #TicketService
 
-  constructor () {
+  constructor() {
     this.initializeServices();
   }
   async initializeServices() {
@@ -15,47 +16,80 @@ class CartController {
     this.#UserService = await DaoFactory.getDao('user');
     this.#ProductService = await DaoFactory.getDao('product');
     this.#TicketService = await DaoFactory.getDao('ticket');
-    
+
   }
-  async findAll (req, res, next) {
+  async findAll(req, res, next) {
     try {
       const carts = await this.#CartService.get()
       if (!carts) {
-        res.status(404).json({ error: 'Carts not found' })
+        throw CustomError.createError({
+          name: 'Not Found',
+          cause: new Error('Carts not found'),
+          message: 'Carts not found',
+          code: 104,
+        })
       } else {
-        // return new OkResponse(res, { carts })
         res.status(200).json(carts)
       }
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: 'Failed to fetch carts',
+        code: 500,
+      }))
     }
   }
 
-  async findOne (req, res, next) {
+  async findOne(req, res, next) {
     const { id } = req.params
     try {
       const cart = await this.#CartService.getById({ _id: id })
       if (!cart) {
-        res.status(404).json({ error: `Cart with id ${id} not found` })
+        throw  CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`Cart with id ${id} not found`),
+          message: `Cart with id ${id} not found`,
+          code: 104,
+        })
         return
       } else {
         res.status(200).json(cart)
       }
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Failed to fetch cart with id ${id}`,
+        code: 500,
+      }))
     }
   }
 
-  async create (req, res, next) {
+  async create(req, res, next) {
     try {
-      const carts = await this.#CartService.create([{}])
-      res.status(200).json({ carts })
+      const newCart = await this.#CartService.create([{}])
+      if (!newCart) {
+        throw  CustomError.createError({
+          name: 'Error creating cart',
+          cause: new Error(`Failed to create cart`),
+          message: `Failed to create cart`,
+          code: 208,
+        })
+        return
+      }
+      res.status(200).json({ carts: newCart })
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: 'Failed to create cart',
+        code: 500,
+      }))
     }
   }
 
-  async addProduct (req, res, next) {
+  async addProduct(req, res, next) {
     const { cid } = req.params
     const { pid } = req.params
     try {
@@ -65,21 +99,24 @@ class CartController {
       )
       if (!product) {
         const newProduct = { quantity: 1, product: pid }
-        console.log('nuevo producto agregado')
         cart.products.push(newProduct)
         res.status(201).json(newProduct)
       } else {
-        console.log('producto actualizado')
         product.quantity += 1
         res.status(201).json(product)
       }
       await cart.save()
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: 'Failed to add product to cart',
+        code: 500,
+      }))
     }
   }
 
-  async deleteAll (req, res, next) {
+  async deleteAll(req, res, next) {
     const { cid } = req.params
     try {
       const result = await this.#CartService.findOneAndUpdate(
@@ -88,18 +125,27 @@ class CartController {
         { new: true }
       )
       if (!result) {
-        res.status(404).json({ error: `Cart with id ${cid} not found` })
-        return
+        throw CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`Cart with id ${cid} not found`),
+          message: `Cart with id ${cid} not found`,
+          code: 104,
+        })
       }
       res
         .status(200)
         .json({ message: `Products deleted from cart with id ${cid}` })
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Failed to delete all products from cart with id ${cid}`,
+        code: 500,
+      }))
     }
   }
 
-  async deleteOne (req, res, next) {
+  async deleteOne(req, res, next) {
     const { cid, pid } = req.params
     try {
       const result = await this.#CartService.findOneAndUpdate(
@@ -108,18 +154,27 @@ class CartController {
         { new: true }
       )
       if (!result) {
-        res.status(404).json({ error: `Cart with id ${cid} not found` })
-        return
+        throw CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`Cart with id ${cid} not found`),
+          message: `Cart with id ${cid} not found`,
+          code: 104,
+        })
       }
       res.status(200).json({
         message: `Product with id ${pid} deleted from cart with id ${cid}`
       })
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Failed to delete product with id ${pid} from cart with id ${cid}`,
+        code: 500,
+      }))
     }
   }
 
-  async updateQuantity (req, res, next) {
+  async updateQuantity(req, res, next) {
     const { cid, pid } = req.params
     const { quantity } = req.body
     try {
@@ -129,27 +184,48 @@ class CartController {
         { new: true }
       )
       if (!result) {
-        res.status(404).json({ error: `Cart with id ${cid} not found` })
-        return
+        throw CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`Cart with id ${cid} not found`),
+          message: `Cart with id ${cid} not found`,
+          code: 104,
+        })
       }
       res.status(200).json({
         message: `Product with id ${pid} updated to quantity ${quantity} in cart with id ${cid}`
       })
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Failed to update quantity for product with id ${pid} in cart with id ${cid}`,
+        code: 500,
+      }))
     }
   }
 
-  async purchase (req, res, next) {
+  async purchase(req, res, next) {
     const { cid } = req.params
     try {
       const cart = await this.#CartService.getById({ _id: cid })
       if (!cart) {
-        res.status(404).json({ error: `Cart with id ${cid} not found` })
-        return
+        throw CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`Cart with id ${cid} not found`),
+          message: `Cart with id ${cid} not found`,
+          code: 104,
+        })
       }
       const user = await this.#UserService.findByCartId(cid)
-      const purchaser = user.email
+      if (!user) {
+        throw CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`User with cart id ${cid} not found`),
+          message: `User with cart id ${cid} not found`,
+          code: 104,
+        })
+      }
+      const purchaser = user ? user.email : null
 
       // Contenedores.
       const purchasableProducts = []
@@ -158,7 +234,16 @@ class CartController {
       // Verificar el stock de cada producto.
       for (const item of cart.products) {
         const idString = item.product._id.toString()
-        const product = await this.#ProductService.findById( {_id : idString})
+        const product = await this.#ProductService.findById({ _id: idString })
+        if (!product) {
+          CustomError.createError({
+            name: 'Not Found',
+            cause: new Error(`Product not found`),
+            message: `Product with id ${idString}`,
+            code: 104,
+          })
+          return
+        }
         if (product.stock >= item.quantity) {
           // Si hay stock, actualizar el stock y agregar el producto a los productos comprables.
           await this.#ProductService.updateProductStock(product._id, item.quantity)
@@ -178,18 +263,50 @@ class CartController {
         cartId: cid,
         purchased_products: purchasableProducts
       }
-      await this.#TicketService.create(ticketData)
+      const newTicket = await this.#TicketService.create(ticketData)
+      if (!newTicket) {
+        throw CustomError.createError({
+          name: 'Error on ticket creation',
+          cause: new Error(`Failed to create ticket`),
+          message: `Failed to create ticket`,
+          code: 208,
+        })
+        return
+      }
 
       // Actualizar el carrito para que sólo contenga los productos que no se pudieron comprar.
-      cart.products = nonPurchasableProducts
-      await cart.save()
-      await this.#CartService.sendPurchaseMail(purchaser)
+      cart.products = nonPurchasableProducts;
+      const updateCart = await this.#CartService.updateCart(cart);
+
+      if (!updateCart) {
+        throw CustomError.createError({
+          name: 'Error on cart update',
+          cause: new Error(`Failed to update cart with id ${cid}`),
+          message: `Failed to update cart with id ${cid}`,
+          code: 209,
+        })
+      }
+
+      const mailSent = await this.#CartService.sendPurchaseMail(purchaser)
+      if (!mailSent) {
+        throw CustomError.createError({
+          name: 'Error on mail sending',
+          cause: new Error(`Failed to send purchase mail to ${purchaser}`),
+          message: `Failed to send purchase mail to ${purchaser}`,
+          code: 211,
+        })
+      }
       res.status(200).json({
         message: 'Purchase completed',
         nonPurchasableProducts: nonPurchasableProducts.map(item => item.product._id)
       })
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Failed to complete purchase for cart with id ${cid}`,
+        code: 500,
+      }))
     }
   }
 }

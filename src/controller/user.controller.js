@@ -3,6 +3,7 @@ import { createHash } from '../utils/crypto.js'
 // import UserService from '../Dao/mongo/user.service.mjs'
 import UserDto from '../Dao/dto/user.dto.js'
 import DaoFactory from '../Dao/DaoFactory.mjs'
+import CustomError from '../errors/custom.error.mjs'
 class UserController {
   #CartService
   #ProductService
@@ -57,12 +58,25 @@ class UserController {
       res.clearCookie('AUTH') // clear cookie "AUTH"
       res.status(200).json({ response: 'success' })
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: 'Error on logout',
+        code: 500
+      }))
     }
   }
 
   async current (req, res, next) {
     const user = req.user
+    if (!user) {
+      throw CustomError.createError({
+        name: 'Not Found',
+        cause: new Error('User not found'),
+        message: 'User not found',
+        code: 104
+      })
+    }
     const userDto = new UserDto(user)
     res.json({ user: userDto })
   }
@@ -72,8 +86,13 @@ class UserController {
       const { email, password, name, lastname } = req.body
 
       const userExists = await this.#UserService.findOne({ email })
-      if (userExists) {
-        return res.status(201).send({ error: 'User Created' })
+      if (!userExists) {
+        throw CustomError.createError({
+          name: 'Not Found',
+          cause: new Error('User not found'),
+          message: 'User not found',
+          code: 104
+        })
       }
 
       const hashedPassword = createHash(password)
@@ -83,10 +102,22 @@ class UserController {
         name,
         lastname
       })
-
+      if (!newUser) {
+        throw CustomError.createError({
+          name: 'Error Creating User',
+          cause: new Error(`Failed to create user ${email}`),
+          message: `Failed to create user ${email}`,
+          code: 208
+        })
+      }
       res.status(201).send({ message: 'User Registered', user: newUser })
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: 'Error on register',
+        code: 500
+      }))
     }
   }
 
@@ -96,20 +127,45 @@ class UserController {
 
   async restorePassword (req, res, next) {
     try {
+      if (!req.body) {
+        throw CustomError.createError({
+          name: 'Bad Request',
+          cause: new Error('Request body missing'),
+          message: 'Request body missing',
+          code: 400
+        })
+      }
       const { email, newPassword } = req.body
       const user = await this.#UserService.findOne({ email })
       if (!user) {
-        res.status(203).json({ status: '404', message: 'User not found' })
-        return
+        throw CustomError.createError({
+          name: 'Not Found',
+          cause: new Error('User not found'),
+          message: 'User not found',
+          code: 104
+        })
       }
       const hashedPassword = createHash(newPassword)
-      await this.#UserService.updateOne(
+      const updated = await this.#UserService.updateOne(
         { email },
         { $set: { password: hashedPassword } }
       )
+      if (!updated) {
+        throw CustomError.createError({
+          name: 'Error Updating User',
+          cause: new Error(`Failed to update user ${email}`),
+          message: `Failed to update user ${email}`,
+          code: 209
+        })
+      }
       res.status(200).send({ status: '200', message: 'Password changed' })
     } catch (error) {
-      next(error)
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: 'Error on restore password',
+        code: 500
+      }))
     }
   }
 }

@@ -1,7 +1,3 @@
-// import UserService from '../Dao/mongo/user.service.mjs'
-// import CartService from '../Dao/mongo/cart.service.mjs'
-// import ProductService from '../Dao/mongo/product.service.mjs'
-// import TicketService from '../Dao/mongo/ticket.service.mjs'
 /* eslint-disable */
 import util from "../utils/view.util.js";
 import jwtLib from "jsonwebtoken";
@@ -9,6 +5,7 @@ import config from "../../data.js";
 import mongoose from "mongoose";
 import DaoFactory from "../Dao/DaoFactory.mjs";
 import moment from "moment";
+import CustomError from "../errors/custom.error.mjs";
 class ViewController {
   #CartService;
   #ProductService;
@@ -42,6 +39,14 @@ class ViewController {
     }
     const userCart = decoded.cartId;
     const user = await this.#UserService.findById(decoded.userId);
+    if (!user) {
+      throw  CustomError.createError({
+        name: 'Not Found',
+        cause: new Error('User not found'),
+        message: 'User not found',
+        code: 104,
+      })
+    } 
     const userObj = user.toObject(); // Convertimos el objeto user a un objeto plano
     const sort = util.createSortObject(query);
     const conditions = { ...util.createConditionsObject(query), status: true };
@@ -66,7 +71,7 @@ class ViewController {
         });
       } else {
         res.status(200).render("index", {
-          title: "Listado de Productos",
+          title: "List of Products",
           products: products.docs,
           pages: products.totalPages,
           page: products.page,
@@ -81,7 +86,12 @@ class ViewController {
         });
       }
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get products`,
+        code: 500,
+      }))
     }
   }
 
@@ -117,7 +127,12 @@ class ViewController {
         .status(200)
         .render("product", { titulo: "View Product", data: product, userCart });
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get product with id: ${pid}`,
+        code: 500,
+      }))
     }
   }
 
@@ -143,7 +158,14 @@ class ViewController {
       const userCartId = decoded.cartId;
       const userId = decoded.userId;
       if (!userId || !userCartId) {
-        throw new Error("User or cart not found");
+       
+          throw  CustomError.createError({
+            name: 'Not Found',
+            cause: new Error(`User or cart not found`),
+            message: `User or cart not found`,
+            code: 104,
+          })
+        
       }
       if (cid !== userCartId) {
         res.status(403).render("unauthorized", {
@@ -165,7 +187,12 @@ class ViewController {
         .status(200)
         .render("cart", { titulo: "Shopping Cart", cart: cartData });
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get cart with id: ${cid}`,
+        code: 500,
+      }))
     }
   }
 
@@ -181,12 +208,17 @@ class ViewController {
       } else {
         const plainData = data.map((doc) => doc.toObject());
         res.status(200).render("realTimeProducts", {
-          titulo: "Listado de Productos",
+          titulo: "List of Products",
           data: plainData,
         });
       }
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get realtime products`,
+        code: 500,
+      }));
     }
   }
 
@@ -208,7 +240,12 @@ class ViewController {
         .status(200)
         .render("chat", { title: "Live Chat", role: userObj.role });
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get chat page`,
+        code: 500,
+      }));
     }
   }
 
@@ -225,7 +262,12 @@ class ViewController {
       }
       res.render("register");
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get register page`,
+        code: 500,
+      }));
     }
   }
 
@@ -242,7 +284,12 @@ class ViewController {
       }
       res.render("login");
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get login page`,
+        code: 500,
+      }))
     }
   }
 
@@ -250,7 +297,12 @@ class ViewController {
     try {
       res.render("forgot-password");
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get forgot password page`,
+        code: 500,
+      }));
     }
   }
 
@@ -259,9 +311,33 @@ class ViewController {
     const cartId = req.user.cartId;
     try {
       const user = await this.#UserService.findById({ _id: userId });
+      if (!user) {
+        throw  CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`User with id ${userId} not found`),
+          message: `User with id ${userId} not found`,
+          code: 104,
+        })
+      }
       const cart = await this.#CartService.getById({ _id: cartId });
+      if (!cart) {
+        throw  CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`cart with id ${cartId} not found`),
+          message: `cart with id ${cartId} not found`,
+          code: 104,
+        })
+      }
       const userObject = user.toObject(); // Convertimos el objeto user a un objeto plano
       let tickets = await this.#TicketService.findByEmail(userObject.email);
+      if (!tickets) {
+        throw  CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`tickets with email ${userObject.email} not found`),
+          message: `tickets with email ${userObject.email} not found`,
+          code: 104,
+        })
+      }
       if (!user) {
         res.redirect("/login");
       }
@@ -289,7 +365,12 @@ class ViewController {
 
       res.render("profile", { user: userObject, cartLength, cartId, tickets });
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get profile page`,
+        code: 500,
+      }));
     }
   }
 
@@ -298,8 +379,32 @@ class ViewController {
       const userId = req.user._id;
       const cartId = req.user.cartId.toString();
       const ticket = await this.#TicketService.findByCartId(cartId);
+      if (!ticket) {
+        throw  CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`Ticket not found for cart id ${cartId}`),
+          message: `Ticket not found for cart id ${cartId}`,
+          code: 104,
+        })
+      }
       const cart = await this.#CartService.getById(cartId);
+      if (!cart) {
+        throw  CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`cart with id ${cartId} not found`),
+          message: `cart with id ${cartId} not found`,
+          code: 104,
+        })
+      }
       const user = await this.#UserService.findById({ _id: userId });
+      if (!user) {
+        throw  CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`User with id ${userId} not found`),
+          message: `User with id ${userId} not found`,
+          code: 104,
+        })
+      }
       const userObject = user.toObject(); // objeto user a un objeto plano
       if (!cart) {
         res.redirect("/login");
@@ -307,7 +412,12 @@ class ViewController {
 
       res.render("purchase", { cart, ticket, userObject });
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get purchase page`,
+        code: 500,
+      }));
     }
   }
 
@@ -316,7 +426,23 @@ class ViewController {
     try {
       const userId = req.user._id;
       const ticket = await this.#TicketService.findByCode(tid);
+      if (!ticket) {
+        throw  CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`Ticket with code ${tid} not found`),
+          message: `Ticket with code ${tid} not found`,
+          code: 104,
+        })
+      }
       const user = await this.#UserService.findById({ _id: userId });
+      if (!user) {
+        throw  CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`User with id ${userId} not found`),
+          message: `User with id ${userId} not found`,
+          code: 104,
+        })
+      }
       const userObject = user.toObject();
       // Crear un nuevo array de productos comprados
       let purchasedProducts = [];
@@ -342,7 +468,12 @@ class ViewController {
       }
       res.render("order", { ticket: ticketObject, userObject });
     } catch (error) {
-      next(error);
+      next(CustomError.createError({
+        name: 'Server Error',
+        cause: error,
+        message: `Error while trying to get order page`,
+        code: 500,
+      }));
     }
   }
 }

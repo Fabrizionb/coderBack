@@ -81,6 +81,10 @@ This is an API for a clothing e-commerce project developed with Node.js and Expr
 - `GET /purchase`: View the purchase page. (Authorization required: user)
 - `GET /view/purchase/:tid`: View a specific order. (Authorization required: user)
 
+### Mocking
+
+- `GET /mockingproducts`: Get 50 mocking products.
+
 ## Environment Variables
 
 This project uses environment variables to configure certain values. Below is an example of the `.env-example` file that you can use as a template to create your `.env` file. Fill in the values for each variable according to your specific configuration:
@@ -131,6 +135,8 @@ Here are the dependencies used in the project:
 - `socket.io`: Library for real-time communication based on WebSocket.
 - `sweetalert2`: Library for displaying custom alerts and dialogs in the browser.
 - `uuid`: Generates unique identifiers.
+- `faker/js`: Generate mocking data.
+- `express-compression`: Data compression.
 
 ## Contribution
 

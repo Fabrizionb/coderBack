@@ -17,10 +17,19 @@ import fileDirname from './utils/fileDirName.js'
 import cors from 'cors'
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access'
 import Handlebars from 'handlebars'
+import compression from 'express-compression'
+import errorMiddleware from './errors/error.middleware.mjs'
 const { __dirname } = fileDirname(import.meta)
 const app = express()
 const httpServer = app.listen(config.PORT, () => console.log(`Escuchando en el puerto ${config.PORT}`))
 
+// Configurar compresión
+app.use(compression({
+  brotli: {
+    enabled: true,
+    zlib: {}
+  }
+}))
 // Configurar socket.io
 configureSocket(httpServer)
 
@@ -75,9 +84,4 @@ app.use(passport.session())
 app.use(cors({ origin: 'http://localhost:8080', methods: ['GET', 'POST', 'PUT'] }))
 
 // Middleware de errores
-app.use((err, req, res, next) => {
-  if (err.message) {
-    return res.status(400)
-  }
-  res.status(500).send({ err })
-})
+app.use(errorMiddleware)

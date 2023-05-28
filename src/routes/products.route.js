@@ -5,11 +5,12 @@ import controller from '../controller/product.controller.js'
 const route = Router()
 
 // Get All
-route.get('/', authorization(['user', 'admin']), controller.findAll.bind(controller))
+route.get('/', controller.findAll.bind(controller))
 // Get One Product
 route.get('/:pid', authorization(['user', 'admin']), controller.findOne.bind(controller))
 // Post Product
-route.post('/', authorization(['admin']), multiUploader, controller.create.bind(controller))
+route.post('/', multiUploader, controller.create.bind(controller))
+// route.post('/', authorization(['admin']), multiUploader, controller.create.bind(controller))
 // Update Product
 route.put('/:id', authorization(['admin']), controller.update.bind(controller))
 // Delete Product
