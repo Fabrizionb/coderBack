@@ -16,7 +16,7 @@ class MockingController {
         code: 208
       })
     }
-    res.send({ status: 'ok', payload: products })
+    res.okResponse({ status: 'ok', payload: products })
   }
 }
 

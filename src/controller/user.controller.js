@@ -56,7 +56,7 @@ class UserController {
       req.session.destroy()
       res.clearCookie('connect.sid')
       res.clearCookie('AUTH') // clear cookie "AUTH"
-      res.status(200).json({ response: 'success' })
+      res.okResponse({ response: 'success' })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error)
@@ -114,7 +114,7 @@ class UserController {
           code: 208
         })
       }
-      res.status(201).send({ message: 'User Registered', user: newUser })
+      res.okResponse({ message: 'User Registered', user: newUser })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error)
@@ -130,7 +130,7 @@ class UserController {
   }
 
   async login (req, res, next) {
-    res.status(200).send({ message: 'User Logged' })
+    res.okResponse({ message: 'User Logged' })
   }
 
   async restorePassword (req, res, next) {
@@ -166,7 +166,7 @@ class UserController {
           code: 209
         })
       }
-      res.status(200).send({ status: '200', message: 'Password changed' })
+      res.okResponse({ status: '200', message: 'Password changed' })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error)

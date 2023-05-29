@@ -49,7 +49,7 @@ class TicketController {
 
       }
 
-      res.status(200).json({ ticket })
+      res.okResponse({ ticket })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -77,7 +77,7 @@ class TicketController {
         })
 
       }
-      res.status(200).json({ ticket })
+      res.okResponse({ ticket })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -104,7 +104,7 @@ class TicketController {
         })
 
       }
-      res.status(200).json({ tickets })
+      res.okResponse({ tickets })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -131,7 +131,7 @@ class TicketController {
           code: 210,
         })
       }
-      res.status(200).json({ message: `Ticket with id ${tid} deleted successfully` })
+      res.okResponse({ message: `Ticket with id ${tid} deleted successfully` })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -158,7 +158,7 @@ class TicketController {
         })
 
       }
-      res.status(200).json({ tickets });
+      res.okResponse({ tickets });
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);

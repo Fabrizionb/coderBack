@@ -29,7 +29,7 @@ class CartController {
           code: 104,
         })
       } else {
-        res.status(200).json(carts)
+        res.okResponse(carts)
       }
     } catch (error) {
       if (error instanceof CustomError) {
@@ -58,7 +58,7 @@ class CartController {
         })
         return
       } else {
-        res.status(200).json(cart)
+        res.okResponse(cart)
       }
     } catch (error) {
       if (error instanceof CustomError) {
@@ -86,7 +86,7 @@ class CartController {
         })
         return
       }
-      res.status(200).json({ carts: newCart })
+      res.okResponse({ carts: newCart })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -112,10 +112,10 @@ class CartController {
       if (!product) {
         const newProduct = { quantity: 1, product: pid }
         cart.products.push(newProduct)
-        res.status(201).json(newProduct)
+        res.okResponse(newProduct)
       } else {
         product.quantity += 1
-        res.status(201).json(product)
+        res.okResponse(product)
       }
       await cart.save()
     } catch (error) {
@@ -148,9 +148,7 @@ class CartController {
           code: 104,
         })
       }
-      res
-        .status(200)
-        .json({ message: `Products deleted from cart with id ${cid}` })
+      res.okResponse({ message: `Products deleted from cart with id ${cid}` })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -181,7 +179,7 @@ class CartController {
           code: 104,
         })
       }
-      res.status(200).json({
+      res.okResponse({
         message: `Product with id ${pid} deleted from cart with id ${cid}`
       })
     } catch (error) {
@@ -215,7 +213,7 @@ class CartController {
           code: 104,
         })
       }
-      res.status(200).json({
+      res.okResponse({
         message: `Product with id ${pid} updated to quantity ${quantity} in cart with id ${cid}`
       })
     } catch (error) {
@@ -324,7 +322,7 @@ class CartController {
           code: 211,
         })
       }
-      res.status(200).json({
+      res.okResponse({
         message: 'Purchase completed',
         nonPurchasableProducts: nonPurchasableProducts.map(item => item.product._id)
       })

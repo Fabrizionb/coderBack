@@ -54,7 +54,7 @@ class ProductController {
           code: 104,
         })
       } else {
-        res.status(200).json({
+        res.okResponse({
           status: 'success',
           payload: products.docs,
           totalPages: products.totalPages,
@@ -103,7 +103,7 @@ class ProductController {
           code: 104,
         })
       }
-      res.status(200).json({ product })
+      res.okResponse({ product })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -167,7 +167,7 @@ class ProductController {
           code: 208,
         });
       }
-      res.status(201).json({ id: createdProduct._id })
+      res.okResponse({ id: createdProduct._id })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -212,7 +212,7 @@ class ProductController {
           code: 209,
         })
       }
-      res.status(200).json(result)
+      res.okResponse(result)
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -238,7 +238,7 @@ class ProductController {
           code: 210,
         })
       }
-      res.status(200).json({ message: 'Product deleted successfully' })
+      res.okResponse({ message: 'Product deleted successfully' })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -275,7 +275,7 @@ class ProductController {
           code: 209,
         });
       }
-      res.status(200).json({ updatedProduct })
+      res.okResponse({ updatedProduct })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);

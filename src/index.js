@@ -24,6 +24,8 @@ const { __dirname } = fileDirname(import.meta)
 const app = express()
 const httpServer = app.listen(config.PORT, () => console.log(`Escuchando en el puerto ${config.PORT}`))
 
+// Middleware de errores
+app.use(customResponseMiddleware)
 // Configurar compresión
 app.use(compression({
   brotli: {
@@ -85,5 +87,5 @@ app.use(passport.session())
 app.use(cors({ origin: 'http://localhost:8080', methods: ['GET', 'POST', 'PUT'] }))
 
 // Middleware de errores
-app.use(customResponseMiddleware)
+
 app.use(errorMiddleware)
