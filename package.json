@@ -7,7 +7,8 @@
   "scripts": {
     "start:dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "purgecss": "purgecss --config ./purgecss.config.js --output ./src/public/css/output"
   },
   "keywords": [],
   "author": "",

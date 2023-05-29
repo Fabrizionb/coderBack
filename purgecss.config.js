@@ -1,5 +1,4 @@
-
 module.exports = {
-  content: ['index.html'],
-  css: ['style.css']
+  content: ['./src/views/**/*.handlebars'],
+  css: ['./src/public/css/style.default.css']
 }
