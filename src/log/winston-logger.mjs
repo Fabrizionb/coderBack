@@ -12,7 +12,7 @@ const levels = {
 
 const colors = {
   fatal: 'red',
-  error: 'orange',
+  error: 'red',
   warn: 'yellow',
   info: 'green',
   http: 'blue',
