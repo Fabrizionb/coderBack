@@ -20,12 +20,15 @@ import Handlebars from 'handlebars'
 import compression from 'express-compression'
 import errorMiddleware from './errors/error.middleware.mjs'
 import customResponseMiddleware from './errors/custom-response.middleware.mjs'
+import { loggerMiddleware } from './log/logger.middleware.mjs'
 const { __dirname } = fileDirname(import.meta)
 const app = express()
 const httpServer = app.listen(config.PORT, () => console.log(`Escuchando en el puerto ${config.PORT}`))
 
 // Middleware de errores
 app.use(customResponseMiddleware)
+// Middleware de logger
+app.use(loggerMiddleware)
 // Configurar compresión
 app.use(compression({
   brotli: {
