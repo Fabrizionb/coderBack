@@ -2,6 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import nodemailer from 'nodemailer'
 import config from '../../../data.js'
+import Logger from '../../log/winston-logger.mjs'
 
 const dataFolder = path.resolve('./data')
 
@@ -64,8 +65,8 @@ class CartService {
         <p class="text-muted">If you have any questions, our customer service center is available 24/7. Feel free to <a href="http://localhost:8080/chat">contact us</a>.</p>
       `
     })
-      .then(info => console.log(info))
-      .catch(error => console.log(error))
+      .then(info => Logger.info(info))
+      .catch(error => Logger.error(error))
   }
 
   async updateCart (cart) {

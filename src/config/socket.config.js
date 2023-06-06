@@ -1,11 +1,14 @@
 import { Server } from 'socket.io'
 import { chatModel } from '../Dao/models/chat.model.js'
+import Logger from '../log/winston-logger.mjs'
+
 export let socketServer
+
 export default function configureSocket (httpServer) {
   socketServer = new Server(httpServer)
 
   socketServer.on('connection', (socket) => {
-    console.log('Client connected with id:', socket.id)
+    Logger.info('Client connected with id:', socket.id)
 
     socket.on('productDeleted', (id) => {
       socketServer.emit('productDeletedServer', id)
@@ -36,8 +39,3 @@ export default function configureSocket (httpServer) {
     })
   })
 }
-
-// sintaxis
-// socket.broadcast.emit('evento_para_socket_individual', "Solo recibira este mensaje el socket")
-// socket.broadcast.emit('evento_para_todos_menos_actual', "Todos los socketes conectados menos el actual")
-// socketServer.emit('evento_para_todos', "Este mensaje lo recibiran todos")

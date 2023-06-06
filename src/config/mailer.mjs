@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import Logger from '../log/winston-logger.mjs'
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -23,5 +24,5 @@ transporter.sendMail({
     }
   ]
 })
-  .then(info => console.log(info))
-  .catch(error => console.log(error))
+  .then(info => Logger.info(info))
+  .catch(error => Logger.error(error))

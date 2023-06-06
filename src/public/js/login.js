@@ -22,9 +22,6 @@ loginForm.addEventListener('submit', async (event) => {
     })
 
     const data = await response.json()
-    console.log('response', response)
-    console.log('responseStatus', response.status)
-    console.log('responseStatustypeof', typeof response.status)
     if (response.status === 200) {
       window.location.href = '/'
     } else {

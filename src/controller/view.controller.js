@@ -148,8 +148,6 @@ class ViewController {
     try {
       const { cid } = req.params;
       const cookie = util.cookieExtractor(req);
-
-      // console.log(cookie);
       if (!cookie) {
         res.redirect("/login");
         return;
@@ -157,7 +155,6 @@ class ViewController {
       let decoded;
       try {
         decoded = jwtLib.verify(cookie, config.JWT_SECRET);
-        // console.log(decoded);
       } catch (err) {
         console.error(err);
         res.redirect("/login");

@@ -21,9 +21,10 @@ import compression from 'express-compression'
 import errorMiddleware from './errors/error.middleware.mjs'
 import customResponseMiddleware from './errors/custom-response.middleware.mjs'
 import { loggerMiddleware } from './log/logger.middleware.mjs'
+import Logger from './log/winston-logger.mjs'
 const { __dirname } = fileDirname(import.meta)
 const app = express()
-const httpServer = app.listen(config.PORT, () => console.log(`Escuchando en el puerto ${config.PORT}`))
+const httpServer = app.listen(config.PORT, () => Logger.info(`Escuchando en el puerto ${config.PORT}`))
 
 // Middleware de errores
 app.use(customResponseMiddleware)

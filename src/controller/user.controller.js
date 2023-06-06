@@ -35,12 +35,12 @@ class UserController {
   }
 
   async failureLogin (req, res) {
-    console.log('failurelogin')
+    req.logger.error('failureLogin: User or password incorrect')
     res.send({ error: 'User or password incorrect' })
   }
 
   async failureRegister (req, res, next) {
-    console.log('failureregister')
+    req.logger.error('failureRegister: Error on register')
     res.send({ error: 'Error on register' })
   }
 

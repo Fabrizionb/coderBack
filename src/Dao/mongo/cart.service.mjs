@@ -2,6 +2,7 @@
 import cartModel from "../models/cart.model.js";
 import nodemailer from 'nodemailer'
 import config from "../../../data.js";
+import Logger from '../../log/winston-logger.mjs'
 class CartService {
   #model;
   constructor() {
@@ -44,8 +45,8 @@ class CartService {
         <p class="text-muted">If you have any questions, our customer service center is available 24/7. Feel free to <a href="http://localhost:8080/chat">contact us</a>.</p>
       `
     })
-    .then(info => console.log(info))
-    .catch(error => console.log(error))
+    .then(info => Logger.info(info))
+    .catch(error => Logger.error(error))
     
   }
   async updateCart(cart) {

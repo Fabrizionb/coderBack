@@ -8,7 +8,7 @@ import google from "passport-google-oauth20";
 import jwtLib from "jsonwebtoken";
 import jwt from "passport-jwt";
 import util from '../utils/view.util.js'
-
+import Logger from '../log/winston-logger.mjs'
 import userModel from "../Dao/models/user.model.js";
 import UserService from '../Dao/mongo/user.service.mjs'
 
@@ -79,11 +79,11 @@ export function configurePassport() {
         try {
           const user = await userModel.findOne({ email: username });
           if (!user) {
-            console.log("User not found");
+            req.logger.info("User not found");
             return done(null, false, { message: "User not found" });
           }
           if (!isValidPassword(password, user.password)) {
-            console.log("Password incorrect");
+            req.logger.info("Password incorrect");
             return done(null, false, { message: "Password incorrect" });
           }
 
@@ -141,7 +141,6 @@ export function configurePassport() {
       },
       async (accesToken, refreshToken, profile, done) => {
         try {
-          //console.log({ login: "github", profile });
           let email = profile._json.email;
           if (!email) {
             email = `${profile._json.id}@github.com`;
@@ -162,7 +161,6 @@ export function configurePassport() {
               password: "-",
               cartId,
             });
-            //console.log("new user created", newUser);
             setAuthCookie(req, newUser);
             return done(null, newUser);
           }
@@ -184,7 +182,6 @@ export function configurePassport() {
       },
       async function (accessToken, refreshToken, profile, done) {
         try {
-          //console.log({ login: "google", profile });
           let email = profile._json.email;
           if (!email) {
             email = `${profile._json.id}@google.com`;
@@ -205,10 +202,8 @@ export function configurePassport() {
               password: "-",
               cartId,
             });
-            //console.log("new user created", newUser);
             return done(null, newUser);
           }
-          //console.log("retorno user", user)
           return done(null, user);
         } catch (error) {
           done(error, false);

@@ -1,4 +1,3 @@
-console.log('cripto')
 const accordionHeaders = document.querySelectorAll('.card-header')
 accordionHeaders.forEach((header) => {
   header.addEventListener('click', () => {

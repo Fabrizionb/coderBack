@@ -16,7 +16,6 @@ function send(event) {
     Swal.fire('Error!', 'All fields are required', 'error')
     return
   }
-  console.log("register.js handler")
   fetch('/api/user/register', {
     method: 'POST',
     headers: {

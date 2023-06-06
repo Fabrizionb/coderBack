@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       const response = await fetch('/api/user/current')
       const userData = await response.json()
-      // console.log(userData.user.cartId)
       return userData.user !== undefined
     } catch (error) {
       return false

@@ -43,7 +43,6 @@ async function send (event) {
       const p = document.getElementById('producto-id-create')
       p.innerText = `producto creado correctamente ${d.id}`
       socket.emit('productCreated', obj, d.id) // Emit con los datos del nuevo producto creado
-      console.log('productCreated emited')
     })
   } else {
     response.json().then(formData)
@@ -103,7 +102,6 @@ async function sendModify (event) {
       const p = document.getElementById('producto-modify')
       p.innerText = `producto modificado ${_id}`
       socket.emit('productModify', product, _id) // Emit con los datos del nuevo producto creado
-      console.log('productModify emited')
     })
   } else {
     const p = document.getElementById('producto-modify')

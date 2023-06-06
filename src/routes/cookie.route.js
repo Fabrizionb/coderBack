@@ -10,9 +10,6 @@ route.get('/getCookie', (req, res) => {
   const cookies = req.cookies
   const signedCookies = req.signedCookies
   const authCookie = req.cookies.AUTH || 'No AUTH cookie found'
-
-  console.log('All cookies:', cookies)
-  console.log('AUTH cookie:', authCookie)
   res.send({ cookies, signedCookies, authCookie })
 })
 

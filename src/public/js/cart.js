@@ -1,3 +1,4 @@
+import Logger from '../../log/winston-logger.mjs'
 /* eslint-disable*/
 async function emptyCart (cid) {
   try {
@@ -75,16 +76,15 @@ function calculateCartTotal() {
 
 async function proceedToCheckout(cartId) {
   event.preventDefault()
-  console.log("proceedToCheckout")
   try {
     const response = await fetch(`/api/cart/${cartId}/purchase`, {
       method: 'POST'
     });
     if (response.ok) {
-      console.log("compra exitosa")
+      Logger.info("compra exitosa")
       window.location.href = '/purchase';
     } else {
-      console.log("Error", response)
+      Logger.Error("Error", response)
       throw new Error('Failed to purchase');
     }
   } catch (error) {
