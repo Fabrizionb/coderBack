@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String },
   cartId: { type: Schema.Types.ObjectId, ref: 'carts' },
-  role: { type: String, enum: ['user', 'admin'], default: 'user' }
+  role: { type: String, enum: ['user', 'admin', 'premium'], default: 'user' }
 })
 
 userSchema.plugin(mongoosePaginate)

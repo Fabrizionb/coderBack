@@ -9,6 +9,7 @@ import nodemailer from 'nodemailer'
 import config from '../../data.js'
 import Logger from '../log/winston-logger.mjs'
 import jwt from 'jsonwebtoken'
+import mongoose from 'mongoose'
 
 class UserController {
   #CartService
@@ -161,18 +162,18 @@ class UserController {
       }
 
       const userObj = {
-          userId: user._id.toString(),
-          cartId: user.cartId.toString(),
-          role: user.role
+        userId: user._id.toString(),
+        cartId: user.cartId.toString(),
+        role: user.role
       }
 
       const token = jwt.sign(userObj, config.JWT_SECRET, {
-          expiresIn: '24h'
+        expiresIn: '24h'
       })
 
       res.cookie('AUTH', token, {
-          maxAge: 60 * 60 * 1000 * 24,
-          httpOnly: true
+        maxAge: 60 * 60 * 1000 * 24,
+        httpOnly: true
       })
 
       res.okResponse({ message: 'User Logged' })
@@ -188,9 +189,9 @@ class UserController {
         }))
       }
     }
-}
+  }
 
-  async restorePassword(email,res) {
+  async restorePassword(email, res) {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 587,
@@ -203,11 +204,11 @@ class UserController {
     const secret = config.JWT_SECRET
     const token = jwt.sign({ email: emailAdress }, secret, { expiresIn: '24h' })
     try {
-    transporter.sendMail({
-      from: "'CoderBack' <proyecto@coderhouse.com>",
-      to: emailAdress,
-      subject: 'Recover Password',
-      html: `
+      transporter.sendMail({
+        from: "'CoderBack' <proyecto@coderhouse.com>",
+        to: emailAdress,
+        subject: 'Recover Password',
+        html: `
       <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto;">
           <h1 style="text-align: center; color: #4F4F4F;">Password Reset</h1>
           <p style="font-size: 16px; line-height: 1.5; color: #333;">
@@ -222,12 +223,12 @@ class UserController {
           <p style="font-size: 14px; color: #888; text-align: center;">This is an automated email, please do not reply.</p>
       </div>
   `})
-  res.okResponse({ message: 'Reset link sent successfully' });
-} catch (error) {
-  Logger.error(error)
-  res.serverErrorResponse({ message: error.message, code: 500 });
+      res.okResponse({ message: 'Reset link sent successfully' });
+    } catch (error) {
+      Logger.error(error)
+      res.serverErrorResponse({ message: error.message, code: 500 });
+    }
   }
-}
 
   async resetPassword(req, res, next) {
     try {
@@ -277,6 +278,41 @@ class UserController {
         res.serverErrorResponse(error)
       }
     }
+  }
+
+  async grant(req, res, next) {
+    const { uid } = req.params
+  if (!mongoose.Types.ObjectId.isValid(uid)) {
+    return res.userErrorResponse({ message: 'Invalid ObjectId', code: 400 });
+  }
+    try {
+      const user = await this.#UserService.findById({ _id: uid })
+      Logger.debug(user)
+      if (!user) {
+        req.logger.info('User not found')
+        return res.userErrorResponse({ message: 'User not found', code: 404 })
+      }
+      if (user.role === 'user') {
+        await this.#UserService.update(uid, { role: 'premium' })
+      }
+      if (user.role === 'premium') {
+        await this.#UserService.update(uid, { role: 'user' })
+      }
+      res.okResponse({ message: 'User role updated successfully' })
+    } catch (error) {
+      if (error instanceof CustomError) {
+        next(error)
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Error on role update',
+          code: 500
+        }))
+      }
+    }
+
+
   }
 }
 

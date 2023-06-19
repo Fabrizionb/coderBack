@@ -19,7 +19,9 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true, index: true },
   stock: { type: Number, required: true },
   status: { type: Boolean, required: true, index: true },
-  thumbnails: { type: Array, required: true }
+  thumbnails: { type: Array, required: true },
+  owner: { type: mongoose.Types.ObjectId, ref: 'users', default: 'admin' }
+
 })
 productSchema.pre('findOneAndUpdate', function (next) {
   if (this._update.$inc && this._update.$inc.stock !== undefined) {

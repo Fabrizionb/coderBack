@@ -51,5 +51,5 @@ route.post(
   "/login",
   controller.login.bind(controller)
 );
-
+route.post("/premium/:uid", controller.grant.bind(controller));
 export default route;
