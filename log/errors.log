@@ -2,3 +2,5 @@
 {"level":"fatal","message":"Fatal log","timestamp":"2023-06-06T20:38:29.878Z"}
 {"level":"error","message":"Error log","timestamp":"2023-06-06T20:51:21.514Z"}
 {"level":"fatal","message":"Fatal log","timestamp":"2023-06-06T20:51:21.515Z"}
+{"error":{},"level":"error","message":"Could not login user","timestamp":"2023-06-18T20:29:59.362Z"}
+{"level":"error","timestamp":"2023-06-19T20:15:28.309Z"}

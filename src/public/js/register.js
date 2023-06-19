@@ -11,7 +11,7 @@ function send(event) {
   const password = passwordForm.value
   const name = nameForm.value
   const lastname = lastnameForm.value
-
+  
   if (email === '' || password === '' || name === '' || lastname === '') {
     Swal.fire('Error!', 'All fields are required', 'error')
     return
@@ -23,8 +23,9 @@ function send(event) {
     },
     body: JSON.stringify({ email, password, name, lastname })
   })
+
     .then((response) => {
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         return response.json();
       } else {
         throw new Error('Error on register');
@@ -35,7 +36,7 @@ function send(event) {
       setTimeout(() => {
         const url = window.location.href
         const first = url.split('/')[2]
-        window.location.href = `http://${first}/profile`
+        window.location.href = `http://${first}/login`
       }, 1500)
     })
     .catch((error) => {

@@ -22,5 +22,7 @@ export default {
   // DaoFactory config
   PERSISTENCE: env.PERSISTENCE,
   // Mailer config
-  GOOGLE_MAILER: env.GOOGLE_MAILER
+  GOOGLE_MAILER: env.GOOGLE_MAILER,
+  BASE_URL: env.BASE_URL,
+  GOOGLE_MAILER_USER: env.GOOGLE_MAILER_USER
 }

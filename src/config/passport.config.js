@@ -27,8 +27,10 @@ export function configurePassport() {
 
     async (req, username, password, done) => {
       const { name, lastname } = req.body;
+      Logger.debug(req.body)
       try {
         const userExist = await userModel.findOne({ email: username });
+        Logger.debug("userExist: ", userExist)
         if (userExist) {
           return done(null, false, { message: "User already exists" });
         }
@@ -69,45 +71,46 @@ export function configurePassport() {
   )
 );
 
-  passport.use("login",
-    new LocalStrategy(
-      {
-        usernameField: "email",
-        passReqToCallback: true,
-      },
-      async (req, username, password, done) => {
-        try {
-          const user = await userModel.findOne({ email: username });
-          if (!user) {
-            req.logger.info("User not found");
-            return done(null, false, { message: "User not found" });
-          }
-          if (!isValidPassword(password, user.password)) {
-            req.logger.info("Password incorrect");
-            return done(null, false, { message: "Password incorrect" });
-          }
+  // passport.use("login",
+  //   new LocalStrategy(
+  //     {
+  //       usernameField: "email",
+  //       passReqToCallback: true,
+  //     },
+  //     async (req, username, password, done) => {
+  //       try {
+  //         const user = await userModel.findOne({ email: username });
+  //         Logger.debug("user",user)
+  //         if (!user) {
+  //           req.logger.info("User not found");
+  //           return done(null, false, { message: "User not found" });
+  //         }
+  //         if (!isValidPassword(password, user.password)) {
+  //           req.logger.info("Password incorrect");
+  //           return done(null, false, { message: "Password incorrect" });
+  //         }
 
-          // Genera el token JWT y setea la cookie en la respuesta
-          const userObj = {
-            userId: user._id.toString(),
-            cartId: user.cartId.toString(),
-            role: user.role,
-          };
-          const token = jwtLib.sign(userObj, config.JWT_SECRET, {
-            expiresIn: "24h",
-          });
-          req.res.cookie("AUTH", token, {
-            maxAge: 60 * 60 * 1000 * 24,
-            httpOnly: true,
-          });
+  //         // Genera el token JWT y setea la cookie en la respuesta
+  //         const userObj = {
+  //           userId: user._id.toString(),
+  //           cartId: user.cartId.toString(),
+  //           role: user.role,
+  //         };
+  //         const token = jwtLib.sign(userObj, config.JWT_SECRET, {
+  //           expiresIn: "24h",
+  //         });
+  //         req.res.cookie("AUTH", token, {
+  //           maxAge: 60 * 60 * 1000 * 24,
+  //           httpOnly: true,
+  //         });
 
-          return done(null, user);
-        } catch (error) {
-          done(error, false, { message: "Could not login user" });
-        }
-      }
-    )
-  );
+  //         return done(null, user);
+  //       } catch (error) {
+  //         done(error, false, { message: "Could not login user" });
+  //       }
+  //     }
+  //   )
+  // );
 
   passport.use("current",
     new JWTStrategy(

@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import DaoFactory from "../Dao/DaoFactory.mjs";
 import moment from "moment";
 import CustomError from "../errors/custom.error.mjs";
+import Logger from '../log/winston-logger.mjs'
 class ViewController {
   #CartService;
   #ProductService;
@@ -320,7 +321,8 @@ class ViewController {
 
   async viewForgot(req, res, next) {
     try {
-      res.render("forgot-password");
+      
+        res.render("forgot-password");
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -334,6 +336,29 @@ class ViewController {
       };
     }
   }
+
+  async viewReset(req, res, next) {
+    try {
+      const token = req.params.token;
+        
+        console.log(token)
+        res.render("reset-password", { token });
+     
+    } catch (error) {
+      if (error instanceof CustomError) {
+        next(error);
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: `Error while trying to reset password`,
+          code: 500,
+        }))
+      };
+    }
+  }
+
+
 
   async viewProfile(req, res, next) {
     const userId = req.user._id;

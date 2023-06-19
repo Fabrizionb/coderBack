@@ -11,6 +11,8 @@ route.get("/register",controller.viewRegister.bind(controller))
 route.get("/login",controller.viewLogin.bind(controller))
 // Ruta para recuperar la password
 route.get("/forgot-password",controller.viewForgot.bind(controller))
+// Ruta para ver el formulario de reseteo de password
+route.get("/reset-password/:token",controller.viewReset.bind(controller))
 // Ruta para los productos
 route.get("/",  
   authorization(['user', 'admin']),
@@ -45,4 +47,5 @@ route.get("/profile",
   route.get("/view/purchase/:tid",
   authorization(['user']),
   passportCall("current"),controller.viewOrder.bind(controller))
+
 export default route;

@@ -58,7 +58,7 @@ class CartController {
         })
         return
       } else {
-        res.okResponse(cart)
+        res.send(cart)
       }
     } catch (error) {
       if (error instanceof CustomError) {

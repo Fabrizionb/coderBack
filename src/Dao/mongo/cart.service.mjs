@@ -27,7 +27,7 @@ class CartService {
       host: 'smtp.gmail.com',
       port: 587,
       auth: {
-        user: 'fabrizio1007@gmail.com',
+        user: config.GOOGLE_MAILER_USER,
         pass: config.GOOGLE_MAILER
       }
     })
