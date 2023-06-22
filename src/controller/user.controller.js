@@ -282,12 +282,11 @@ class UserController {
 
   async grant(req, res, next) {
     const { uid } = req.params
-  if (!mongoose.Types.ObjectId.isValid(uid)) {
-    return res.userErrorResponse({ message: 'Invalid ObjectId', code: 400 });
-  }
+    if (!mongoose.Types.ObjectId.isValid(uid)) {
+      return res.userErrorResponse({ message: 'Invalid ObjectId', code: 400 });
+    }
     try {
       const user = await this.#UserService.findById({ _id: uid })
-      Logger.debug(user)
       if (!user) {
         req.logger.info('User not found')
         return res.userErrorResponse({ message: 'User not found', code: 404 })
@@ -311,8 +310,6 @@ class UserController {
         }))
       }
     }
-
-
   }
 }
 

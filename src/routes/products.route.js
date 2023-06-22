@@ -9,11 +9,11 @@ route.get('/', controller.findAll.bind(controller))
 // Get One Product
 route.get('/:pid', authorization(['user', 'admin']), controller.findOne.bind(controller))
 // Post Product
-route.post('/', passportCall('current'), multiUploader, authorization(['admin']), controller.create.bind(controller))
-// route.post('/', authorization(['admin']), multiUploader, controller.create.bind(controller))
+route.post('/', authorization(['admin', 'premium']), multiUploader, controller.create.bind(controller))
+
 // Update Product
-route.put('/:id', authorization(['admin']), controller.update.bind(controller))
+route.put('/:id', authorization(['admin', 'premium']), controller.update.bind(controller))
 // Delete Product
-route.delete('/:pid', authorization(['admin']), controller.delete.bind(controller))
+route.delete('/:pid', authorization(['admin', 'premium']), controller.delete.bind(controller))
 
 export default route

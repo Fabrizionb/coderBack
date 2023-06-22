@@ -68,9 +68,11 @@
             <div class="product" data-product-id="{{this._id}}">
               <div class="flip-container">
                 <div class="flipper">
-                  <div class="front"><img src="/img/{{thumbnails.[0]}}" alt="image of {{this.title}}" class="img-fluid">
+                  <div class="front">
+                    <a href="/view/product/{{this._id}}"><img src="/img/{{thumbnails.[0]}}" alt="image of {{this.title}}" class="img-fluid"></a>
                   </div>
-                  <div class="back"><img src="/img/{{thumbnails.[1]}}" alt="image of {{this.title}}" class="img-fluid">
+                  <div class="back">
+                    <a href="/view/product/{{this._id}}"><img src="/img/{{thumbnails.[1]}}" alt="image of {{this.title}}" class="img-fluid"></a>
                   </div>
                 </div>
               </div><a href="/view/product/{{this._id}}" class="invisible"><img src="/img/{{thumbnails.[0]}}"

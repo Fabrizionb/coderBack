@@ -32,17 +32,19 @@ async function send (event) {
       obj[key] = value
     }
   }
-
-  const response = await fetch('/api/products', {
+  console.log('obj', obj)
+  const response = await fetch('/api/product', {
     method: 'POST',
     body: formData,
     headers: {}
   })
+  console.log('res', response)
   if (response.ok) {
     response.json().then((d) => {
       const p = document.getElementById('producto-id-create')
       p.innerText = `producto creado correctamente ${d.id}`
       socket.emit('productCreated', obj, d.id) // Emit con los datos del nuevo producto creado
+      console.log('productCreated emited')
     })
   } else {
     response.json().then(formData)
@@ -102,6 +104,7 @@ async function sendModify (event) {
       const p = document.getElementById('producto-modify')
       p.innerText = `producto modificado ${_id}`
       socket.emit('productModify', product, _id) // Emit con los datos del nuevo producto creado
+      console.log('productModify emited')
     })
   } else {
     const p = document.getElementById('producto-modify')

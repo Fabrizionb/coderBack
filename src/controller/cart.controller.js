@@ -109,6 +109,26 @@ class CartController {
       const product = cart.products.find(
         (product) => product.product._id.toString() === pid
       )
+  
+      // Buscar el usuario que tiene el cartId == cid
+      const user = await this.#UserService.findOne({ cartId: cid })
+      if (!user) {
+        throw CustomError.createError({
+          name: 'Not Found',
+          cause: new Error(`User with id not found`),
+          message: `User with id not found`,
+          code: 104,
+        })}
+
+      // Buscar el producto que se quiere agregar al carrito
+      const productToAdd = await this.#ProductService.findById({ _id: pid })
+  
+      // Si el usuario es premium y es el owner del producto, no puede agregarlo
+      if (user.role === 'premium' && productToAdd.owner.toString() === user._id.toString()) {
+        Logger.debug('Premium user cannot add their own product to the cart')
+        return res.userErrorResponse({ message: 'Premium user cannot add their own product to the cart. Forbidden', code: 403 })
+      }
+  
       if (!product) {
         const newProduct = { quantity: 1, product: pid }
         cart.products.push(newProduct)
@@ -131,6 +151,7 @@ class CartController {
       }
     }
   }
+  
 
   async deleteAll(req, res, next) {
     const { cid } = req.params

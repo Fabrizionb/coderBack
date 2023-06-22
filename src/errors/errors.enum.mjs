@@ -16,6 +16,7 @@ const ErrorEnum = {
 
   // Errores de petición incorrecta
   BAD_REQUEST: 400,
+  FORBIDDEN: 403,
 
   // Errores de servidor 500-599
   SERVER_ERROR: 500

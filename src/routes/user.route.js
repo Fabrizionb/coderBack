@@ -48,7 +48,7 @@ route.get(
   route.post(
     "/register",  controller.register.bind(controller));
 route.post(
-  "/login",
+    "/login",
   controller.login.bind(controller)
 );
 route.post("/premium/:uid", controller.grant.bind(controller));

@@ -15,22 +15,22 @@ route.get("/forgot-password",controller.viewForgot.bind(controller))
 route.get("/reset-password/:token",controller.viewReset.bind(controller))
 // Ruta para los productos
 route.get("/",  
-  authorization(['user', 'admin']),
+  authorization(['user', 'admin', 'premium']),
   passportCall("current"),
   controller.viewStore.bind(controller))
 // ruta para ver cada uno de los productos
   route.get("/view/product/:pid",
-  authorization(['user', 'admin']),
+  authorization(['user', 'admin', 'premium']),
   passportCall("current"),
   controller.viewProduct.bind(controller))
 // ruta para ver el carrito
   route.get("/view/cart/:cid",
-  authorization(['user', 'admin']),
+  authorization(['user', 'admin', 'premium']),
   passportCall("current"),
   controller.viewCart.bind(controller))
 // Ruta para ver los productos en tiempo real
 route.get("/realtimeproducts",
-authorization( 'admin'),
+authorization( ['admin', 'premium']),
   passportCall("current"),
   controller.viewRealTime.bind(controller))
 // Ruta para ver el chat en tiempo real
@@ -39,7 +39,7 @@ route.get("/chat",
   passportCall("current"),controller.viewChat.bind(controller))
 // Ruta para ver el perfil
 route.get("/profile",
-  authorization(['user', 'admin']),
+  authorization(['user', 'admin', 'premium']),
   passportCall("current"),controller.viewProfile.bind(controller))
   route.get("/purchase",
   authorization(['user']),

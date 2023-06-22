@@ -1,8 +1,12 @@
 import mongoose from 'mongoose'
 // import ProductService from '../Dao/mongo/product.service.mjs'
 import CustomError from '../errors/custom.error.mjs'
-
+import util from '../utils/view.util.js'
+import jwtLib from 'jsonwebtoken'
 import DaoFactory from '../Dao/DaoFactory.mjs'
+// import { authorization, passportCall } from '../utils/auth.js'
+// import { multiUploader } from '../utils/multiUploader.js'
+import Logger from '../log/winston-logger.mjs'
 /* eslint-disable */
 
 class ProductController {
@@ -121,6 +125,7 @@ class ProductController {
   //Version con validaciones del create
   async create(req, res, next) {
     const product = req.body
+    Logger.debug(product)
     try {
       if (!product) {
         throw CustomError.createError({
@@ -131,6 +136,10 @@ class ProductController {
         });
       }
 
+      const cookie = util.cookieExtractor(req);
+      Logger.debug(cookie)
+      const decoded = jwtLib.verify(cookie, process.env.JWT_SECRET);
+      Logger.debug(decoded)
       // Props y tipos requeridos
       const requiredProperties = {
         title: 'string',
@@ -138,27 +147,29 @@ class ProductController {
       };
 
       // comprobar que esten todas y sean del tipo correcto
-      const missingOrInvalidProperties = [];
-      for (let prop in requiredProperties) {
-        if (!product.hasOwnProperty(prop) || typeof product[prop] !== requiredProperties[prop]) {
-          missingOrInvalidProperties.push(`${prop} (${requiredProperties[prop]})`);
-        }
-      }
+      // const missingOrInvalidProperties = [];
+      // for (let prop in requiredProperties) {
+      //   if (!product.hasOwnProperty(prop) || typeof product[prop] !== requiredProperties[prop]) {
+      //     missingOrInvalidProperties.push(`${prop} (${requiredProperties[prop]})`);
+      //   }
+      // }
 
       // si faltan o son invalidas, tirar error
-      if (missingOrInvalidProperties.length > 0) {
-        throw CustomError.createError({
-          name: 'Bad Request',
-          cause: new Error('Required fields missing or invalid'),
-          message: `The following properties are required and must be of the correct type: ${missingOrInvalidProperties.join(', ')}`,
-          code: 400,
-        });
-      }
+      // if (missingOrInvalidProperties.length > 0) {
+      //   throw CustomError.createError({
+      //     name: 'Bad Request',
+      //     cause: new Error('Required fields missing or invalid'),
+      //     message: `The following properties are required and must be of the correct type: ${missingOrInvalidProperties.join(', ')}`,
+      //     code: 400,
+      //   });
+      // }
 
       const thumbnails = req.files ? req.files.map(file => file.filename) : []
       //const thumbnails = []
-      const newProduct = { ...product, status: true, thumbnails }
+      const newProduct = { ...product, status: true, thumbnails, owner: decoded.userId || 'admin' }
+      Logger.debug(newProduct)
       const createdProduct = await this.#ProductService.create(newProduct)
+      Logger.debug(createdProduct)
       if (!createdProduct) {
         throw CustomError.createError({
           name: 'Error Creating Product',
@@ -168,7 +179,7 @@ class ProductController {
         });
       }
       res.okResponse({ id: createdProduct._id })
-    } catch (error) {
+     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
       } else {
@@ -185,6 +196,25 @@ class ProductController {
   async update(req, res, next) {
     const { id } = req.params
     const updateProduct = req.body
+    const cookie = util.cookieExtractor(req);
+    const decoded = jwtLib.verify(cookie, process.env.JWT_SECRET);
+  
+    if (!cookie) {
+      throw CustomError.createError({
+        name: 'Bad Request',
+        cause: new Error('Cookie missing'),
+        message: 'Cookie missing',
+        code: 400,
+      });
+    }
+    if (!decoded) {
+      throw CustomError.createError({
+        name: 'Bad Request',
+        cause: new Error('Invalid token'),
+        message: 'Invalid token',
+        code: 400,
+      });
+    }
     if (!updateProduct) {
       throw CustomError.createError({
         name: 'Bad Request',
@@ -194,7 +224,16 @@ class ProductController {
       });
     }
     try {
-      const productById = await this.#ProductService.findById({ _id: pid })
+      const user = await this.#UserService.findById({ _id: decoded.userId })
+      if (!user) {
+        throw CustomError.createError({
+          name: 'Bad Request',
+          cause: new Error('User missing'),
+          message: 'User missing',
+          code: 400,
+        });
+      }
+      const productById = await this.#ProductService.findById({ _id: id })
       if (!productById) {
         throw CustomError.createError({
           name: 'Not Found',
@@ -203,16 +242,20 @@ class ProductController {
           code: 104,
         });
       }
-      const result = await this.#ProductService.update({ _id: id }, updateProduct)
-      if (!result) {
-        throw CustomError.createError({
-          name: 'Error Updating Product',
-          cause: new Error(`Failed to update product with id ${id}`),
-          message: `Failed to update product with id ${id}`,
-          code: 209,
-        })
+      if (user.role === 'admin' || (user.role === 'premium' && productById.owner.toString() === user._id.toString())) {
+        const result = await this.#ProductService.update({ _id: id }, updateProduct)
+        if (!result) {
+          throw CustomError.createError({
+            name: 'Error Updating Product',
+            cause: new Error(`Failed to update product with id ${id}`),
+            message: `Failed to update product with id ${id}`,
+            code: 209,
+          })
+        }
+        res.okResponse(result)
+      } else {
+        return res.status(403).send({ error: 'You are not authorized to update this product' })
       }
-      res.okResponse(result)
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
@@ -226,19 +269,44 @@ class ProductController {
       }
     }
   }
+  
   async delete(req, res, next) {
     const { pid } = req.params
     try {
-      const result = await this.#ProductService.delete({ _id: pid })
-      if (!result) {
+      const cookie = util.cookieExtractor(req);
+      const decoded = jwtLib.verify(cookie, process.env.JWT_SECRET);
+      const user = await this.#UserService.findById({ _id: decoded.userId })
+      const productById = await this.#ProductService.findById({ _id: pid })
+  
+      if (!user) {
         throw CustomError.createError({
-          name: 'Error Deleting Product',
-          cause: new Error(`Failed to update product with id ${id}`),
-          message: `Failed to update product with id ${id}`,
-          code: 210,
-        })
+          name: 'Bad Request',
+          cause: new Error('User missing'),
+          message: 'User missing',
+          code: 400,
+        });
       }
-      res.okResponse({ message: 'Product deleted successfully' })
+      if (!productById) {
+        throw CustomError.createError({
+          name: 'Not Found',
+          cause: new Error('Product not found'),
+          message: 'Product not found',
+          code: 104,
+        });
+      }
+      if (user.role === 'admin' || (user.role === 'premium' && productById.owner.toString() === user._id.toString())) {
+        const result = await this.#ProductService.delete({ _id: pid })
+        if (!result) {
+          throw CustomError.createError({
+            name: 'Error Deleting Product',
+            cause: new Error(`Failed to delete product with id ${pid}`),
+            message: `Failed to delete product with id ${pid}`,
+            code: 210,
+          })
+        }
+        return res.okResponse({ message: 'Product deleted successfully' })
+      }
+      return res.status(403).send({ error: 'You are not authorized to delete this product' })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error);
