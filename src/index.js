@@ -22,10 +22,15 @@ import errorMiddleware from './errors/error.middleware.mjs'
 import customResponseMiddleware from './errors/custom-response.middleware.mjs'
 import { loggerMiddleware } from './log/logger.middleware.mjs'
 import Logger from './log/winston-logger.mjs'
+import spec from './docs/swagger-options.js'
+import swaggerUiExpress from 'swagger-ui-express'
+
 const { __dirname } = fileDirname(import.meta)
 const app = express()
 const httpServer = app.listen(config.PORT, () => Logger.info(`Escuchando en el puerto ${config.PORT}`))
 
+// Configurar Swagger
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec))
 // Middleware de errores
 app.use(customResponseMiddleware)
 // Middleware de logger

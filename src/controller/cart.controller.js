@@ -44,7 +44,6 @@ class CartController {
       }
     }
   }
-
   async findOne(req, res, next) {
     const { id } = req.params
     try {
@@ -73,7 +72,6 @@ class CartController {
       }
     }
   }
-
   async create(req, res, next) {
     try {
       const newCart = await this.#CartService.create([{}])
@@ -100,7 +98,6 @@ class CartController {
       }
     }
   }
-
   async addProduct(req, res, next) {
     const { cid } = req.params
     const { pid } = req.params
@@ -151,9 +148,7 @@ class CartController {
       }
     }
   }
-  
-
-  async deleteAll(req, res, next) {
+    async deleteAll(req, res, next) {
     const { cid } = req.params
     try {
       const result = await this.#CartService.findOneAndUpdate(
@@ -183,7 +178,6 @@ class CartController {
       }
     }
   }
-
   async deleteOne(req, res, next) {
     const { cid, pid } = req.params
     try {
@@ -216,7 +210,6 @@ class CartController {
       }
     }
   }
-
   async updateQuantity(req, res, next) {
     const { cid, pid } = req.params
     const { quantity } = req.body
@@ -250,7 +243,6 @@ class CartController {
       }
     }
   }
-
   async purchase(req, res, next) {
     const { cid } = req.params
     try {

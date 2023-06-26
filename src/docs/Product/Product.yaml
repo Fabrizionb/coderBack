@@ -1,0 +1,241 @@
+paths:
+  /api/product:
+    get:
+      summary: Gets all the products
+      tags:
+        - Products
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Number of items per page for pagination
+          required: false
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          description: Field to sort the products
+          required: false
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: Order to sort the products (asc or desc)
+          required: false
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Category of the product
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Status of the product (true or false)
+          required: false
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: Products successfully retrieved from the database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: The status of the response
+                    example: success
+                  payload:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  totalPages:
+                    type: integer
+                    description: Total number of pages
+                  prevPage:
+                    type: integer
+                    description: Previous page number
+                  nextPage:
+                    type: integer
+                    description: Next page number
+                  page:
+                    type: integer
+                    description: Current page number
+                  hasPrevPage:
+                    type: boolean
+                    description: Whether has previous page or not
+                  hasNextPage:
+                    type: boolean
+                    description: Whether has next page or not
+                  prevLink:
+                    type: string
+                    description: Link to the previous page
+                  nextLink:
+                    type: string
+        400:
+          description: Bad request. This status is returned when a required parameter is missing or incorrect.
+        404:
+          description: Not found. This status is returned when the products are not found.
+        500:
+          description: Internal server error. This is usually caused by a defective query or a database connection failure.
+    post:
+      summary: Creates a new product
+      tags:
+        - Products
+      requestBody:
+        description: Product data to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        201:
+          description: The product was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          description: Bad request. Typically caused by missing required parameters or invalid data
+        500:
+          description: Internal server error. Typically caused by a faulty query or a database connection failure  
+  /api/product/{pid}:
+    get:
+      summary: Retrieves the product by product ID
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The product was successfully retrieved from the database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        404:
+          description: The product was not found in the database
+        500:
+          description: Internal server error. Typically caused by a faulty query or a database connection failure
+    delete:
+      summary: Deletes a product by its product ID
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The product was successfully deleted
+        404:
+          description: The product was not found in the database
+        500:
+          description: Internal server error. Typically caused by a faulty query or a database connection failure       
+  /api/product/{id}:
+    put:
+      summary: Updates a product by its product ID
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The product was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          description: The update was not possible due to invalid input
+        404:
+          description: The product was not found in the database  
+        500:
+          description: Internal server error. Typically caused by a faulty query or a database connection failure
+           
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The product ID
+          example: 5f9d7a9b9c6b4a1b7c9b4a1b
+        title:
+          type: string
+          description: The product title
+          example: T-shirt 001
+        description:
+          type: string
+          description: The product description
+          example: This is a T-shirt 001
+        price:
+          type: number
+          description: The product price
+          example: 300
+        code:
+          type: string
+          description: The product code
+          example: abc001
+        category:
+          type: string
+          description: The product category
+          example: T-shirts
+        stock:
+          type: number
+          description: The product stock
+          example: 22
+        status:
+          type: boolean
+          description: The product status
+          example: false
+        thumbnails:
+          type: array
+          items:
+            type: string
+          description: Array of product thumbnail URLs
+          example:
+            - product-img1.jpg
+            - product-img2.jpg
+            - product-img3.jpg
+        owner:
+          type: string
+          description: The ID of the user owner
+          example: admin
+      example:
+        _id: 5f9d7a9b9c6b4a1b7c9b4a1b
+        title: T-shirt 001
+        description: This is a T-shirt 001
+        price: 300
+        code: abc001
+        category: T-shirts
+        stock: 22
+        status: false
+        owner: admin
+        thumbnails:
+          - product-img1.jpg
+          - product-img2.jpg
+          - product-img3.jpg
