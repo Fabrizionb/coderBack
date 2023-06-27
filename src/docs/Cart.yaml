@@ -7,6 +7,7 @@ paths:
       responses:
         200:
           description: Cart successfully retrieved from the database
+          $ref: '#/components/responses/OkResponse'
           content:
             application/json:
               schema:
@@ -22,10 +23,13 @@ paths:
                       $ref: '#/components/schemas/Cart'                
         400:
           description: Bad request. This status is returned when a required parameter is missing or incorrect.
+          $ref: '#/components/responses/UserErrorResponse'
         404:
           description: Not found. This status is returned when the cart are not found.
+          $ref: '#/components/responses/UserErrorResponse'
         500:
           description: Internal server error. This is usually caused by a defective query or a database connection failure.
+          $ref: '#/components/responses/ServerErrorResponse'
     post:
       summary: Create a new cart
       tags:
@@ -33,6 +37,7 @@ paths:
       responses:
         200:
           description: The cart was successfully created
+          $ref: '#/components/responses/OkResponse'
           content:
             application/json:
               schema:
@@ -40,7 +45,8 @@ paths:
                 items:
                  $ref: '#/components/schemas/Cart'
         500:
-          description: Internal server error. Typically caused by a faulty query or a database connection failure      
+          description: Internal server error. Typically caused by a faulty query or a database connection failure   
+          $ref: '#/components/responses/ServerErrorResponse'   
   /api/cart/{id}:
     get:
       summary: Retrieves the Cart by product ID
@@ -64,10 +70,13 @@ paths:
                       $ref: '#/components/schemas/Cart'                
         400:
           description: Bad request. This status is returned when a required parameter is missing or incorrect.
+          $ref: '#/components/responses/UserErrorResponse'
         404:
           description: Not found. This status is returned when the cart are not found.
+          $ref: '#/components/responses/UserErrorResponse'
         500:
           description: Internal server error. This is usually caused by a defective query or a database connection failure.
+          $ref: '#/components/responses/ServerErrorResponse'
   /api/cart//ticket/{tid}:
     get:
       summary: Retrieves the Ticket by product ID
@@ -76,6 +85,7 @@ paths:
       responses:
         200:
           description: Ticket successfully retrieved from the database
+          $ref: '#/components/responses/OkResponse'
           content:
             application/json:
               schema:
@@ -91,10 +101,13 @@ paths:
                       $ref: '#/components/schemas/Cart'                
         400:
           description: Bad request. This status is returned when a required parameter is missing or incorrect.
+          $ref: '#/components/responses/UserErrorResponse'
         404:
           description: Not found. This status is returned when the cart are not found.
+          $ref: '#/components/responses/UserErrorResponse'
         500:
           description: Internal server error. This is usually caused by a defective query or a database connection failure.
+          $ref: '#/components/responses/ServerErrorResponse'
   /api/carts/tickets/all:
     get:
       summary: Get all tickets
@@ -103,6 +116,7 @@ paths:
       responses:
         200:
          description: Successfully fetched all tickets
+         $ref: '#/components/responses/OkResponse'
          content:
           application/json:
             schema:
@@ -111,8 +125,10 @@ paths:
                 $ref: '#/components/schemas/Ticket'
         404:
          description: Not found. This status is returned when the tickets are not found.
+         $ref: '#/components/responses/UserErrorResponse'
         500:
          description: Internal server error. Typically caused by a faulty query or a database connection failure  
+         $ref: '#/components/responses/ServerErrorResponse'
   /api/cart/{cid}/purchase:
     post:
       summary: Purchase cart by ID
@@ -128,8 +144,10 @@ paths:
       responses:
         200:
           description: The purchase was successfully completed
+          $ref: '#/components/responses/OkResponse'
         500:
           description: Internal server error. Typically caused by a faulty query or a database connection failure
+          $ref: '#/components/responses/ServerErrorResponse'
   /api/cart/{cid}/product/{pid}:
     post:
       summary: Add product to cart
@@ -151,8 +169,10 @@ paths:
       responses:
         200:
           description: The product was successfully added to the cart
+          $ref: '#/components/responses/OkResponse'
         500:
          description: Internal server error. Typically caused by a faulty query or a database connection failure
+         $ref: '#/components/responses/ServerErrorResponse'
 
     put:
       summary: Modify quantity of product in cart
@@ -184,8 +204,10 @@ paths:
       responses:
         200:
           description: The quantity was successfully updated
+          $ref: '#/components/responses/OkResponse'
         500:
           description: Internal server error. Typically caused by a faulty query or a database connection failure
+          $ref: '#/components/responses/ServerErrorResponse'
   /carts/{cid}/product/{pid}:
     delete:
       summary: Deletes a product from the cart
@@ -207,34 +229,41 @@ paths:
       responses:
         200:
           description: Product successfully removed from the cart
+          $ref: '#/components/responses/OkResponse'
         400:
           description: Bad request. Typically caused by missing required parameters or invalid data
+          $ref: '#/components/responses/UserErrorResponse'
         404:
           description: Not Found. The requested cart or product could not be found
+          $ref: '#/components/responses/UserErrorResponse'
         500:
           description: Internal server error. Typically caused by a faulty query or a database connection failure 
-
-/carts/{cid}:
-    delete:
-      summary: Deletes all products in the cart
-      tags:
-        - Cart
-      parameters:
-        - name: cid
-          in: path
-          description: ID of the cart
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: Products successfully removed from the cart
-        400:
-          description: Bad request. Typically caused by missing required parameters or invalid data
-        404:
-          description: Not Found. The requested cart could not be found
-        500:
-          description: Internal server error. Typically caused by a faulty query or a database connection failure 
+          $ref: '#/components/responses/ServerErrorResponse'
+  /carts/{cid}:
+      delete:
+        summary: Deletes all products in the cart
+        tags:
+          - Cart
+        parameters:
+          - name: cid
+            in: path
+            description: ID of the cart
+            required: true
+            schema:
+              type: string
+        responses:
+          200:
+            description: Products successfully removed from the cart
+            $ref: '#/components/responses/OkResponse'
+          400:
+            description: Bad request. Typically caused by missing required parameters or invalid data
+            $ref: '#/components/responses/UserErrorResponse'
+          404:
+            description: Not Found. The requested cart could not be found
+            $ref: '#/components/responses/UserErrorResponse'
+          500:
+            description: Internal server error. Typically caused by a faulty query or a database connection failure 
+            $ref: '#/components/responses/ServerErrorResponse'
 
 /tickets/{tid}:
     delete:
@@ -251,12 +280,16 @@ paths:
       responses:
         200:
           description: Ticket successfully deleted
+          $ref: '#/components/responses/OkResponse'
         400:
           description: Bad request. Typically caused by missing required parameters or invalid data
+          $ref: '#/components/responses/UserErrorResponse'
         404:
           description: Not Found. The requested ticket could not be found
+          $ref: '#/components/responses/UserErrorResponse'
         500:
           description: Internal server error. Typically caused by a faulty query or a database connection failure 
+          $ref: '#/components/responses/ServerErrorResponse'
 /api/cart/{cid}/purchase:
 components:
   schemas:
@@ -352,3 +385,42 @@ components:
               $oid: "643041d86ed6ac26dc81adab"
             quantity: 1
         __v: 0
+  responses:
+    OkResponse:
+      description: Successful Operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              payload:
+                type: object
+                additionalProperties: true
+    UserErrorResponse:
+      description: User Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+              code:
+                type: integer
+    ServerErrorResponse:
+      description: Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+              code:
+                type: integer  

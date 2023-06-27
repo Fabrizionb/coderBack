@@ -44,6 +44,7 @@ paths:
       responses:
         200:
           description: Products successfully retrieved from the database
+          $ref: '#/components/responses/OkResponse'
           content:
             application/json:
               schema:
@@ -82,10 +83,13 @@ paths:
                     type: string
         400:
           description: Bad request. This status is returned when a required parameter is missing or incorrect.
+          $ref: '#/components/responses/UserErrorResponse'
         404:
           description: Not found. This status is returned when the products are not found.
+          $ref: '#/components/responses/UserErrorResponse'
         500:
           description: Internal server error. This is usually caused by a defective query or a database connection failure.
+          $ref: '#/components/responses/ServerErrorResponse'
     post:
       summary: Creates a new product
       tags:
@@ -106,8 +110,10 @@ paths:
                 $ref: '#/components/schemas/Product'
         400:
           description: Bad request. Typically caused by missing required parameters or invalid data
+          $ref: '#/components/responses/UserErrorResponse'
         500:
           description: Internal server error. Typically caused by a faulty query or a database connection failure  
+          $ref: '#/components/responses/ServerErrorResponse'
   /api/product/{pid}:
     get:
       summary: Retrieves the product by product ID
@@ -123,14 +129,17 @@ paths:
       responses:
         200:
           description: The product was successfully retrieved from the database
+          $ref: '#/components/responses/OkResponse'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
         404:
           description: The product was not found in the database
+          $ref: '#/components/responses/UserErrorResponse'
         500:
           description: Internal server error. Typically caused by a faulty query or a database connection failure
+          $ref: '#/components/responses/ServerErrorResponse'
     delete:
       summary: Deletes a product by its product ID
       tags:
@@ -145,10 +154,13 @@ paths:
       responses:
         200:
           description: The product was successfully deleted
+          $ref: '#/components/responses/OkResponse'
         404:
           description: The product was not found in the database
+          $ref: '#/components/responses/UserErrorResponse'
         500:
-          description: Internal server error. Typically caused by a faulty query or a database connection failure       
+          description: Internal server error. Typically caused by a faulty query or a database connection failure
+          $ref: '#/components/responses/ServerErrorResponse'       
   /api/product/{id}:
     put:
       summary: Updates a product by its product ID
@@ -164,16 +176,20 @@ paths:
       responses:
         200:
           description: The product was successfully updated
+          $ref: '#/components/responses/OkResponse'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
         400:
           description: The update was not possible due to invalid input
+          $ref: '#/components/responses/UserErrorResponse'
         404:
-          description: The product was not found in the database  
+          description: The product was not found in the database
+          $ref: '#/components/responses/UserErrorResponse'  
         500:
           description: Internal server error. Typically caused by a faulty query or a database connection failure
+          $ref: '#/components/responses/ServerErrorResponse'
            
 components:
   schemas:
@@ -239,3 +255,42 @@ components:
           - product-img1.jpg
           - product-img2.jpg
           - product-img3.jpg
+  responses:
+    OkResponse:
+      description: Successful Operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              payload:
+                type: object
+                additionalProperties: true
+    UserErrorResponse:
+      description: User Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+              code:
+                type: integer
+    ServerErrorResponse:
+      description: Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+              code:
+                type: integer                        
