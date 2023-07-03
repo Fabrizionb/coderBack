@@ -3,6 +3,8 @@
 import { Router } from "express";
 import passport from "passport";
 import controller from "../controller/user.controller.js";
+import { authorization, passportCall } from '../utils/auth.js'
+
 const route = Router();
 
 route.get("/failurelogin", controller.failureLogin.bind(controller));
@@ -34,10 +36,11 @@ route.get(
 
 route.get(
   "/current",
-  passport.authenticate("current", {
-    session: false,
-    failureRedirect: "/unauthorized",
-  }),
+  // passport.authenticate("current", {
+  //   session: false,
+  //   failureRedirect: "/unauthorized",
+  // }),
+  authorization(['admin', 'premium']),
   controller.current.bind(controller)
 );
 // route.post(

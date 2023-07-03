@@ -9,6 +9,7 @@ import nodemailer from 'nodemailer'
 import config from '../../data.js'
 import Logger from '../log/winston-logger.mjs'
 import jwt from 'jsonwebtoken'
+import jwtLib from "jsonwebtoken";
 import mongoose from 'mongoose'
 
 class UserController {
@@ -79,7 +80,10 @@ class UserController {
   }
 
   async current(req, res, next) {
-    const user = req.user
+    //const user = req.user
+    const cookie = utils.cookieExtractor(req);
+    const decoded = jwtLib.verify(cookie, config.JWT_SECRET);
+    const user = await this.#UserService.findById(decoded.userId);
     if (!user) {
       throw CustomError.createError({
         name: 'Not Found',

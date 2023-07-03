@@ -7,7 +7,7 @@
   "scripts": {
     "start:dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --reporter spec --exit",
     "purgecss": "purgecss --config ./purgecss.config.js --output ./src/public/css/output"
   },
   "keywords": [],
@@ -44,12 +44,15 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.1",
+    "chai": "^4.3.7",
     "eslint": "8.34.0",
     "eslint-config-standard": "17.0.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-n": "15.6.1",
     "eslint-plugin-promise": "6.1.1",
+    "mocha": "^10.2.0",
     "nodemon": "2.0.20",
-    "purgecss": "^5.0.0"
+    "purgecss": "^5.0.0",
+    "supertest": "^6.3.3"
   }
 }
