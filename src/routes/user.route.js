@@ -4,7 +4,7 @@ import { Router } from "express";
 import passport from "passport";
 import controller from "../controller/user.controller.js";
 import { authorization, passportCall } from '../utils/auth.js'
-import { documentUploader } from '../utils/documentUploader.js'
+import { multiUploader } from '../utils/multiUploader.js'
 const route = Router();
 
 route.get("/failurelogin", controller.failureLogin.bind(controller));
@@ -40,7 +40,7 @@ route.get(
   //   session: false,
   //   failureRedirect: "/unauthorized",
   // }),
-  authorization(['admin', 'premium']),
+  authorization(['admin',]),
   controller.current.bind(controller)
 );
 // route.post(
@@ -54,6 +54,6 @@ route.post(
     "/login",
   controller.login.bind(controller)
 );
-route.post("/premium/:uid", controller.grant.bind(controller));
-route.post("/:uid/documents", documentUploader, controller.postDocuments.bind(controller));
+route.post("/premium/:uid", authorization(['admin']), controller.grant.bind(controller));
+route.post("/:uid/documents", authorization(['admin', 'premium', 'user']),multiUploader, controller.postDocuments.bind(controller));
 export default route;
