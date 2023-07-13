@@ -4,7 +4,7 @@ import { Router } from "express";
 import passport from "passport";
 import controller from "../controller/user.controller.js";
 import { authorization, passportCall } from '../utils/auth.js'
-
+import { documentUploader } from '../utils/documentUploader.js'
 const route = Router();
 
 route.get("/failurelogin", controller.failureLogin.bind(controller));
@@ -55,4 +55,5 @@ route.post(
   controller.login.bind(controller)
 );
 route.post("/premium/:uid", controller.grant.bind(controller));
+route.post("/:uid/documents", documentUploader, controller.postDocuments.bind(controller));
 export default route;

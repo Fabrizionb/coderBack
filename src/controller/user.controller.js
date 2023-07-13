@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 import utils from '../utils/view.util.js'
 import { createHash, isValidPassword } from '../utils/crypto.js'
 // import UserService from '../Dao/mongo/user.service.mjs'
@@ -9,7 +9,6 @@ import nodemailer from 'nodemailer'
 import config from '../../data.js'
 import Logger from '../log/winston-logger.mjs'
 import jwt from 'jsonwebtoken'
-import jwtLib from "jsonwebtoken";
 import mongoose from 'mongoose'
 
 class UserController {
@@ -17,50 +16,56 @@ class UserController {
   #ProductService
   #UserService
   #TicketService
-  constructor() {
+  constructor () {
     this.initializeServices()
   }
 
-  async initializeServices() {
+  async initializeServices () {
     this.#CartService = await DaoFactory.getDao('cart')
     this.#UserService = await DaoFactory.getDao('user')
     this.#ProductService = await DaoFactory.getDao('product')
     this.#TicketService = await DaoFactory.getDao('ticket')
   }
 
-  async google(req, res) { }
+  async google (req, res) { }
 
-  async googleCallback(req, res) {
+  async googleCallback (req, res) {
     utils.setAuthCookie(req.user, res)
     res.redirect('/')
   }
 
-  async github(req, res, next) { }
+  async github (req, res, next) { }
 
-  async githubCallback(req, res) {
+  async githubCallback (req, res) {
     utils.setAuthCookie(req.user, res)
     res.redirect('/')
   }
 
-  async failureLogin(req, res) {
+  async failureLogin (req, res) {
     req.logger.error('failureLogin: User or password incorrect')
     res.send({ error: 'User or password incorrect' })
   }
 
-  async failureRegister(req, res, next) {
+  async failureRegister (req, res, next) {
     req.logger.error('failureRegister: Error on register')
     res.send({ error: 'Error on register' })
   }
 
-  async unauthorized(req, res, next) {
+  async unauthorized (req, res, next) {
     res.render('unauthorized', {
       title: 'Unauthorized',
       msg: 'You are Unauthorized, please log in.'
     })
   }
 
-  async logout(req, res, next) {
+  async logout (req, res, next) {
     try {
+      const cookie = utils.cookieExtractor(req)
+      const decoded = jwt.verify(cookie, config.JWT_SECRET)
+
+      // update last connection
+      await this.#UserService.update(decoded.userId, { last_connection: new Date() })
+
       req.session.destroy()
       res.clearCookie('connect.sid')
       res.clearCookie('AUTH') // clear cookie "AUTH"
@@ -79,11 +84,11 @@ class UserController {
     }
   }
 
-  async current(req, res, next) {
-    //const user = req.user
-    const cookie = utils.cookieExtractor(req);
-    const decoded = jwtLib.verify(cookie, config.JWT_SECRET);
-    const user = await this.#UserService.findById(decoded.userId);
+  async current (req, res, next) {
+    // const user = req.user
+    const cookie = utils.cookieExtractor(req)
+    const decoded = jwt.verify(cookie, config.JWT_SECRET)
+    const user = await this.#UserService.findById(decoded.userId)
     if (!user) {
       throw CustomError.createError({
         name: 'Not Found',
@@ -96,7 +101,7 @@ class UserController {
     res.json({ user: userDto })
   }
 
-  async register(req, res, next) {
+  async register (req, res, next) {
     try {
       const { email, password, name, lastname } = req.body
       const userExists = await this.#UserService.findOne({ email })
@@ -110,11 +115,11 @@ class UserController {
       }
 
       // new cart
-      const createdCart = await fetch("http://localhost:8080/api/cart", {
-        method: "POST",
-      });
-      const cartData = await createdCart.json();
-      const cartId = cartData.payload.carts[0]._id;
+      const createdCart = await fetch('http://localhost:8080/api/cart', {
+        method: 'POST'
+      })
+      const cartData = await createdCart.json()
+      const cartId = cartData.payload.carts[0]._id
 
       const hashedPassword = createHash(password)
       const newUser = await this.#UserService.create({
@@ -133,7 +138,6 @@ class UserController {
         })
       }
       res.okResponse({ message: 'User Registered', user: newUser })
-
     } catch (error) {
       if (error instanceof CustomError) {
         next(error)
@@ -148,7 +152,7 @@ class UserController {
     }
   }
 
-  async login(req, res, next) {
+  async login (req, res, next) {
     try {
       const { email, password } = req.body
       const user = await this.#UserService.findOne({ email })
@@ -170,6 +174,9 @@ class UserController {
         cartId: user.cartId.toString(),
         role: user.role
       }
+
+      // update last connection
+      await this.#UserService.update(user._id, { last_connection: new Date() })
 
       const token = jwt.sign(userObj, config.JWT_SECRET, {
         expiresIn: '24h'
@@ -195,7 +202,7 @@ class UserController {
     }
   }
 
-  async restorePassword(email, res) {
+  async restorePassword (email, res) {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 587,
@@ -226,22 +233,23 @@ class UserController {
           <hr style="border: 0; border-top: 1px solid #f6f6f6;">
           <p style="font-size: 14px; color: #888; text-align: center;">This is an automated email, please do not reply.</p>
       </div>
-  `})
-      res.okResponse({ message: 'Reset link sent successfully' });
+  `
+      })
+      res.okResponse({ message: 'Reset link sent successfully' })
     } catch (error) {
       Logger.error(error)
-      res.serverErrorResponse({ message: error.message, code: 500 });
+      res.serverErrorResponse({ message: error.message, code: 500 })
     }
   }
 
-  async resetPassword(req, res, next) {
+  async resetPassword (req, res, next) {
     try {
       const { token, newPassword } = req.body
-      Logger.debug("token, newPassword ", token, newPassword)
+      Logger.debug('token, newPassword ', token, newPassword)
       let decodedToken
       try {
         decodedToken = jwt.verify(token, config.JWT_SECRET)
-        Logger.debug("decodedToken: ", decodedToken)
+        Logger.debug('decodedToken: ', decodedToken)
       } catch (err) {
         throw CustomError.createError({
           name: 'Bad Request',
@@ -250,9 +258,9 @@ class UserController {
           code: 400
         })
       }
-      Logger.debug("decodedToken.email: ", decodedToken.email)
+      Logger.debug('decodedToken.email: ', decodedToken.email)
       const user = await this.#UserService.findOne({ email: decodedToken.email })
-      Logger.debug("User: ", user)
+      Logger.debug('User: ', user)
       if (!user) {
         throw CustomError.createError({
           name: 'Not Found',
@@ -261,7 +269,7 @@ class UserController {
           code: 404
         })
       }
-      Logger.debug("isValidPassword(newPassword, user.password): ", isValidPassword(newPassword, user.password))
+      Logger.debug('isValidPassword(newPassword, user.password): ', isValidPassword(newPassword, user.password))
       if (isValidPassword(newPassword, user.password)) {
         throw CustomError.createError({
           name: 'Bad Request',
@@ -271,7 +279,7 @@ class UserController {
         })
       }
       const hashedPassword = createHash(newPassword)
-      Logger.debug("new hashedPassword: ", hashedPassword)
+      Logger.debug('new hashedPassword: ', hashedPassword)
       await this.#UserService.update(user._id, { password: hashedPassword })
 
       res.okResponse({ message: 'Password updated successfully' })
@@ -284,23 +292,36 @@ class UserController {
     }
   }
 
-  async grant(req, res, next) {
+  async grant (req, res, next) {
     const { uid } = req.params
     if (!mongoose.Types.ObjectId.isValid(uid)) {
-      return res.userErrorResponse({ message: 'Invalid ObjectId', code: 400 });
+      return res.userErrorResponse({ message: 'Invalid ObjectId', code: 400 })
     }
+
     try {
       const user = await this.#UserService.findById({ _id: uid })
       if (!user) {
         req.logger.info('User not found')
         return res.userErrorResponse({ message: 'User not found', code: 404 })
       }
+
       if (user.role === 'user') {
+        // el usuario tiene los documentos requeridos?
+        const requiredDocs = ['doc-address-', 'doc-id-', 'doc-account-']
+        const userDocs = user.documents.map(doc => doc.name)
+        const hasRequiredDocs = requiredDocs.every(doc => userDocs.some(userDoc => userDoc.startsWith(doc)))
+
+        if (!hasRequiredDocs) {
+          return res.userErrorResponse({ message: 'User has not finished processing their documentation', code: 400 })
+        }
+
         await this.#UserService.update(uid, { role: 'premium' })
       }
+
       if (user.role === 'premium') {
         await this.#UserService.update(uid, { role: 'user' })
       }
+
       res.okResponse({ message: 'User role updated successfully' })
     } catch (error) {
       if (error instanceof CustomError) {
@@ -310,6 +331,40 @@ class UserController {
           name: 'Server Error',
           cause: error,
           message: 'Error on role update',
+          code: 500
+        }))
+      }
+    }
+  }
+
+  async postDocuments (req, res, next) {
+    const { uid } = req.params
+    try {
+      const user = await this.#UserService.findById({ _id: uid })
+      if (!user) {
+        req.logger.info('User not found')
+        return res.userErrorResponse({ message: 'User not found', code: 404 })
+      }
+
+      // Pushear los documentos al array de documentos del usuario
+      req.files.forEach(file => {
+        user.documents.push({
+          name: file.originalname,
+          reference: `/public/${file.filename}`
+        })
+      })
+      await user.save()
+
+      // repuesta
+      res.okResponse({ message: 'Documents uploaded successfully' })
+    } catch (error) {
+      if (error instanceof CustomError) {
+        next(error)
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Error on post documents',
           code: 500
         }))
       }

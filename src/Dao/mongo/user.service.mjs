@@ -20,7 +20,7 @@ class UserService {
     return this.#model.create(data);
   }
   async update(id, data) {
-    return this.#model.findOneAndUpdate({_id: id}, data);
+    return this.#model.findOneAndUpdate({_id: id}, data, { new: true });
   }
   async delete(id) {
     return this.#model.deleteOne({ _id: id });
