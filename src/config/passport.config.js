@@ -184,20 +184,26 @@ export function configurePassport() {
         callbackURL: config.GOOGLE_CALLBACK_URL,
       },
       async function (accessToken, refreshToken, profile, done) {
+        console.log("profile", profile);
         try {
           let email = profile._json.email;
+          const user = await userModel.findOne({ email });
+          
           if (!email) {
             email = `${profile._json.id}@google.com`;
           }
-          const user = await userModel.findOne({ email });
-          if (!user) {
+          console.log("email", email);
+          console.log("user", user);
+          if (user ===  null) {
             // new cart
             const createdCart = await fetch("http://localhost:8080/api/cart", {
               method: "POST",
             });
             const cartData = await createdCart.json();
+            console.log("cartData", cartData);
             const cartId = cartData.carts[0]._id;
-            const password = profile._json.id;
+            console.log("cartId", cartId);
+            //const password = profile._json.id;
             const newUser = await userModel.create({
               email,
               name: profile._json.name,
