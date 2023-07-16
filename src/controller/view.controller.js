@@ -7,6 +7,8 @@ import DaoFactory from "../Dao/DaoFactory.mjs";
 import moment from "moment";
 import CustomError from "../errors/custom.error.mjs";
 import Logger from '../log/winston-logger.mjs'
+import UserDto from '../Dao/dto/user.dto.js'
+
 class ViewController {
   #CartService;
   #ProductService;
@@ -98,6 +100,31 @@ class ViewController {
         }))
       }
     }
+  }
+
+  async userDashboard(req, res, next) {
+    const { query } = req;
+    const cookie = util.cookieExtractor(req);
+    if (!cookie) {
+      res.redirect("/login");
+      return;
+    }
+    let decoded;
+    try {
+      decoded = jwtLib.verify(cookie, config.JWT_SECRET);
+    } catch (err) {
+      console.error(err);
+      res.redirect("/login");
+      return;
+    }
+    if (decoded.role !== "admin") {
+      res.render('forbidden')
+    }
+  const users = await this.#UserService.findAll();
+    const usersDto = users.map(user => new UserDto(user)) // Crea un nuevo UserDto para cada usuario
+
+    
+    res.render("userDashboard", {users: usersDto});
   }
 
   async viewProduct(req, res, next) {

@@ -434,6 +434,32 @@ class UserController {
     }
   }
 
+  async deleteById (req, res, next) {
+    const { uid } = req.params
+    try {
+      const user = await this.#UserService.findById({ _id: uid })
+      await this.#UserService.delete(user._id)
+      if (!user) {
+        req.logger.info('User not found')
+        return res.userErrorResponse({ message: 'User not found', code: 404 })
+      }
+
+      await this.#UserService.delete(uid)
+      res.okResponse({ message: 'User deleted successfully' })
+    } catch (error) {
+      if (error instanceof CustomError) {
+        next(error)
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Error on delete user',
+          code: 500
+        }))
+      }
+    }
+  }
+
   async sendDeleteMail (email, daysInactive) {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',

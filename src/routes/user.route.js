@@ -57,6 +57,7 @@ route.post(
 route.post("/premium/:uid", authorization(['admin']), controller.grant.bind(controller));
 route.post("/:uid/documents", authorization(['admin', 'premium', 'user']),multiUploader, controller.postDocuments.bind(controller));
 
-route.get("/",  controller.getAll.bind(controller));
-route.delete("/", controller.deleteByConnection.bind(controller));
+route.get("/",  authorization(['admin']), controller.getAll.bind(controller));
+route.delete("/", authorization(['admin']), controller.deleteByConnection.bind(controller));
+route.delete("/:uid", authorization(['admin']), controller.deleteById.bind(controller));
 export default route;
