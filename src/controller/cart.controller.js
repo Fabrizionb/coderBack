@@ -46,6 +46,7 @@ class CartController {
   }
   async findOne(req, res, next) {
     const { id } = req.params
+    Logger.debug("id desde el findone",id)
     try {
       const cart = await this.#CartService.getById({ _id: id })
       if (!cart) {
@@ -106,9 +107,9 @@ class CartController {
       const product = cart.products.find(
         (product) => product.product._id.toString() === pid
       )
-  
-      // Buscar el usuario que tiene el cartId == cid
-      const user = await this.#UserService.findOne({ cartId: cid })
+        // Buscar el usuario que tiene el cartId == cid
+      const cartId = cid.toString()
+      const user = await this.#UserService.findByCartId(cartId)   
       if (!user) {
         throw CustomError.createError({
           name: 'Not Found',
@@ -116,17 +117,14 @@ class CartController {
           message: `User with id not found`,
           code: 104,
         })}
-
-      // Buscar el producto que se quiere agregar al carrito
+      //Buscar el producto que se quiere agregar al carrito
       const productToAdd = await this.#ProductService.findById({ _id: pid })
-  
-      // Si el usuario es premium y es el owner del producto, no puede agregarlo
+        //Si el usuario es premium y es el owner del producto, no puede agregarlo
       if (user.role === 'premium' && productToAdd.owner.toString() === user._id.toString()) {
         Logger.debug('Premium user cannot add their own product to the cart')
         return res.userErrorResponse({ message: 'Premium user cannot add their own product to the cart. Forbidden', code: 403 })
       }
-  
-      if (!product) {
+        if (!product) {
         const newProduct = { quantity: 1, product: pid }
         cart.products.push(newProduct)
         res.okResponse(newProduct)
@@ -269,7 +267,6 @@ class CartController {
       // Contenedores.
       const purchasableProducts = []
       const nonPurchasableProducts = []
-
       // Verificar el stock de cada producto.
       for (const item of cart.products) {
         const idString = item.product._id.toString()
@@ -303,6 +300,7 @@ class CartController {
         purchased_products: purchasableProducts
       }
       const newTicket = await this.#TicketService.create(ticketData)
+
       if (!newTicket) {
         throw CustomError.createError({
           name: 'Error on ticket creation',

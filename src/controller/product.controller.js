@@ -304,6 +304,11 @@ class ProductController {
             code: 210,
           })
         }
+        
+      // Si el dueño del producto no es "admin" y tiene un correo electrónico envio correo
+      if (productById.owner !== "admin" && user.email && user.email.includes('@')) {
+        await this.sendDeleteMail(user.email);
+      }
         return res.okResponse({ message: 'Product deleted successfully' })
       }
       return res.status(403).send({ error: 'You are not authorized to delete this product' })

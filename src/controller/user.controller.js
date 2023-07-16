@@ -10,6 +10,7 @@ import config from '../../data.js'
 import Logger from '../log/winston-logger.mjs'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
+import moment from 'moment'
 
 class UserController {
   #CartService
@@ -369,6 +370,98 @@ class UserController {
         }))
       }
     }
+  }
+
+  async getAll (req, res, next) {
+    try {
+      const users = await this.#UserService.findAll()
+      const usersDto = users.map(user => new UserDto(user)) // Crea un nuevo UserDto para cada usuario
+      res.okResponse({ data: usersDto }) // Enviar los usuarios transformados
+    } catch (error) {
+      if (error instanceof CustomError) {
+        next(error)
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Error on get all users',
+          code: 500
+        }))
+      }
+    }
+  }
+
+  async deleteByConnection (req, res, next) {
+    try {
+      const daysInactive = 5
+      const cutoffDate = moment().subtract(daysInactive, 'days') // fecha de corte
+
+      // Encuentra todos los usuarios y filtro inactivos en daysInactive
+      const users = (await this.#UserService.findAll()).filter(user => {
+        return moment(user.last_connection).isBefore(cutoffDate)
+      })
+
+      // Lista de usuarios eliminados
+      const deletedUsers = []
+
+      // Elimina a los usuarios inactivos
+      for (const user of users) {
+        // Enviar correo de notificación de eliminación
+        await this.sendDeleteMail(user.email, daysInactive)
+
+        // Eliminar usuario
+        await this.#UserService.delete(user._id)
+        deletedUsers.push({
+          email: user.email,
+          name: user.name,
+          last_connection: user.last_connection
+        })
+      }
+
+      return res.okResponse({ message: `${users.length} user(s) who have been inactive for the last ${daysInactive} days were deleted.`, data: deletedUsers }
+      )
+    } catch (error) {
+      if (error instanceof CustomError) {
+        next(error)
+      } else {
+        next(CustomError.createError({
+          name: 'Server Error',
+          cause: error,
+          message: 'Error on deleting users',
+          code: 500
+        }))
+      }
+    }
+  }
+
+  async sendDeleteMail (email, daysInactive) {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      auth: {
+        user: config.GOOGLE_MAILER_USER,
+        pass: config.GOOGLE_MAILER
+      }
+    })
+
+    transporter.sendMail({
+      from: "'CoderBack' <proyecto@coderhouse.com>",
+      to: email,
+      subject: 'Account deleted due to inactivity',
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto;">
+            <h1 style="text-align: center; color: #4F4F4F;">Account Deletion</h1>
+            <p style="font-size: 16px; line-height: 1.5; color: #333;">
+                We're writing to let you know that your account has been deleted due to inactivity for the past ${daysInactive} days.
+            </p>
+            <p style="font-size: 16px; line-height: 1.5; color: #333;">
+                Please feel free to re-register if you wish to use our services again.
+            </p>
+            <hr style="border: 0; border-top: 1px solid #f6f6f6;">
+            <p style="font-size: 14px; color: #888; text-align: center;">This is an automated email, please do not reply.</p>
+        </div>
+      `
+    })
   }
 }
 

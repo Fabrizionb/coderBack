@@ -10,6 +10,9 @@ class UserService {
     const data = await fs.promises.readFile(this.filePath, 'utf-8')
     return JSON.parse(data)
   }
+  async findAll() {
+    return this.#model.find();
+  }
   async findOne({ email }) {
     return this.#model.findOne({ email });
   }

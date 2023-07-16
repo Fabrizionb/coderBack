@@ -40,7 +40,7 @@ route.get(
   //   session: false,
   //   failureRedirect: "/unauthorized",
   // }),
-  authorization(['admin',]),
+  authorization(['admin', 'premium', 'user']),
   controller.current.bind(controller)
 );
 // route.post(
@@ -56,4 +56,7 @@ route.post(
 );
 route.post("/premium/:uid", authorization(['admin']), controller.grant.bind(controller));
 route.post("/:uid/documents", authorization(['admin', 'premium', 'user']),multiUploader, controller.postDocuments.bind(controller));
+
+route.get("/",  controller.getAll.bind(controller));
+route.delete("/", controller.deleteByConnection.bind(controller));
 export default route;

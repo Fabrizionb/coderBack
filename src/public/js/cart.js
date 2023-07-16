@@ -1,4 +1,3 @@
-import Logger from '../../log/winston-logger.mjs'
 /* eslint-disable*/
 async function emptyCart (cid) {
   try {
@@ -80,11 +79,14 @@ async function proceedToCheckout(cartId) {
     const response = await fetch(`/api/cart/${cartId}/purchase`, {
       method: 'POST'
     });
+    console.log("Response desde el cart.js",response);
     if (response.ok) {
-      Logger.info("compra exitosa")
+      //Logger.info("compra exitosa")
+      console.log("compra exitosa", response);
       window.location.href = '/purchase';
     } else {
-      Logger.Error("Error", response)
+      //Logger.Error("Error", response)
+      console.error('Failed to purchase',response);
       throw new Error('Failed to purchase');
     }
   } catch (error) {
