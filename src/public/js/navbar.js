@@ -2,9 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const isLoggedIn = async () => {
     try {
       const response = await fetch('/api/user/current')
-      console.log('del navbar', response)
       const userData = await response.json()
-      console.log('del navbar', userData)
       return userData.user !== undefined
     } catch (error) {
       return false
