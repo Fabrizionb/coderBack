@@ -102,6 +102,40 @@ class ViewController {
     }
   }
 
+  async viewUploadDocument(req, res, next) {
+    const { uid } = req.params;
+
+    // const cookie = util.cookieExtractor(req);
+    // if (!cookie) {
+    //   res.redirect("/login");
+    //   return;
+    // }
+    // let decoded;
+    // try {
+    //   decoded = jwtLib.verify(cookie, config.JWT_SECRET);
+    // } catch (err) {
+    //   console.error(err);
+    //   res.redirect("/login");
+    //   return;
+    // }
+    // if (decoded.userId !== uid) {
+    //   res.redirect("/login");
+    //   return;
+    // }
+    // const user = await this.#UserService.findById(uid);
+    // if (!user) {
+    //   throw CustomError.createError({
+    //     name: 'Not Found',
+    //     cause: new Error('User not found'),
+    //     message: 'User not found',
+    //     code: 104,
+    //   })
+    // }
+    //const userObj = user.toObject(); // Convertimos el objeto user a un objeto plano
+    res.status(200).render("uploadDocuments",  {id: uid}  );
+   
+  }
+
   async userDashboard(req, res, next) {
     const { query } = req;
     const cookie = util.cookieExtractor(req);
@@ -120,12 +154,13 @@ class ViewController {
     if (decoded.role !== "admin") {
       res.render('forbidden')
     }
-  const users = await this.#UserService.findAll();
-    const usersDto = users.map(user => new UserDto(user)) // Crea un nuevo UserDto para cada usuario
-
-    
-    res.render("userDashboard", {users: usersDto});
-  }
+    const users = await this.#UserService.findAll();
+    let usersDto = users.map(user => new UserDto(user)) // Crea un nuevo UserDto para cada usuario
+    // Filtra la lista para mostrar solo usuarios con rol 'premium' o 'user'
+    usersDto = usersDto.filter(user => user.role === 'premium' || user.role === 'user');
+   res.render("userDashboard", {users: usersDto});
+}
+  
 
   async viewProduct(req, res, next) {
     const { pid } = req.params;

@@ -146,24 +146,6 @@ class ProductController {
         price: 'number',
       };
 
-      // comprobar que esten todas y sean del tipo correcto
-      // const missingOrInvalidProperties = [];
-      // for (let prop in requiredProperties) {
-      //   if (!product.hasOwnProperty(prop) || typeof product[prop] !== requiredProperties[prop]) {
-      //     missingOrInvalidProperties.push(`${prop} (${requiredProperties[prop]})`);
-      //   }
-      // }
-
-      // si faltan o son invalidas, tirar error
-      // if (missingOrInvalidProperties.length > 0) {
-      //   throw CustomError.createError({
-      //     name: 'Bad Request',
-      //     cause: new Error('Required fields missing or invalid'),
-      //     message: `The following properties are required and must be of the correct type: ${missingOrInvalidProperties.join(', ')}`,
-      //     code: 400,
-      //   });
-      // }
-
       const thumbnails = req.files ? req.files.map(file => file.filename) : []
       //const thumbnails = []
       const newProduct = { ...product, status: true, thumbnails, owner: decoded.userId || 'admin' }

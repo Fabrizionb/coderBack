@@ -12,19 +12,24 @@
       <div class="col-lg-12 mb-3">
         <button class="btn btn-danger mb-3" onclick="deleteInactiveUsers()">Delete Inactive Users</button>
         <div class="row users">
-{{#each users}}
-<div class="col-lg-4 col-md-6 card p-3 w-25 mt-5 mb-5 mx-1 justify-content-center align-items-center">
-  <div class="user d-flex flex-column justify-content-center align-items-center" data-user-id="{{this._id}}">
-    <h3>Name: <strong>{{this.name}}</strong></h3>
-    <p>Email: <strong>{{this.email}}</strong></p>
-    <p>Last connection: <strong>{{this.lastConnection}}</strong></p>
-    <button class="btn btn-danger {{this._id}}" onclick="deleteUser('{{this._id}}')">Delete User</button>
-  </div>
-</div>
-{{/each}}
+          {{#each users}}
+          <div class="col-lg-4 col-md-6 card p-3 w-25 mt-5 mb-5 mx-1 justify-content-center align-items-center">
+            <div class="user d-flex flex-column justify-content-center align-items-center" data-user-id="{{this._id}}">
+              <h5> <strong>{{this.name}} {{this.lastname}}</strong> </h5>
+              <p>Email: <strong>{{this.email}}</strong></p>
+              <p>Role: <strong>{{this.role}}</strong></p>
+              <p>Last connection: <strong>{{this.lastConnection}}</strong></p>
+              <div class="d-flex">
+                <button class="btn btn-danger {{this._id}}" onclick="deleteUser('{{this._id}}')">Delete User</button>
+                <button class="btn btn-info {{this._id}}" onclick="changeUserRole('{{this._id}}')">Change Role</button>
+              </div>
+            </div>
+          </div>
+          {{/each}}
         </div>
       </div>
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/userDashboard.js"></script>

@@ -11,7 +11,7 @@ import Logger from '../log/winston-logger.mjs'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 import moment from 'moment'
-
+/* eslint-disable */
 class UserController {
   #CartService
   #ProductService
@@ -308,9 +308,11 @@ class UserController {
 
       if (user.role === 'user') {
         // el usuario tiene los documentos requeridos?
-        const requiredDocs = ['doc-address-', 'doc-id-', 'doc-account-']
-        const userDocs = user.documents.map(doc => doc.name)
-        const hasRequiredDocs = requiredDocs.every(doc => userDocs.some(userDoc => userDoc.startsWith(doc)))
+        const requiredDocs = ['doc-address', 'doc-id', 'doc-account']
+        const userDocs = user.documents.map(doc => doc.name.split('.')[0])
+        console.log('userDocs: ', userDocs)
+        const hasRequiredDocs = requiredDocs.every(doc => userDocs.includes(doc))
+        console.log('hasRequiredDocs: ', hasRequiredDocs)
 
         if (!hasRequiredDocs) {
           return res.userErrorResponse({ message: 'User has not finished processing their documentation', code: 400 })
@@ -323,7 +325,8 @@ class UserController {
         await this.#UserService.update(uid, { role: 'user' })
       }
 
-      res.okResponse({ message: 'User role updated successfully' })
+      const updatedUser = await this.#UserService.findById({ _id: uid })
+      res.okResponse({ message: `User role updated to ${updatedUser.role} successfully` })
     } catch (error) {
       if (error instanceof CustomError) {
         next(error)
@@ -338,6 +341,7 @@ class UserController {
     }
   }
 
+
   async postDocuments (req, res, next) {
     const { uid } = req.params
     try {
@@ -347,16 +351,20 @@ class UserController {
         return res.userErrorResponse({ message: 'User not found', code: 404 })
       }
 
+      // Prepare the documents to be pushed
+      const newDocuments = req.files.map(file => ({
+        name: file.originalname,
+        reference: `/public/${file.filename}`
+      }))
+
       // Pushear los documentos al array de documentos del usuario
-      req.files.forEach(file => {
-        user.documents.push({
-          name: file.originalname,
-          reference: `/public/${file.filename}`
-        })
-      })
+      user.documents.push(...newDocuments)
       await user.save()
 
-      // repuesta
+      // Update user with the new documents
+      await this.#UserService.update({ _id: uid }, { documents: user.documents })
+
+      // response
       res.okResponse({ message: 'Documents uploaded successfully' })
     } catch (error) {
       if (error instanceof CustomError) {
@@ -393,7 +401,7 @@ class UserController {
 
   async deleteByConnection (req, res, next) {
     try {
-      const daysInactive = 5
+      const daysInactive = 10
       const cutoffDate = moment().subtract(daysInactive, 'days') // fecha de corte
 
       // Encuentra todos los usuarios y filtro inactivos en daysInactive
@@ -432,7 +440,7 @@ class UserController {
         }))
       }
     }
-  }
+}
 
   async deleteById (req, res, next) {
     const { uid } = req.params

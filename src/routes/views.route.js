@@ -15,7 +15,7 @@ route.get("/forgot-password",controller.viewForgot.bind(controller))
 route.get("/reset-password/:token",controller.viewReset.bind(controller))
 // Ruta para los productos
 route.get("/", authorization(['user', 'admin', 'premium']), passportCall("current"), controller.viewStore.bind(controller))
-
+// Ruta para ver el dashboard de admin
 route.get("/userDasboard", authorization(['admin']), controller.userDashboard.bind(controller))
 // ruta para ver cada uno de los productos
 route.get("/view/product/:pid", authorization(['user', 'admin', 'premium']), passportCall("current"), controller.viewProduct.bind(controller))
@@ -31,5 +31,7 @@ route.get("/profile", authorization(['user', 'admin', 'premium']), passportCall(
 route.get("/purchase", authorization(['user']), passportCall("current"),controller.viewPurchase.bind(controller))
 // Ruta para ver una compra
 route.get("/view/purchase/:tid", authorization(['user']), passportCall("current"),controller.viewOrder.bind(controller))
+// Ruta para subir documentos
+route.get("/view/uploadDocument/:uid",controller.viewUploadDocument.bind(controller))
 
 export default route;
