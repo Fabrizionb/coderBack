@@ -52,22 +52,37 @@ async function addProductToCart (cartId, productId) {
     method: 'POST'
   })
 
-  Swal.fire({
-    title: 'Product added to cart',
-    icon: 'success',
-    showCancelButton: true,
-    confirmButtonText: 'Go to cart',
-    confirmButtonClass: 'btn-go-to-cart',
-    cancelButtonText: 'Continue shopping',
-    position: 'top-right',
-    timer: 5000,
-    timerProgressBar: true,
-    toast: true
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.href = `/view/cart/${cartId}` // redirigir al usuario al carrito
+  if (response.ok) {
+    Swal.fire({
+      title: 'Product added to cart',
+      icon: 'success',
+      showCancelButton: true,
+      confirmButtonText: 'Go to cart',
+      confirmButtonClass: 'btn-go-to-cart',
+      cancelButtonText: 'Continue shopping',
+      position: 'top-right',
+      timer: 5000,
+      timerProgressBar: true,
+      toast: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `/view/cart/${cartId}` // redirigir al usuario al carrito
+      }
+    })
+  } else {
+    let message = 'Error adding product to cart'
+    if (response.status === 400) {
+      message = 'Premium user cannot add their own product to the cart'
     }
-  })
+    Swal.fire({
+      title: message,
+      icon: 'error',
+      position: 'top-right',
+      timer: 5000,
+      timerProgressBar: true,
+      toast: true
+    })
+  }
 }
 const cartBtns = document.querySelectorAll('.cart-btn')
 cartBtns.forEach(function (btn) {

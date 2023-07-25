@@ -3,7 +3,6 @@ import * as path from 'path'
 import fileDirName from './fileDirName.js'
 
 const { __dirname } = fileDirName(import.meta)
-console.log('__dirname', __dirname)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let folder = 'public' // default folder

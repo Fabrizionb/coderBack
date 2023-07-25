@@ -122,13 +122,15 @@ async function sendModify (event) {
 }
 
 async function sendDelete (event) {
+  console.log('hizo click en delete')
   event.preventDefault()
   const id = document.getElementById('form-id-delete').value
+  console.log('id', id)
 
-  const response = await fetch(`/api/products/${id}`, {
+  const response = await fetch(`/api/product/${id}`, {
     method: 'DELETE'
   })
-
+  console.log('response', response)
   if (response.ok) {
     const p = document.getElementById('delete-id')
     p.innerText = `producto eliminado ${id}`

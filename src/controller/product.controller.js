@@ -145,10 +145,10 @@ class ProductController {
         title: 'string',
         price: 'number',
       };
-
+      const stringId = decoded.userId.toString()
       const thumbnails = req.files ? req.files.map(file => file.filename) : []
       //const thumbnails = []
-      const newProduct = { ...product, status: true, thumbnails, owner: decoded.userId || 'admin' }
+      const newProduct = { ...product, status: true, thumbnails, owner: stringId || 'admin' }
       Logger.debug(newProduct)
       const createdProduct = await this.#ProductService.create(newProduct)
       Logger.debug(createdProduct)
@@ -161,7 +161,7 @@ class ProductController {
         });
       }
       res.okResponse({ id: createdProduct._id })
-     } catch (error) {
+    } catch (error) {
       if (error instanceof CustomError) {
         next(error);
       } else {
@@ -180,7 +180,7 @@ class ProductController {
     const updateProduct = req.body
     const cookie = util.cookieExtractor(req);
     const decoded = jwtLib.verify(cookie, process.env.JWT_SECRET);
-  
+
     if (!cookie) {
       throw CustomError.createError({
         name: 'Bad Request',
@@ -251,15 +251,17 @@ class ProductController {
       }
     }
   }
-  
+
   async delete(req, res, next) {
     const { pid } = req.params
+
+
     try {
       const cookie = util.cookieExtractor(req);
       const decoded = jwtLib.verify(cookie, process.env.JWT_SECRET);
-      const user = await this.#UserService.findById({ _id: decoded.userId })
+      const userId = decoded.userId
+      const user = await this.#UserService.findById(userId)
       const productById = await this.#ProductService.findById({ _id: pid })
-  
       if (!user) {
         throw CustomError.createError({
           name: 'Bad Request',
@@ -286,11 +288,11 @@ class ProductController {
             code: 210,
           })
         }
-        
-      // Si el dueño del producto no es "admin" y tiene un correo electrónico envio correo
-      if (productById.owner !== "admin" && user.email && user.email.includes('@')) {
-        await this.sendDeleteMail(user.email);
-      }
+
+        // Si el dueño del producto no es "admin" y tiene un correo electrónico envio correo
+        if (productById.owner !== "admin" && user.email && user.email.includes('@')) {
+          await this.sendDeleteMail(user.email);
+        }
         return res.okResponse({ message: 'Product deleted successfully' })
       }
       return res.status(403).send({ error: 'You are not authorized to delete this product' })

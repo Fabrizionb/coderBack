@@ -20,9 +20,9 @@ route.post('/', cartController.create.bind(cartController))
 // Purchase
 route.post('/:cid/purchase', authorization(['user', 'admin']), passportCall('current'), cartController.purchase.bind(cartController))
 // Add product in cart
-route.post('/:cid/product/:pid', authorization(['user']), cartController.addProduct.bind(cartController))
+route.post('/:cid/product/:pid', authorization(['user', 'premium']), cartController.addProduct.bind(cartController))
 // Modify quantity
-route.put('/:cid/product/:pid', authorization(['user']), cartController.updateQuantity.bind(cartController))
+route.put('/:cid/product/:pid', authorization(['user', 'premium']), cartController.updateQuantity.bind(cartController))
 
 
 // Delete one product form cart

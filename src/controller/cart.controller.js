@@ -1,5 +1,6 @@
 import DaoFactory from '../Dao/DaoFactory.mjs'
 import CustomError from '../errors/custom.error.mjs'
+import Logger from '../log/winston-logger.mjs'
 /* eslint-disable */
 
 class CartController {
@@ -110,6 +111,7 @@ class CartController {
         // Buscar el usuario que tiene el cartId == cid
       const cartId = cid.toString()
       const user = await this.#UserService.findByCartId(cartId)   
+      const stringId = user._id.toString()
       if (!user) {
         throw CustomError.createError({
           name: 'Not Found',
@@ -119,11 +121,12 @@ class CartController {
         })}
       //Buscar el producto que se quiere agregar al carrito
       const productToAdd = await this.#ProductService.findById({ _id: pid })
+
         //Si el usuario es premium y es el owner del producto, no puede agregarlo
-      if (user.role === 'premium' && productToAdd.owner.toString() === user._id.toString()) {
-        Logger.debug('Premium user cannot add their own product to the cart')
-        return res.userErrorResponse({ message: 'Premium user cannot add their own product to the cart. Forbidden', code: 403 })
-      }
+        if (user.role === 'premium' && productToAdd.owner === stringId ) {
+          Logger.debug('Premium user cannot add their own product to the cart')
+          return res.userErrorResponse({ message: 'Premium user cannot add their own product to the cart. Forbidden', code: 403 })
+        }
         if (!product) {
         const newProduct = { quantity: 1, product: pid }
         cart.products.push(newProduct)

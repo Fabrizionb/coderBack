@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true },
   status: { type: Boolean, required: true, index: true },
   thumbnails: { type: Array, required: true },
-  owner: { type: mongoose.Types.ObjectId, ref: 'users', default: 'admin' }
+  owner: { type: String, default: 'admin' }
 
 })
 productSchema.pre('findOneAndUpdate', function (next) {
